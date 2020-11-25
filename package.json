@@ -1,0 +1,73 @@
+{
+  "name": "ishiro-mobile",
+  "version": "0.1.0",
+  "description": "📱 Ishiro mobile app for iOS and Android",
+  "license": "GPL-3.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "lint": "eslint --ext .ts,.tsx .",
+    "build": "tsc",
+    "test": "jest",
+    "test:pre-commit": "jest -o"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm run test:pre-commit"
+    }
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "pretty-quick --staged",
+      "yarn lint"
+    ]
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "expo": "~39.0.2",
+    "expo-status-bar": "~1.0.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
+    "react-native-web": "~0.13.12"
+  },
+  "devDependencies": {
+    "@babel/core": "~7.9.0",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@testing-library/jest-native": "^3.4.1",
+    "@testing-library/react-native": "^7.0.2",
+    "@types/react": "~16.9.35",
+    "@types/react-dom": "~16.9.8",
+    "@types/react-native": "~0.63.2",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
+    "import-sort-style-module-alias": "^1.1.0",
+    "jest-expo": "^39.0.0",
+    "lint-staged": "^10.3.0",
+    "prettier": "^2.2.0",
+    "prettier-plugin-import-sort": "^0.0.6",
+    "pretty-quick": "^3.0.0",
+    "typescript": "~3.9.5"
+  },
+  "importSort": {
+    ".js, .jsx, .ts, .tsx": {
+      "style": "module-alias",
+      "parser": "typescript",
+      "options": {
+        "alias": [
+          "app",
+          "assets",
+          "shared"
+        ]
+      }
+    }
+  }
+}
