@@ -1,6 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AppLoading } from "expo";
 import React, { useContext } from "react";
 import { ThemeContext } from "react-native-elements";
 
