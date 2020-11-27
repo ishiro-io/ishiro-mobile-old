@@ -20,7 +20,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./src",
     "paths": {
-      "*/": ["./src/*"]
+      "*/": ["./src/*", "./src/types/*"]
     }
   }
 }
