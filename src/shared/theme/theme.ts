@@ -3,6 +3,7 @@ import { Theme } from "react-native-elements";
 const theme: Theme = {
   colors: {
     primary: "#CE1126",
+    primaryLighter: "#E14649",
     white: "#FFF",
     black: "#131313",
     grey0: "##ededed",
@@ -20,7 +21,24 @@ const theme: Theme = {
     warning: "#C17005",
     info: "#0087C6"
   },
-  Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } }
+  Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } },
+  spacing: {
+    xs: 4,
+    s: 8,
+    m: 16,
+    l: 24,
+    xl: 40,
+    xxl: 78,
+    "3xl": 100
+  },
+  borderRadii: {
+    xs: 5,
+    s: 8,
+    m: 14,
+    l: 24,
+    xl: 30,
+    xxl: 40
+  }
 };
 
 export default theme;
