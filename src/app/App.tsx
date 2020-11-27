@@ -16,7 +16,9 @@ import { ThemeProvider } from "react-native-elements";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { client } from "shared/graphql";
-import theme from "shared/theme";
+import { theme } from "shared/theme";
+
+import AppNavigator from "./AppNavigator";
 
 const App = () => {
   let [fontsLoaded] = useFonts({
@@ -35,7 +37,8 @@ const App = () => {
     <SafeAreaProvider>
       <ApolloProvider {...{ client }}>
         <ThemeProvider useDark {...{ theme }}>
-          <StatusBar style="dark" />
+          <StatusBar style="light" />
+          <AppNavigator />
         </ThemeProvider>
       </ApolloProvider>
     </SafeAreaProvider>
