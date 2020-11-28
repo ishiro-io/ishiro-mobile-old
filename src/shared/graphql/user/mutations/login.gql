@@ -1,0 +1,5 @@
+mutation login($input: UserLoginInput!) {
+  login(input: $input) {
+    ...UserFields
+  }
+}

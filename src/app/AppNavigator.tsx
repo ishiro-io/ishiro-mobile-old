@@ -6,6 +6,7 @@ import { ThemeContext } from "react-native-elements";
 import { LoadingScreen } from "components";
 import { Authentication } from "routes/Authentication";
 import { Content } from "routes/Content";
+import { cache } from "shared/graphql";
 import { useMeQuery } from "shared/graphql/generated";
 import { AppRoutes } from "shared/navigation/Routes";
 
@@ -13,6 +14,8 @@ const Stack = createStackNavigator<AppRoutes>();
 
 const AppNavigator: React.FC = () => {
   const { theme } = useContext(ThemeContext);
+
+  if (__DEV__) cache.reset();
 
   const { data, loading } = useMeQuery();
 
