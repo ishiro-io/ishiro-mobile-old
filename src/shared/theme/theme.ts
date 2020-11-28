@@ -1,6 +1,27 @@
 import { Theme } from "react-native-elements";
 
 const theme: Theme = {
+  Input: {
+    inputStyle: {
+      color: "#fff",
+      fontFamily: "Poppins_400Regular",
+      fontSize: 14
+    },
+    inputContainerStyle: {
+      height: 40,
+      backgroundColor: "#2f2f2f",
+      borderRadius: 8,
+      borderBottomWidth: 0,
+      paddingLeft: 8
+    },
+    labelStyle: {
+      fontFamily: "Poppins_500Medium",
+      fontSize: 18,
+      color: "#fff",
+      marginBottom: 8
+    }
+  },
+  Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } },
   colors: {
     primary: "#CE1126",
     primaryLighter: "#E14649",
@@ -21,7 +42,6 @@ const theme: Theme = {
     warning: "#C17005",
     info: "#0087C6"
   },
-  Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } },
   spacing: {
     xs: 4,
     s: 8,
