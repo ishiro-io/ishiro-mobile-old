@@ -1,21 +1,16 @@
+import { ApolloProvider } from "@apollo/client";
 import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+
+import { client } from "shared/graphql";
 
 const App = () => {
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-    </View>
+    <ApolloProvider {...{ client }}>
+      <StatusBar style="dark" />
+    </ApolloProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#131313"
-  }
-});
 
 export default registerRootComponent(App);
