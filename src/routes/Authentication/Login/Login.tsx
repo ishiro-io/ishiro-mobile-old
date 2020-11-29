@@ -158,7 +158,7 @@ const Login: React.FC<LoginProps> = ({}: LoginProps) => {
                 <Text
                   style={{
                     fontFamily: "Poppins_300Light",
-                    fontSize: 11,
+                    fontSize: 12,
                     color: theme.colors?.error
                   }}
                 >
