@@ -7,8 +7,8 @@ export type AuthenticationRoutes = {
   Onboarding: undefined;
   Login: undefined;
   SignUp: undefined;
-  ConfirmEmailCode: { email: string };
+  ConfirmPhoneNumberCode: { phoneNumber: string };
   ForgotPassword: undefined;
-  ConfirmPasswordCode: { email: string };
+  ConfirmPasswordCode: { phoneNumber: string };
   ChangeForgotPassword: { token: string };
 };

@@ -5,8 +5,8 @@ import { ThemeContext } from "react-native-elements";
 import { AuthenticationRoutes } from "shared/navigation/Routes";
 
 import { ChangeForgotPassword } from "./ChangeForgotPassword";
-import { ConfirmEmailCode } from "./ConfirmEmailCode";
 import { ConfirmPasswordCode } from "./ConfirmPasswordCode";
+import { ConfirmPhoneNumberCode } from "./ConfirmPhoneNumberCode";
 import { ForgotPassword } from "./ForgotPassword";
 import { Login } from "./Login";
 import { Onboarding } from "./Onboarding";
@@ -31,8 +31,8 @@ const Authentication: React.FC = () => {
       <AuthenticationStack.Screen name="Login" component={Login} />
       <AuthenticationStack.Screen name="SignUp" component={SignUp} />
       <AuthenticationStack.Screen
-        name="ConfirmEmailCode"
-        component={ConfirmEmailCode}
+        name="ConfirmPhoneNumberCode"
+        component={ConfirmPhoneNumberCode}
       />
       <AuthenticationStack.Screen
         name="ForgotPassword"

@@ -41,7 +41,7 @@ const Login: React.FC<LoginProps> = ({}: LoginProps) => {
   const [login, { loading }] = useLoginMutation({ errorPolicy: "all" });
 
   const onSubmit = async (values: {
-    emailOrUsername: string;
+    phoneNumberOrUsername: string;
     password: string;
   }) => {
     const response = await login({
@@ -59,12 +59,12 @@ const Login: React.FC<LoginProps> = ({}: LoginProps) => {
       if (response.data?.login) {
         rootNavigation.reset({ index: 0, routes: [{ name: "Content" }] });
       } else {
-        const emailNotConfirmedError = response.errors?.find(
-          (e) => e.extensions!.code === "EMAIL_NOT_CONFIRMED"
+        const phoneNumberNotConfirmedError = response.errors?.find(
+          (e) => e.extensions!.code === "PHONE_NUMBER_NOT_CONFIRMED"
         );
-        if (emailNotConfirmedError) {
-          // TODO : Corriger ce use case (Arriver sur login, mais email non validé)
-          navigation.navigate("ConfirmEmailCode", { email: "" });
+        if (phoneNumberNotConfirmedError) {
+          // TODO : Corriger ce use case (Arriver sur login, mais phoneNumber non validé)
+          navigation.navigate("ConfirmPhoneNumberCode", { phoneNumber: "" });
         } else {
           setLoginError("Vos identifiants et/ou mot de passe sont incorrects.");
         }
@@ -85,7 +85,7 @@ const Login: React.FC<LoginProps> = ({}: LoginProps) => {
 
         <Formik
           initialValues={{
-            emailOrUsername: "",
+            phoneNumberOrUsername: "",
             password: ""
           }}
           validationSchema={LoginSchema}
@@ -114,16 +114,16 @@ const Login: React.FC<LoginProps> = ({}: LoginProps) => {
                 containerStyle={{ marginBottom: theme.spacing?.m }}
                 rightIcon={
                   <ClearInputButton
-                    value={values.emailOrUsername}
-                    onPress={() => setFieldValue("emailOrUsername", "")}
+                    value={values.phoneNumberOrUsername}
+                    onPress={() => setFieldValue("phoneNumberOrUsername", "")}
                   />
                 }
-                value={values.emailOrUsername}
-                onChangeText={handleChange("emailOrUsername")}
-                onBlur={handleBlur("emailOrUsername")}
-                errorMessage={errors.emailOrUsername}
-                keyboardType="email-address"
-                autoCompleteType="email"
+                value={values.phoneNumberOrUsername}
+                onChangeText={handleChange("phoneNumberOrUsername")}
+                onBlur={handleBlur("phoneNumberOrUsername")}
+                errorMessage={errors.phoneNumberOrUsername}
+                keyboardType="default"
+                autoCompleteType="off"
                 returnKeyType="next"
                 blurOnSubmit={false}
                 onSubmitEditing={() => passwordRef.current?.focus()}
