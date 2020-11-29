@@ -1,0 +1,19 @@
+overwrite: true
+schema: ${SCHEMA_PATH}
+documents: "src/shared/graphql/**/*.gql"
+generates:
+  src/shared/graphql/generated.tsx:
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+    plugins:
+      - named-operations-object
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+      - typescript-apollo-client-helpers
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+    - eslint --fix
