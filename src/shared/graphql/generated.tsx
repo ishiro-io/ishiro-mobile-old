@@ -66,8 +66,37 @@ export type User = {
   createdAt: Scalars["String"];
   updatedAt: Scalars["String"];
   username: Scalars["String"];
-  email: Scalars["String"];
+  phoneNumber?: Maybe<Scalars["String"]>;
 };
+
+export type UserEpisodeStatus = {
+  __typename?: "UserEpisodeStatus";
+  id: Scalars["Float"];
+  createdAt: Scalars["String"];
+  updatedAt: Scalars["String"];
+  hasBeenSeen?: Maybe<Scalars["Boolean"]>;
+  episode: Episode;
+  animeStatus: UserAnimeStatus;
+};
+
+export type UserAnimeStatus = {
+  __typename?: "UserAnimeStatus";
+  id: Scalars["Float"];
+  createdAt: Scalars["String"];
+  updatedAt: Scalars["String"];
+  status: AnimeViewingStatus;
+  anime: Anime;
+  user: User;
+  episodesStatus: Array<UserEpisodeStatus>;
+};
+
+export enum AnimeViewingStatus {
+  None = "NONE",
+  InProgress = "IN_PROGRESS",
+  ToSee = "TO_SEE",
+  Finished = "FINISHED",
+  Abandoned = "ABANDONED"
+}
 
 export type Anime = {
   __typename?: "Anime";
@@ -108,35 +137,6 @@ export enum AnimeStatus {
   Ongoing = "ONGOING",
   Finished = "FINISHED",
   Cancelled = "CANCELLED"
-}
-
-export type UserEpisodeStatus = {
-  __typename?: "UserEpisodeStatus";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-  hasBeenSeen?: Maybe<Scalars["Boolean"]>;
-  episode: Episode;
-  animeStatus: UserAnimeStatus;
-};
-
-export type UserAnimeStatus = {
-  __typename?: "UserAnimeStatus";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-  status: AnimeViewingStatus;
-  anime: Anime;
-  user: User;
-  episodesStatus: Array<UserEpisodeStatus>;
-};
-
-export enum AnimeViewingStatus {
-  None = "NONE",
-  InProgress = "IN_PROGRESS",
-  ToSee = "TO_SEE",
-  Finished = "FINISHED",
-  Abandoned = "ABANDONED"
 }
 
 export type PopulateAnimeOutput = {
@@ -223,8 +223,19 @@ export type UpdateEpisodeInput = {
   airedDate?: Maybe<Scalars["String"]>;
 };
 
-export type AskEmailChangeInput = {
-  email: Scalars["String"];
+export type UserGoogleLoginInput = {
+  accessToken: Scalars["String"];
+  refreshToken?: Maybe<Scalars["String"]>;
+};
+
+export type UserGoogleRegisterInput = {
+  accessToken: Scalars["String"];
+  refreshToken?: Maybe<Scalars["String"]>;
+  username: Scalars["String"];
+};
+
+export type AskPhoneNumberChangeInput = {
+  phoneNumber: Scalars["String"];
 };
 
 export type PasswordInput = {
@@ -237,20 +248,23 @@ export type UserChangeForgotPasswordInput = {
 };
 
 export type UserLoginInput = {
-  emailOrUsername: Scalars["String"];
+  phoneNumberOrUsername: Scalars["String"];
   password: Scalars["String"];
 };
 
 export type UserRegisterInput = {
   password: Scalars["String"];
   username: Scalars["String"];
-  email: Scalars["String"];
+  phoneNumber: Scalars["String"];
 };
 
-export type UpdateUserInformationsInput = {
-  username?: Maybe<Scalars["String"]>;
-  email?: Maybe<Scalars["String"]>;
+export type UpdateInternalIdentifiersInput = {
+  phoneNumber?: Maybe<Scalars["String"]>;
   password?: Maybe<Scalars["String"]>;
+};
+
+export type UpdateUsernameInput = {
+  username: Scalars["String"];
 };
 
 export type Query = {
@@ -323,15 +337,18 @@ export type Mutation = {
   deleteEpisodes: Scalars["Boolean"];
   /** Met à jour certaines données d'un épisode */
   updateEpisode?: Maybe<Episode>;
-  askEmailChange: Scalars["Boolean"];
+  loginWithGoogle?: Maybe<User>;
+  registerWithGoogle: User;
+  askPhoneNumberChange: Scalars["Boolean"];
   changeForgotPassword?: Maybe<User>;
-  confirmEmail?: Maybe<User>;
+  confirmPhoneNumber?: Maybe<User>;
   forgotPassword: Scalars["Boolean"];
   login?: Maybe<User>;
   logout: Scalars["Boolean"];
   register: Scalars["Boolean"];
   resendConfirmationMail: Scalars["Boolean"];
-  updateUserInformations?: Maybe<User>;
+  updateInternalIdentifiers?: Maybe<User>;
+  updateUsername?: Maybe<User>;
 };
 
 export type MutationCreateAnimeArgs = {
@@ -379,20 +396,28 @@ export type MutationUpdateEpisodeArgs = {
   id: Scalars["Float"];
 };
 
-export type MutationAskEmailChangeArgs = {
-  input: AskEmailChangeInput;
+export type MutationLoginWithGoogleArgs = {
+  input: UserGoogleLoginInput;
+};
+
+export type MutationRegisterWithGoogleArgs = {
+  input: UserGoogleRegisterInput;
+};
+
+export type MutationAskPhoneNumberChangeArgs = {
+  input: AskPhoneNumberChangeInput;
 };
 
 export type MutationChangeForgotPasswordArgs = {
   input: UserChangeForgotPasswordInput;
 };
 
-export type MutationConfirmEmailArgs = {
+export type MutationConfirmPhoneNumberArgs = {
   token: Scalars["String"];
 };
 
 export type MutationForgotPasswordArgs = {
-  email: Scalars["String"];
+  phoneNumber: Scalars["String"];
 };
 
 export type MutationLoginArgs = {
@@ -404,16 +429,20 @@ export type MutationRegisterArgs = {
 };
 
 export type MutationResendConfirmationMailArgs = {
-  email: Scalars["String"];
+  phoneNumber: Scalars["String"];
 };
 
-export type MutationUpdateUserInformationsArgs = {
-  input: UpdateUserInformationsInput;
+export type MutationUpdateInternalIdentifiersArgs = {
+  input: UpdateInternalIdentifiersInput;
+};
+
+export type MutationUpdateUsernameArgs = {
+  input: UpdateUsernameInput;
 };
 
 export type UserFieldsFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "username" | "email"
+  "id" | "username" | "phoneNumber"
 >;
 
 export type LoginMutationVariables = Exact<{
@@ -443,7 +472,7 @@ export const UserFieldsFragmentDoc = gql`
   fragment UserFields on User {
     id
     username
-    email
+    phoneNumber
   }
 `;
 export const LoginDocument = gql`
@@ -633,7 +662,7 @@ export type UserKeySpecifier = (
   | "createdAt"
   | "updatedAt"
   | "username"
-  | "email"
+  | "phoneNumber"
   | UserKeySpecifier
 )[];
 export type UserFieldPolicy = {
@@ -641,7 +670,43 @@ export type UserFieldPolicy = {
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
   username?: FieldPolicy<any> | FieldReadFunction<any>;
-  email?: FieldPolicy<any> | FieldReadFunction<any>;
+  phoneNumber?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type UserEpisodeStatusKeySpecifier = (
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "hasBeenSeen"
+  | "episode"
+  | "animeStatus"
+  | UserEpisodeStatusKeySpecifier
+)[];
+export type UserEpisodeStatusFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasBeenSeen?: FieldPolicy<any> | FieldReadFunction<any>;
+  episode?: FieldPolicy<any> | FieldReadFunction<any>;
+  animeStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type UserAnimeStatusKeySpecifier = (
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "status"
+  | "anime"
+  | "user"
+  | "episodesStatus"
+  | UserAnimeStatusKeySpecifier
+)[];
+export type UserAnimeStatusFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  status?: FieldPolicy<any> | FieldReadFunction<any>;
+  anime?: FieldPolicy<any> | FieldReadFunction<any>;
+  user?: FieldPolicy<any> | FieldReadFunction<any>;
+  episodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type AnimeKeySpecifier = (
   | "id"
@@ -690,42 +755,6 @@ export type AnimeFieldPolicy = {
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type UserEpisodeStatusKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | "hasBeenSeen"
-  | "episode"
-  | "animeStatus"
-  | UserEpisodeStatusKeySpecifier
-)[];
-export type UserEpisodeStatusFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  hasBeenSeen?: FieldPolicy<any> | FieldReadFunction<any>;
-  episode?: FieldPolicy<any> | FieldReadFunction<any>;
-  animeStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type UserAnimeStatusKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | "status"
-  | "anime"
-  | "user"
-  | "episodesStatus"
-  | UserAnimeStatusKeySpecifier
-)[];
-export type UserAnimeStatusFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  status?: FieldPolicy<any> | FieldReadFunction<any>;
-  anime?: FieldPolicy<any> | FieldReadFunction<any>;
-  user?: FieldPolicy<any> | FieldReadFunction<any>;
-  episodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-};
 export type PopulateAnimeOutputKeySpecifier = (
   | "timeToPopulate"
   | "fields"
@@ -768,15 +797,18 @@ export type MutationKeySpecifier = (
   | "populateCategories"
   | "deleteEpisodes"
   | "updateEpisode"
-  | "askEmailChange"
+  | "loginWithGoogle"
+  | "registerWithGoogle"
+  | "askPhoneNumberChange"
   | "changeForgotPassword"
-  | "confirmEmail"
+  | "confirmPhoneNumber"
   | "forgotPassword"
   | "login"
   | "logout"
   | "register"
   | "resendConfirmationMail"
-  | "updateUserInformations"
+  | "updateInternalIdentifiers"
+  | "updateUsername"
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
@@ -791,15 +823,18 @@ export type MutationFieldPolicy = {
   populateCategories?: FieldPolicy<any> | FieldReadFunction<any>;
   deleteEpisodes?: FieldPolicy<any> | FieldReadFunction<any>;
   updateEpisode?: FieldPolicy<any> | FieldReadFunction<any>;
-  askEmailChange?: FieldPolicy<any> | FieldReadFunction<any>;
+  loginWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
+  registerWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
+  askPhoneNumberChange?: FieldPolicy<any> | FieldReadFunction<any>;
   changeForgotPassword?: FieldPolicy<any> | FieldReadFunction<any>;
-  confirmEmail?: FieldPolicy<any> | FieldReadFunction<any>;
+  confirmPhoneNumber?: FieldPolicy<any> | FieldReadFunction<any>;
   forgotPassword?: FieldPolicy<any> | FieldReadFunction<any>;
   login?: FieldPolicy<any> | FieldReadFunction<any>;
   logout?: FieldPolicy<any> | FieldReadFunction<any>;
   register?: FieldPolicy<any> | FieldReadFunction<any>;
   resendConfirmationMail?: FieldPolicy<any> | FieldReadFunction<any>;
-  updateUserInformations?: FieldPolicy<any> | FieldReadFunction<any>;
+  updateInternalIdentifiers?: FieldPolicy<any> | FieldReadFunction<any>;
+  updateUsername?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type TypedTypePolicies = TypePolicies & {
   BaseEntity?: {
@@ -839,16 +874,6 @@ export type TypedTypePolicies = TypePolicies & {
     subscriptionType?: true;
     fields?: UserFieldPolicy;
   };
-  Anime?: {
-    keyFields?:
-      | false
-      | AnimeKeySpecifier
-      | (() => undefined | AnimeKeySpecifier);
-    queryType?: true;
-    mutationType?: true;
-    subscriptionType?: true;
-    fields?: AnimeFieldPolicy;
-  };
   UserEpisodeStatus?: {
     keyFields?:
       | false
@@ -868,6 +893,16 @@ export type TypedTypePolicies = TypePolicies & {
     mutationType?: true;
     subscriptionType?: true;
     fields?: UserAnimeStatusFieldPolicy;
+  };
+  Anime?: {
+    keyFields?:
+      | false
+      | AnimeKeySpecifier
+      | (() => undefined | AnimeKeySpecifier);
+    queryType?: true;
+    mutationType?: true;
+    subscriptionType?: true;
+    fields?: AnimeFieldPolicy;
   };
   PopulateAnimeOutput?: {
     keyFields?:

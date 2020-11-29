@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 const SignUpSchema = Yup.object().shape({
-  email: Yup.string().required("Une adresse mail est requise"),
+  phoneNumber: Yup.string().required("Un numéro de  téléphone est requis"),
   username: Yup.string().required("Un nom d'utilisateur est requis"),
   password: Yup.string()
     .min(8, "Le mot de passe est trop court (8 caractères minimum)")

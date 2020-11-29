@@ -19,7 +19,7 @@ const IdentifierInputLabel: React.FC = () => {
           color: theme.colors?.white
         }}
       >
-        Adresse mail
+        Numéro de téléphone
       </Text>
       <Text
         style={{

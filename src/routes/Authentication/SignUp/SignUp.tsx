@@ -24,13 +24,13 @@ const SignUp: React.FC<SignUpProps> = ({}: SignUpProps) => {
   const [registerError, setRegisterError] = useState("");
 
   const usernameRef = useRef<Input>(null);
-  const emailRef = useRef<Input>(null);
+  const phoneNumberRef = useRef<Input>(null);
   const passwordRef = useRef<Input>(null);
 
   const [register, { loading }] = useRegisterMutation({ errorPolicy: "all" });
 
   const onSubmit = async (values: {
-    email: string;
+    phoneNumber: string;
     username: string;
     password: string;
   }) => {
@@ -40,8 +40,13 @@ const SignUp: React.FC<SignUpProps> = ({}: SignUpProps) => {
 
     if (response) {
       if (response.data?.register)
-        navigation.navigate("ConfirmEmailCode", { email: values.email });
-      else setRegisterError("Adresse mail ou nom d'utilisateur indisponible");
+        navigation.navigate("ConfirmPhoneNumberCode", {
+          phoneNumber: values.phoneNumber
+        });
+      else
+        setRegisterError(
+          "Numéro de téléphone ou nom d'utilisateur indisponible"
+        );
     }
   };
 
@@ -58,7 +63,7 @@ const SignUp: React.FC<SignUpProps> = ({}: SignUpProps) => {
 
         <Formik
           initialValues={{
-            email: "",
+            phoneNumber: "",
             username: "",
             password: ""
           }}
@@ -108,33 +113,32 @@ const SignUp: React.FC<SignUpProps> = ({}: SignUpProps) => {
                 autoCompleteType="username"
                 returnKeyType="next"
                 blurOnSubmit={false}
-                onSubmitEditing={() => emailRef.current?.focus()}
+                onSubmitEditing={() => phoneNumberRef.current?.focus()}
               />
 
               <Input
-                ref={emailRef}
-                label="Adresse mail"
+                ref={phoneNumberRef}
+                label="Numéro de téléphone"
                 containerStyle={{ marginBottom: theme.spacing?.m }}
                 rightIcon={
                   <ClearInputButton
-                    value={values.email}
-                    onPress={() => setFieldValue("email", "")}
+                    value={values.phoneNumber}
+                    onPress={() => setFieldValue("phoneNumber", "")}
                   />
                 }
-                value={values.email}
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
+                value={values.phoneNumber}
+                onChangeText={handleChange("phoneNumber")}
+                onBlur={handleBlur("phoneNumber")}
                 errorMessage={
-                  errors.email ??
-                  "Vous devrez confirmer cette adresse mail par la suite."
+                  errors.phoneNumber ??
+                  "Vous devrez confirmer ce numéro par la suite."
                 }
                 errorStyle={{
-                  color: errors.email
+                  color: errors.phoneNumber
                     ? theme.colors?.error
                     : theme.colors?.grey5
                 }}
-                keyboardType="email-address"
-                autoCompleteType="email"
+                keyboardType="phone-pad"
                 returnKeyType="next"
                 blurOnSubmit={false}
                 onSubmitEditing={() => passwordRef.current?.focus()}
