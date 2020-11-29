@@ -11,4 +11,5 @@ export type AuthenticationRoutes = {
   ForgotPassword: undefined;
   ConfirmPasswordCode: { phoneNumber: string };
   ChangeForgotPassword: { token: string };
+  GoogleSetUsername: { accountId: string };
 };

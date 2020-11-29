@@ -8,6 +8,7 @@ import { ChangeForgotPassword } from "./ChangeForgotPassword";
 import { ConfirmPasswordCode } from "./ConfirmPasswordCode";
 import { ConfirmPhoneNumberCode } from "./ConfirmPhoneNumberCode";
 import { ForgotPassword } from "./ForgotPassword";
+import { GoogleSetUsername } from "./GoogleSetUsername";
 import { Login } from "./Login";
 import { Onboarding } from "./Onboarding";
 import { SignUp } from "./SignUp";
@@ -45,6 +46,10 @@ const Authentication: React.FC = () => {
       <AuthenticationStack.Screen
         name="ChangeForgotPassword"
         component={ChangeForgotPassword}
+      />
+      <AuthenticationStack.Screen
+        name="GoogleSetUsername"
+        component={GoogleSetUsername}
       />
     </AuthenticationStack.Navigator>
   );

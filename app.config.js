@@ -31,7 +31,9 @@ export default {
       backgroundColor: "#131313"
     },
     extra: {
-      apiEndpoint: process.env.EXPO_API_ENDPOINT
+      apiEndpoint: process.env.EXPO_API_ENDPOINT,
+      googleExpoClientId: process.env.EXPO_GOOGLE_EXPO_CLIENT_ID,
+      googleUserApiEndpoint: process.env.EXPO_GOOGLE_USER_API_ENDPOINT
     }
   }
 };
