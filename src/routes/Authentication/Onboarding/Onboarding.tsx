@@ -6,6 +6,8 @@ import { Button, Text, ThemeContext } from "react-native-elements";
 import { cache } from "shared/graphql";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
+import { GoogleAuthButton } from "./GoogleAuthButton";
+
 const { width } = Dimensions.get("screen");
 
 const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
@@ -73,6 +75,8 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
         onPress={() => navigation.navigate("Login")}
         title="Se connecter"
       />
+
+      <GoogleAuthButton />
 
       <Button
         type="solid"

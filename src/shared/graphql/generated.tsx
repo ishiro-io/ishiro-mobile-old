@@ -11,10 +11,12 @@ export type Exact<T extends { [key: string]: unknown }> = {
 };
 export const namedOperations = {
   Query: {
+    isRegisteredWithGoogle: "isRegisteredWithGoogle",
     me: "me"
   },
   Mutation: {
     login: "login",
+    loginWithGoogle: "loginWithGoogle",
     register: "register"
   },
   Fragment: {
@@ -224,14 +226,8 @@ export type UpdateEpisodeInput = {
 };
 
 export type UserGoogleLoginInput = {
-  accessToken: Scalars["String"];
-  refreshToken?: Maybe<Scalars["String"]>;
-};
-
-export type UserGoogleRegisterInput = {
-  accessToken: Scalars["String"];
-  refreshToken?: Maybe<Scalars["String"]>;
-  username: Scalars["String"];
+  accountId: Scalars["String"];
+  username?: Maybe<Scalars["String"]>;
 };
 
 export type AskPhoneNumberChangeInput = {
@@ -281,6 +277,7 @@ export type Query = {
   episode?: Maybe<Episode>;
   /** Retourne tous les épisodes d'un anime disponibles en base de données */
   episodes: Array<Episode>;
+  isRegisteredWithGoogle: Scalars["Boolean"];
   checkConfirmationCode?: Maybe<Scalars["Boolean"]>;
   me?: Maybe<User>;
 };
@@ -304,6 +301,10 @@ export type QueryEpisodesArgs = {
   animeId: Scalars["Float"];
 };
 
+export type QueryIsRegisteredWithGoogleArgs = {
+  accountId: Scalars["String"];
+};
+
 export type QueryCheckConfirmationCodeArgs = {
   deleteToken?: Maybe<Scalars["Boolean"]>;
   type: ConfirmationCodeType;
@@ -311,7 +312,7 @@ export type QueryCheckConfirmationCodeArgs = {
 };
 
 export enum ConfirmationCodeType {
-  Email = "EMAIL",
+  PhoneNumber = "PHONE_NUMBER",
   Password = "PASSWORD"
 }
 
@@ -337,8 +338,7 @@ export type Mutation = {
   deleteEpisodes: Scalars["Boolean"];
   /** Met à jour certaines données d'un épisode */
   updateEpisode?: Maybe<Episode>;
-  loginWithGoogle?: Maybe<User>;
-  registerWithGoogle: User;
+  loginWithGoogle: User;
   askPhoneNumberChange: Scalars["Boolean"];
   changeForgotPassword?: Maybe<User>;
   confirmPhoneNumber?: Maybe<User>;
@@ -400,10 +400,6 @@ export type MutationLoginWithGoogleArgs = {
   input: UserGoogleLoginInput;
 };
 
-export type MutationRegisterWithGoogleArgs = {
-  input: UserGoogleRegisterInput;
-};
-
 export type MutationAskPhoneNumberChangeArgs = {
   input: AskPhoneNumberChangeInput;
 };
@@ -453,6 +449,14 @@ export type LoginMutation = { __typename?: "Mutation" } & {
   login?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
 };
 
+export type LoginWithGoogleMutationVariables = Exact<{
+  input: UserGoogleLoginInput;
+}>;
+
+export type LoginWithGoogleMutation = { __typename?: "Mutation" } & {
+  loginWithGoogle: { __typename?: "User" } & UserFieldsFragment;
+};
+
 export type RegisterMutationVariables = Exact<{
   input: UserRegisterInput;
 }>;
@@ -460,6 +464,15 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
   "register"
+>;
+
+export type IsRegisteredWithGoogleQueryVariables = Exact<{
+  accountId: Scalars["String"];
+}>;
+
+export type IsRegisteredWithGoogleQuery = { __typename?: "Query" } & Pick<
+  Query,
+  "isRegisteredWithGoogle"
 >;
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
@@ -522,6 +535,55 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
 >;
+export const LoginWithGoogleDocument = gql`
+  mutation loginWithGoogle($input: UserGoogleLoginInput!) {
+    loginWithGoogle(input: $input) {
+      ...UserFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type LoginWithGoogleMutationFn = Apollo.MutationFunction<
+  LoginWithGoogleMutation,
+  LoginWithGoogleMutationVariables
+>;
+
+/**
+ * __useLoginWithGoogleMutation__
+ *
+ * To run a mutation, you first call `useLoginWithGoogleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginWithGoogleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginWithGoogleMutation, { data, loading, error }] = useLoginWithGoogleMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLoginWithGoogleMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LoginWithGoogleMutation,
+    LoginWithGoogleMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    LoginWithGoogleMutation,
+    LoginWithGoogleMutationVariables
+  >(LoginWithGoogleDocument, baseOptions);
+}
+export type LoginWithGoogleMutationHookResult = ReturnType<
+  typeof useLoginWithGoogleMutation
+>;
+export type LoginWithGoogleMutationResult = Apollo.MutationResult<LoginWithGoogleMutation>;
+export type LoginWithGoogleMutationOptions = Apollo.BaseMutationOptions<
+  LoginWithGoogleMutation,
+  LoginWithGoogleMutationVariables
+>;
 export const RegisterDocument = gql`
   mutation register($input: UserRegisterInput!) {
     register(input: $input)
@@ -565,6 +627,60 @@ export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<
   RegisterMutation,
   RegisterMutationVariables
+>;
+export const IsRegisteredWithGoogleDocument = gql`
+  query isRegisteredWithGoogle($accountId: String!) {
+    isRegisteredWithGoogle(accountId: $accountId)
+  }
+`;
+
+/**
+ * __useIsRegisteredWithGoogleQuery__
+ *
+ * To run a query within a React component, call `useIsRegisteredWithGoogleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsRegisteredWithGoogleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsRegisteredWithGoogleQuery({
+ *   variables: {
+ *      accountId: // value for 'accountId'
+ *   },
+ * });
+ */
+export function useIsRegisteredWithGoogleQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    IsRegisteredWithGoogleQuery,
+    IsRegisteredWithGoogleQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    IsRegisteredWithGoogleQuery,
+    IsRegisteredWithGoogleQueryVariables
+  >(IsRegisteredWithGoogleDocument, baseOptions);
+}
+export function useIsRegisteredWithGoogleLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IsRegisteredWithGoogleQuery,
+    IsRegisteredWithGoogleQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    IsRegisteredWithGoogleQuery,
+    IsRegisteredWithGoogleQueryVariables
+  >(IsRegisteredWithGoogleDocument, baseOptions);
+}
+export type IsRegisteredWithGoogleQueryHookResult = ReturnType<
+  typeof useIsRegisteredWithGoogleQuery
+>;
+export type IsRegisteredWithGoogleLazyQueryHookResult = ReturnType<
+  typeof useIsRegisteredWithGoogleLazyQuery
+>;
+export type IsRegisteredWithGoogleQueryResult = Apollo.QueryResult<
+  IsRegisteredWithGoogleQuery,
+  IsRegisteredWithGoogleQueryVariables
 >;
 export const MeDocument = gql`
   query me {
@@ -771,6 +887,7 @@ export type QueryKeySpecifier = (
   | "category"
   | "episode"
   | "episodes"
+  | "isRegisteredWithGoogle"
   | "checkConfirmationCode"
   | "me"
   | QueryKeySpecifier
@@ -782,6 +899,7 @@ export type QueryFieldPolicy = {
   category?: FieldPolicy<any> | FieldReadFunction<any>;
   episode?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
+  isRegisteredWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
   checkConfirmationCode?: FieldPolicy<any> | FieldReadFunction<any>;
   me?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -798,7 +916,6 @@ export type MutationKeySpecifier = (
   | "deleteEpisodes"
   | "updateEpisode"
   | "loginWithGoogle"
-  | "registerWithGoogle"
   | "askPhoneNumberChange"
   | "changeForgotPassword"
   | "confirmPhoneNumber"
@@ -824,7 +941,6 @@ export type MutationFieldPolicy = {
   deleteEpisodes?: FieldPolicy<any> | FieldReadFunction<any>;
   updateEpisode?: FieldPolicy<any> | FieldReadFunction<any>;
   loginWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
-  registerWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
   askPhoneNumberChange?: FieldPolicy<any> | FieldReadFunction<any>;
   changeForgotPassword?: FieldPolicy<any> | FieldReadFunction<any>;
   confirmPhoneNumber?: FieldPolicy<any> | FieldReadFunction<any>;
