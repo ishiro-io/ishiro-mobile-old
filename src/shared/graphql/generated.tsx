@@ -11,6 +11,8 @@ export type Exact<T extends { [key: string]: unknown }> = {
 };
 export const namedOperations = {
   Query: {
+    animes: "animes",
+    categories: "categories",
     checkConfirmationCode: "checkConfirmationCode",
     isRegisteredWithGoogle: "isRegisteredWithGoogle",
     me: "me"
@@ -25,6 +27,8 @@ export const namedOperations = {
     resendConfirmationSMS: "resendConfirmationSMS"
   },
   Fragment: {
+    AnimeFields: "AnimeFields",
+    CategoryFields: "CategoryFields",
     UserFields: "UserFields"
   }
 };
@@ -146,10 +150,28 @@ export enum AnimeStatus {
   Cancelled = "CANCELLED"
 }
 
+export type PaginatedAnimesOutput = {
+  __typename?: "PaginatedAnimesOutput";
+  hasMore: Scalars["Boolean"];
+  fields: Array<Anime>;
+};
+
+export type CategoryPreview = {
+  __typename?: "CategoryPreview";
+  title: Scalars["String"];
+  animes?: Maybe<Array<Anime>>;
+  categoryId?: Maybe<Scalars["Float"]>;
+};
+
 export type PopulateAnimeOutput = {
   __typename?: "PopulateAnimeOutput";
   timeToPopulate: Scalars["String"];
   fields: Array<Anime>;
+};
+
+export type PaginatedInput = {
+  limit: Scalars["Float"];
+  offset: Scalars["Float"];
 };
 
 export type CreateAnimeInput = {
@@ -272,10 +294,12 @@ export type Query = {
   __typename?: "Query";
   /** Retourne un anime spécifique basé sur son id interne ou son id MyAnimeList */
   anime?: Maybe<Anime>;
-  /** Retourne tout les animes disponibles en base de données */
-  animes: Array<Anime>;
+  /** Retourne les animes disponibles en base de données */
+  animes: PaginatedAnimesOutput;
   /** Retourne toutes les catégories disponibles en base de données */
   categories: Array<Category>;
+  /** Retourne les 10 premiers animes des 5 catégories de la home */
+  categoriesPreviews: Array<CategoryPreview>;
   /** Retourne une categorie spécifique basé sur son id interne */
   category?: Maybe<Category>;
   /** Retourne un épisode spécifique basée sur son id interne ou l'id de son anime et son numéro d'épisode */
@@ -290,6 +314,11 @@ export type Query = {
 export type QueryAnimeArgs = {
   idMAL?: Maybe<Scalars["Float"]>;
   id?: Maybe<Scalars["Float"]>;
+};
+
+export type QueryAnimesArgs = {
+  categoryId?: Maybe<Scalars["Float"]>;
+  options?: Maybe<PaginatedInput>;
 };
 
 export type QueryCategoryArgs = {
@@ -441,6 +470,34 @@ export type MutationUpdateUsernameArgs = {
   input: UpdateUsernameInput;
 };
 
+export type AnimeFieldsFragment = { __typename?: "Anime" } & Pick<
+  Anime,
+  "id" | "title" | "bannerImage" | "posterImage"
+>;
+
+export type AnimesQueryVariables = Exact<{
+  categoryId?: Maybe<Scalars["Float"]>;
+  options?: Maybe<PaginatedInput>;
+}>;
+
+export type AnimesQuery = { __typename?: "Query" } & {
+  animes: { __typename?: "PaginatedAnimesOutput" } & Pick<
+    PaginatedAnimesOutput,
+    "hasMore"
+  > & { fields: Array<{ __typename?: "Anime" } & AnimeFieldsFragment> };
+};
+
+export type CategoryFieldsFragment = { __typename?: "Category" } & Pick<
+  Category,
+  "id" | "name" | "coverImage"
+>;
+
+export type CategoriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CategoriesQuery = { __typename?: "Query" } & {
+  categories: Array<{ __typename?: "Category" } & CategoryFieldsFragment>;
+};
+
 export type UserFieldsFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "username" | "phoneNumber"
@@ -531,6 +588,21 @@ export type MeQuery = { __typename?: "Query" } & {
   me?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
 };
 
+export const AnimeFieldsFragmentDoc = gql`
+  fragment AnimeFields on Anime {
+    id
+    title
+    bannerImage
+    posterImage
+  }
+`;
+export const CategoryFieldsFragmentDoc = gql`
+  fragment CategoryFields on Category {
+    id
+    name
+    coverImage
+  }
+`;
 export const UserFieldsFragmentDoc = gql`
   fragment UserFields on User {
     id
@@ -538,6 +610,111 @@ export const UserFieldsFragmentDoc = gql`
     phoneNumber
   }
 `;
+export const AnimesDocument = gql`
+  query animes($categoryId: Float, $options: PaginatedInput) {
+    animes(categoryId: $categoryId, options: $options) {
+      hasMore
+      fields {
+        ...AnimeFields
+      }
+    }
+  }
+  ${AnimeFieldsFragmentDoc}
+`;
+
+/**
+ * __useAnimesQuery__
+ *
+ * To run a query within a React component, call `useAnimesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAnimesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAnimesQuery({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useAnimesQuery(
+  baseOptions?: Apollo.QueryHookOptions<AnimesQuery, AnimesQueryVariables>
+) {
+  return Apollo.useQuery<AnimesQuery, AnimesQueryVariables>(
+    AnimesDocument,
+    baseOptions
+  );
+}
+export function useAnimesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AnimesQuery, AnimesQueryVariables>
+) {
+  return Apollo.useLazyQuery<AnimesQuery, AnimesQueryVariables>(
+    AnimesDocument,
+    baseOptions
+  );
+}
+export type AnimesQueryHookResult = ReturnType<typeof useAnimesQuery>;
+export type AnimesLazyQueryHookResult = ReturnType<typeof useAnimesLazyQuery>;
+export type AnimesQueryResult = Apollo.QueryResult<
+  AnimesQuery,
+  AnimesQueryVariables
+>;
+export const CategoriesDocument = gql`
+  query categories {
+    categories {
+      ...CategoryFields
+    }
+  }
+  ${CategoryFieldsFragmentDoc}
+`;
+
+/**
+ * __useCategoriesQuery__
+ *
+ * To run a query within a React component, call `useCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCategoriesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    CategoriesQuery,
+    CategoriesQueryVariables
+  >
+) {
+  return Apollo.useQuery<CategoriesQuery, CategoriesQueryVariables>(
+    CategoriesDocument,
+    baseOptions
+  );
+}
+export function useCategoriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CategoriesQuery,
+    CategoriesQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<CategoriesQuery, CategoriesQueryVariables>(
+    CategoriesDocument,
+    baseOptions
+  );
+}
+export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
+export type CategoriesLazyQueryHookResult = ReturnType<
+  typeof useCategoriesLazyQuery
+>;
+export type CategoriesQueryResult = Apollo.QueryResult<
+  CategoriesQuery,
+  CategoriesQueryVariables
+>;
 export const ChangeForgotPasswordDocument = gql`
   mutation changeForgotPassword($input: UserChangeForgotPasswordInput!) {
     changeForgotPassword(input: $input) {
@@ -1171,6 +1348,26 @@ export type AnimeFieldPolicy = {
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PaginatedAnimesOutputKeySpecifier = (
+  | "hasMore"
+  | "fields"
+  | PaginatedAnimesOutputKeySpecifier
+)[];
+export type PaginatedAnimesOutputFieldPolicy = {
+  hasMore?: FieldPolicy<any> | FieldReadFunction<any>;
+  fields?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CategoryPreviewKeySpecifier = (
+  | "title"
+  | "animes"
+  | "categoryId"
+  | CategoryPreviewKeySpecifier
+)[];
+export type CategoryPreviewFieldPolicy = {
+  title?: FieldPolicy<any> | FieldReadFunction<any>;
+  animes?: FieldPolicy<any> | FieldReadFunction<any>;
+  categoryId?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type PopulateAnimeOutputKeySpecifier = (
   | "timeToPopulate"
   | "fields"
@@ -1184,6 +1381,7 @@ export type QueryKeySpecifier = (
   | "anime"
   | "animes"
   | "categories"
+  | "categoriesPreviews"
   | "category"
   | "episode"
   | "episodes"
@@ -1196,6 +1394,7 @@ export type QueryFieldPolicy = {
   anime?: FieldPolicy<any> | FieldReadFunction<any>;
   animes?: FieldPolicy<any> | FieldReadFunction<any>;
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
+  categoriesPreviews?: FieldPolicy<any> | FieldReadFunction<any>;
   category?: FieldPolicy<any> | FieldReadFunction<any>;
   episode?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -1319,6 +1518,26 @@ export type TypedTypePolicies = TypePolicies & {
     mutationType?: true;
     subscriptionType?: true;
     fields?: AnimeFieldPolicy;
+  };
+  PaginatedAnimesOutput?: {
+    keyFields?:
+      | false
+      | PaginatedAnimesOutputKeySpecifier
+      | (() => undefined | PaginatedAnimesOutputKeySpecifier);
+    queryType?: true;
+    mutationType?: true;
+    subscriptionType?: true;
+    fields?: PaginatedAnimesOutputFieldPolicy;
+  };
+  CategoryPreview?: {
+    keyFields?:
+      | false
+      | CategoryPreviewKeySpecifier
+      | (() => undefined | CategoryPreviewKeySpecifier);
+    queryType?: true;
+    mutationType?: true;
+    subscriptionType?: true;
+    fields?: CategoryPreviewFieldPolicy;
   };
   PopulateAnimeOutput?: {
     keyFields?:
