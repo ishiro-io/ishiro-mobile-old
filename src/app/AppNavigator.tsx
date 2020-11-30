@@ -36,6 +36,7 @@ const AppNavigator: React.FC = () => {
       <Stack.Navigator
         headerMode="none"
         initialRouteName={data?.me ? "Content" : "Authentication"}
+        // initialRouteName={"Content"}
       >
         <Stack.Screen name="Content" component={Content} />
         <Stack.Screen name="Authentication" component={Authentication} />
