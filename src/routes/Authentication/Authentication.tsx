@@ -1,6 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useContext } from "react";
-import { ThemeContext } from "react-native-elements";
+import React from "react";
 
 import { AuthenticationRoutes } from "shared/navigation/Routes";
 
@@ -16,17 +15,10 @@ import { SignUp } from "./SignUp";
 const AuthenticationStack = createStackNavigator<AuthenticationRoutes>();
 
 const Authentication: React.FC = () => {
-  const { theme } = useContext(ThemeContext);
-
   return (
     <AuthenticationStack.Navigator
-      initialRouteName="ChangeForgotPassword"
+      initialRouteName="Onboarding"
       headerMode="none"
-      screenOptions={{
-        cardStyle: {
-          backgroundColor: theme.colors?.black
-        }
-      }}
     >
       <AuthenticationStack.Screen name="Onboarding" component={Onboarding} />
       <AuthenticationStack.Screen name="Login" component={Login} />

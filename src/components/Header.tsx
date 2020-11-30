@@ -8,7 +8,8 @@ const Header: React.FC<HeaderProps> = ({
   iconLeft,
   iconRight,
   onIconLeftPress,
-  onIconRightPress
+  onIconRightPress,
+  height = 80
 }: HeaderProps) => {
   const { theme } = useContext(ThemeContext);
   const { top } = useSafeAreaInsets();
@@ -16,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <View
       style={{
-        height: 80,
+        height,
         paddingHorizontal: theme.spacing?.m,
         marginTop: top
       }}
@@ -31,24 +32,30 @@ const Header: React.FC<HeaderProps> = ({
       >
         {iconLeft ? (
           <Button icon={iconLeft} type="clear" onPress={onIconLeftPress} />
-        ) : (
+        ) : iconRight ? (
           <View style={{ width: 32, height: 32 }} />
+        ) : (
+          <></>
         )}
 
-        <Text
-          style={{
-            fontFamily: "Poppins_500Medium",
-            fontSize: 20,
-            color: theme.colors?.white
-          }}
-        >
-          {label}
-        </Text>
+        {label && (
+          <Text
+            style={{
+              fontFamily: "Poppins_500Medium",
+              fontSize: 20,
+              color: theme.colors?.white
+            }}
+          >
+            {label}
+          </Text>
+        )}
 
         {iconRight ? (
           <Button icon={iconRight} type="clear" onPress={onIconRightPress} />
-        ) : (
+        ) : iconLeft ? (
           <View style={{ width: 32, height: 32 }} />
+        ) : (
+          <></>
         )}
       </View>
     </View>
@@ -58,9 +65,10 @@ const Header: React.FC<HeaderProps> = ({
 export default Header;
 
 interface HeaderProps {
-  label: string;
+  label?: string;
   iconLeft?: IconNode;
   onIconLeftPress?: () => void;
   iconRight?: IconNode;
   onIconRightPress?: () => void;
+  height?: number;
 }

@@ -1,15 +1,20 @@
+import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { View } from "react-native";
-import { Text } from "react-native-elements";
 
-const Content: React.FC<ContentProps> = ({}: ContentProps) => {
+import { ContentRoutes } from "shared/navigation/Routes";
+
+import { Main } from "./Main";
+import { Profile } from "./Profile";
+
+const MainStack = createStackNavigator<ContentRoutes>();
+
+const Content: React.FC = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Content</Text>
-    </View>
+    <MainStack.Navigator initialRouteName="Main" headerMode="none">
+      <MainStack.Screen name="Main" component={Main} />
+      <MainStack.Screen name="Profile" component={Profile} />
+    </MainStack.Navigator>
   );
 };
 
 export default Content;
-
-interface ContentProps {}
