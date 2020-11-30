@@ -20,7 +20,7 @@ const Authentication: React.FC = () => {
 
   return (
     <AuthenticationStack.Navigator
-      initialRouteName="Onboarding"
+      initialRouteName="ConfirmPhoneNumberCode"
       headerMode="none"
       screenOptions={{
         cardStyle: {

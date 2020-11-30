@@ -15,9 +15,11 @@ export const namedOperations = {
     me: "me"
   },
   Mutation: {
+    confirmPhoneNumber: "confirmPhoneNumber",
     login: "login",
     loginWithGoogle: "loginWithGoogle",
-    register: "register"
+    register: "register",
+    resendConfirmationSMS: "resendConfirmationSMS"
   },
   Fragment: {
     UserFields: "UserFields"
@@ -346,7 +348,7 @@ export type Mutation = {
   login?: Maybe<User>;
   logout: Scalars["Boolean"];
   register: Scalars["Boolean"];
-  resendConfirmationMail: Scalars["Boolean"];
+  resendConfirmationSMS: Scalars["Boolean"];
   updateInternalIdentifiers?: Maybe<User>;
   updateUsername?: Maybe<User>;
 };
@@ -424,7 +426,7 @@ export type MutationRegisterArgs = {
   input: UserRegisterInput;
 };
 
-export type MutationResendConfirmationMailArgs = {
+export type MutationResendConfirmationSmsArgs = {
   phoneNumber: Scalars["String"];
 };
 
@@ -440,6 +442,14 @@ export type UserFieldsFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "username" | "phoneNumber"
 >;
+
+export type ConfirmPhoneNumberMutationVariables = Exact<{
+  token: Scalars["String"];
+}>;
+
+export type ConfirmPhoneNumberMutation = { __typename?: "Mutation" } & {
+  confirmPhoneNumber?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
+};
 
 export type LoginMutationVariables = Exact<{
   input: UserLoginInput;
@@ -466,6 +476,15 @@ export type RegisterMutation = { __typename?: "Mutation" } & Pick<
   "register"
 >;
 
+export type ResendConfirmationSmsMutationVariables = Exact<{
+  phoneNumber: Scalars["String"];
+}>;
+
+export type ResendConfirmationSmsMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "resendConfirmationSMS"
+>;
+
 export type IsRegisteredWithGoogleQueryVariables = Exact<{
   accountId: Scalars["String"];
 }>;
@@ -488,6 +507,55 @@ export const UserFieldsFragmentDoc = gql`
     phoneNumber
   }
 `;
+export const ConfirmPhoneNumberDocument = gql`
+  mutation confirmPhoneNumber($token: String!) {
+    confirmPhoneNumber(token: $token) {
+      ...UserFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type ConfirmPhoneNumberMutationFn = Apollo.MutationFunction<
+  ConfirmPhoneNumberMutation,
+  ConfirmPhoneNumberMutationVariables
+>;
+
+/**
+ * __useConfirmPhoneNumberMutation__
+ *
+ * To run a mutation, you first call `useConfirmPhoneNumberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmPhoneNumberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmPhoneNumberMutation, { data, loading, error }] = useConfirmPhoneNumberMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useConfirmPhoneNumberMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ConfirmPhoneNumberMutation,
+    ConfirmPhoneNumberMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    ConfirmPhoneNumberMutation,
+    ConfirmPhoneNumberMutationVariables
+  >(ConfirmPhoneNumberDocument, baseOptions);
+}
+export type ConfirmPhoneNumberMutationHookResult = ReturnType<
+  typeof useConfirmPhoneNumberMutation
+>;
+export type ConfirmPhoneNumberMutationResult = Apollo.MutationResult<ConfirmPhoneNumberMutation>;
+export type ConfirmPhoneNumberMutationOptions = Apollo.BaseMutationOptions<
+  ConfirmPhoneNumberMutation,
+  ConfirmPhoneNumberMutationVariables
+>;
 export const LoginDocument = gql`
   mutation login($input: UserLoginInput!) {
     login(input: $input) {
@@ -627,6 +695,52 @@ export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<
   RegisterMutation,
   RegisterMutationVariables
+>;
+export const ResendConfirmationSmsDocument = gql`
+  mutation resendConfirmationSMS($phoneNumber: String!) {
+    resendConfirmationSMS(phoneNumber: $phoneNumber)
+  }
+`;
+export type ResendConfirmationSmsMutationFn = Apollo.MutationFunction<
+  ResendConfirmationSmsMutation,
+  ResendConfirmationSmsMutationVariables
+>;
+
+/**
+ * __useResendConfirmationSmsMutation__
+ *
+ * To run a mutation, you first call `useResendConfirmationSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResendConfirmationSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resendConfirmationSmsMutation, { data, loading, error }] = useResendConfirmationSmsMutation({
+ *   variables: {
+ *      phoneNumber: // value for 'phoneNumber'
+ *   },
+ * });
+ */
+export function useResendConfirmationSmsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ResendConfirmationSmsMutation,
+    ResendConfirmationSmsMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    ResendConfirmationSmsMutation,
+    ResendConfirmationSmsMutationVariables
+  >(ResendConfirmationSmsDocument, baseOptions);
+}
+export type ResendConfirmationSmsMutationHookResult = ReturnType<
+  typeof useResendConfirmationSmsMutation
+>;
+export type ResendConfirmationSmsMutationResult = Apollo.MutationResult<ResendConfirmationSmsMutation>;
+export type ResendConfirmationSmsMutationOptions = Apollo.BaseMutationOptions<
+  ResendConfirmationSmsMutation,
+  ResendConfirmationSmsMutationVariables
 >;
 export const IsRegisteredWithGoogleDocument = gql`
   query isRegisteredWithGoogle($accountId: String!) {
@@ -923,7 +1037,7 @@ export type MutationKeySpecifier = (
   | "login"
   | "logout"
   | "register"
-  | "resendConfirmationMail"
+  | "resendConfirmationSMS"
   | "updateInternalIdentifiers"
   | "updateUsername"
   | MutationKeySpecifier
@@ -948,7 +1062,7 @@ export type MutationFieldPolicy = {
   login?: FieldPolicy<any> | FieldReadFunction<any>;
   logout?: FieldPolicy<any> | FieldReadFunction<any>;
   register?: FieldPolicy<any> | FieldReadFunction<any>;
-  resendConfirmationMail?: FieldPolicy<any> | FieldReadFunction<any>;
+  resendConfirmationSMS?: FieldPolicy<any> | FieldReadFunction<any>;
   updateInternalIdentifiers?: FieldPolicy<any> | FieldReadFunction<any>;
   updateUsername?: FieldPolicy<any> | FieldReadFunction<any>;
 };

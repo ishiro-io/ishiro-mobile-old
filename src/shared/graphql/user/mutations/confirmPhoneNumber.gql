@@ -1,0 +1,5 @@
+mutation confirmPhoneNumber($token: String!) {
+    confirmPhoneNumber(token: $token) {
+      ...UserFields
+    }
+  }
