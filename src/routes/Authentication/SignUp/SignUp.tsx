@@ -10,7 +10,7 @@ import VisibilityInputButton from "components/VisiblityInputButton";
 import { useRegisterMutation } from "shared/graphql/generated";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
-import SignUpSchema from "../shared/schemas/SignUpSchema";
+import { SignUpSchema } from "../shared/schemas";
 
 const { width } = Dimensions.get("screen");
 

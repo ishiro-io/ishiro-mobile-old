@@ -11,11 +11,14 @@ export type Exact<T extends { [key: string]: unknown }> = {
 };
 export const namedOperations = {
   Query: {
+    checkConfirmationCode: "checkConfirmationCode",
     isRegisteredWithGoogle: "isRegisteredWithGoogle",
     me: "me"
   },
   Mutation: {
+    changeForgotPassword: "changeForgotPassword",
     confirmPhoneNumber: "confirmPhoneNumber",
+    forgotPassword: "forgotPassword",
     login: "login",
     loginWithGoogle: "loginWithGoogle",
     register: "register",
@@ -443,6 +446,14 @@ export type UserFieldsFragment = { __typename?: "User" } & Pick<
   "id" | "username" | "phoneNumber"
 >;
 
+export type ChangeForgotPasswordMutationVariables = Exact<{
+  input: UserChangeForgotPasswordInput;
+}>;
+
+export type ChangeForgotPasswordMutation = { __typename?: "Mutation" } & {
+  changeForgotPassword?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
+};
+
 export type ConfirmPhoneNumberMutationVariables = Exact<{
   token: Scalars["String"];
 }>;
@@ -450,6 +461,15 @@ export type ConfirmPhoneNumberMutationVariables = Exact<{
 export type ConfirmPhoneNumberMutation = { __typename?: "Mutation" } & {
   confirmPhoneNumber?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
 };
+
+export type ForgotPasswordMutationVariables = Exact<{
+  phoneNumber: Scalars["String"];
+}>;
+
+export type ForgotPasswordMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "forgotPassword"
+>;
 
 export type LoginMutationVariables = Exact<{
   input: UserLoginInput;
@@ -485,6 +505,17 @@ export type ResendConfirmationSmsMutation = { __typename?: "Mutation" } & Pick<
   "resendConfirmationSMS"
 >;
 
+export type CheckConfirmationCodeQueryVariables = Exact<{
+  token: Scalars["String"];
+  type: ConfirmationCodeType;
+  deleteToken?: Maybe<Scalars["Boolean"]>;
+}>;
+
+export type CheckConfirmationCodeQuery = { __typename?: "Query" } & Pick<
+  Query,
+  "checkConfirmationCode"
+>;
+
 export type IsRegisteredWithGoogleQueryVariables = Exact<{
   accountId: Scalars["String"];
 }>;
@@ -507,6 +538,55 @@ export const UserFieldsFragmentDoc = gql`
     phoneNumber
   }
 `;
+export const ChangeForgotPasswordDocument = gql`
+  mutation changeForgotPassword($input: UserChangeForgotPasswordInput!) {
+    changeForgotPassword(input: $input) {
+      ...UserFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type ChangeForgotPasswordMutationFn = Apollo.MutationFunction<
+  ChangeForgotPasswordMutation,
+  ChangeForgotPasswordMutationVariables
+>;
+
+/**
+ * __useChangeForgotPasswordMutation__
+ *
+ * To run a mutation, you first call `useChangeForgotPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeForgotPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeForgotPasswordMutation, { data, loading, error }] = useChangeForgotPasswordMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useChangeForgotPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ChangeForgotPasswordMutation,
+    ChangeForgotPasswordMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    ChangeForgotPasswordMutation,
+    ChangeForgotPasswordMutationVariables
+  >(ChangeForgotPasswordDocument, baseOptions);
+}
+export type ChangeForgotPasswordMutationHookResult = ReturnType<
+  typeof useChangeForgotPasswordMutation
+>;
+export type ChangeForgotPasswordMutationResult = Apollo.MutationResult<ChangeForgotPasswordMutation>;
+export type ChangeForgotPasswordMutationOptions = Apollo.BaseMutationOptions<
+  ChangeForgotPasswordMutation,
+  ChangeForgotPasswordMutationVariables
+>;
 export const ConfirmPhoneNumberDocument = gql`
   mutation confirmPhoneNumber($token: String!) {
     confirmPhoneNumber(token: $token) {
@@ -555,6 +635,52 @@ export type ConfirmPhoneNumberMutationResult = Apollo.MutationResult<ConfirmPhon
 export type ConfirmPhoneNumberMutationOptions = Apollo.BaseMutationOptions<
   ConfirmPhoneNumberMutation,
   ConfirmPhoneNumberMutationVariables
+>;
+export const ForgotPasswordDocument = gql`
+  mutation forgotPassword($phoneNumber: String!) {
+    forgotPassword(phoneNumber: $phoneNumber)
+  }
+`;
+export type ForgotPasswordMutationFn = Apollo.MutationFunction<
+  ForgotPasswordMutation,
+  ForgotPasswordMutationVariables
+>;
+
+/**
+ * __useForgotPasswordMutation__
+ *
+ * To run a mutation, you first call `useForgotPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useForgotPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [forgotPasswordMutation, { data, loading, error }] = useForgotPasswordMutation({
+ *   variables: {
+ *      phoneNumber: // value for 'phoneNumber'
+ *   },
+ * });
+ */
+export function useForgotPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ForgotPasswordMutation,
+    ForgotPasswordMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    ForgotPasswordMutation,
+    ForgotPasswordMutationVariables
+  >(ForgotPasswordDocument, baseOptions);
+}
+export type ForgotPasswordMutationHookResult = ReturnType<
+  typeof useForgotPasswordMutation
+>;
+export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
+export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<
+  ForgotPasswordMutation,
+  ForgotPasswordMutationVariables
 >;
 export const LoginDocument = gql`
   mutation login($input: UserLoginInput!) {
@@ -741,6 +867,66 @@ export type ResendConfirmationSmsMutationResult = Apollo.MutationResult<ResendCo
 export type ResendConfirmationSmsMutationOptions = Apollo.BaseMutationOptions<
   ResendConfirmationSmsMutation,
   ResendConfirmationSmsMutationVariables
+>;
+export const CheckConfirmationCodeDocument = gql`
+  query checkConfirmationCode(
+    $token: String!
+    $type: ConfirmationCodeType!
+    $deleteToken: Boolean
+  ) {
+    checkConfirmationCode(token: $token, type: $type, deleteToken: $deleteToken)
+  }
+`;
+
+/**
+ * __useCheckConfirmationCodeQuery__
+ *
+ * To run a query within a React component, call `useCheckConfirmationCodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckConfirmationCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckConfirmationCodeQuery({
+ *   variables: {
+ *      token: // value for 'token'
+ *      type: // value for 'type'
+ *      deleteToken: // value for 'deleteToken'
+ *   },
+ * });
+ */
+export function useCheckConfirmationCodeQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    CheckConfirmationCodeQuery,
+    CheckConfirmationCodeQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    CheckConfirmationCodeQuery,
+    CheckConfirmationCodeQueryVariables
+  >(CheckConfirmationCodeDocument, baseOptions);
+}
+export function useCheckConfirmationCodeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CheckConfirmationCodeQuery,
+    CheckConfirmationCodeQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    CheckConfirmationCodeQuery,
+    CheckConfirmationCodeQueryVariables
+  >(CheckConfirmationCodeDocument, baseOptions);
+}
+export type CheckConfirmationCodeQueryHookResult = ReturnType<
+  typeof useCheckConfirmationCodeQuery
+>;
+export type CheckConfirmationCodeLazyQueryHookResult = ReturnType<
+  typeof useCheckConfirmationCodeLazyQuery
+>;
+export type CheckConfirmationCodeQueryResult = Apollo.QueryResult<
+  CheckConfirmationCodeQuery,
+  CheckConfirmationCodeQueryVariables
 >;
 export const IsRegisteredWithGoogleDocument = gql`
   query isRegisteredWithGoogle($accountId: String!) {

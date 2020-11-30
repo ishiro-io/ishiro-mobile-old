@@ -16,7 +16,7 @@ import {
   AuthenticationNavigationProps
 } from "shared/navigation/NavigationProps";
 
-import GoogleSetUsernameSchema from "../shared/schemas/GoogleSetUsernameSchema";
+import { GoogleSetUsernameSchema } from "../shared/schemas";
 
 const { width } = Dimensions.get("screen");
 
@@ -126,7 +126,7 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
                 autoCompleteType="off"
                 returnKeyType="send"
                 blurOnSubmit={false}
-                onSubmitEditing={() => onSubmit(values)}
+                onSubmitEditing={() => handleSubmit()}
               />
 
               <View style={{ height: 30, alignItems: "center" }}>
