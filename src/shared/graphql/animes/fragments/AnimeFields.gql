@@ -1,0 +1,6 @@
+fragment AnimeFields on Anime {
+  id
+  title
+  bannerImage
+  posterImage
+}
