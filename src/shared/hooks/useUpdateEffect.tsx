@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
+
 import useFirstMountState from "./useFirstMountState";
 
 const useUpdateEffect: typeof useEffect = (effect, deps) => {
