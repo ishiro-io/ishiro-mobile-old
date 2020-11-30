@@ -20,7 +20,7 @@ const Authentication: React.FC = () => {
 
   return (
     <AuthenticationStack.Navigator
-      initialRouteName="ConfirmPhoneNumberCode"
+      initialRouteName="ChangeForgotPassword"
       headerMode="none"
       screenOptions={{
         cardStyle: {
@@ -46,6 +46,7 @@ const Authentication: React.FC = () => {
       <AuthenticationStack.Screen
         name="ChangeForgotPassword"
         component={ChangeForgotPassword}
+        initialParams={{ token: "506400" }}
       />
       <AuthenticationStack.Screen
         name="GoogleSetUsername"
