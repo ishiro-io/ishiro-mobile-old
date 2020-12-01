@@ -49,11 +49,19 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: Constants.manifest.extra.googleExpoClientId,
-    selectAccount: true
+    selectAccount: true,
+    language: "fr-FR"
   });
+
+  // ? Reset state on render
+  useEffect(() => {
+    setAccessToken(undefined);
+    setUserGoogleId(undefined);
+  }, [navigation]);
 
   // ? Quand nous recevons une réponse de l'auth google, on récupère l'access token
   useEffect(() => {
+    console.log({ response });
     if (response?.type === "success") {
       const { authentication } = response;
       if (authentication) setAccessToken(authentication.accessToken);
@@ -71,6 +79,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
       );
 
       const userInfo: GoogleUser = await userInfoResponse.json();
+      console.log({ userInfo });
       setUserGoogleId(userInfo.id);
     };
 

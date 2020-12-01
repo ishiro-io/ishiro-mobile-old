@@ -26,6 +26,7 @@ const Authentication: React.FC = () => {
       <AuthenticationStack.Screen
         name="ConfirmPhoneNumberCode"
         component={ConfirmPhoneNumberCode}
+        options={{ gestureEnabled: false }}
       />
       <AuthenticationStack.Screen
         name="ForgotPassword"
@@ -43,6 +44,7 @@ const Authentication: React.FC = () => {
       <AuthenticationStack.Screen
         name="GoogleSetUsername"
         component={GoogleSetUsername}
+        options={{ gestureEnabled: false }}
       />
     </AuthenticationStack.Navigator>
   );

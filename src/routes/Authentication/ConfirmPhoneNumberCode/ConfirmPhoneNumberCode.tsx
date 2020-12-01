@@ -81,7 +81,7 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
   return (
     <DismissKeyboard>
       <View style={{ flex: 1 }}>
-        <Header label="Confirmation" />
+        <Header label="Confirmation" justifyContent="center" />
         <View
           style={{
             flex: 1,

@@ -69,13 +69,7 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
   return (
     <DismissKeyboard>
       <View style={{ flex: 1 }}>
-        <Header
-          label="Créer un compte"
-          iconLeft={
-            <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
-          }
-          onIconLeftPress={() => navigation.goBack()}
-        />
+        <Header label="Créer un compte" justifyContent="center" />
 
         <Formik
           initialValues={{

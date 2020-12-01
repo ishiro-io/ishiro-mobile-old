@@ -9,6 +9,7 @@ const Header: React.FC<HeaderProps> = ({
   iconRight,
   onIconLeftPress,
   onIconRightPress,
+  justifyContent = "space-between",
   height = 80
 }: HeaderProps) => {
   const { theme } = useContext(ThemeContext);
@@ -27,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({
           flex: 1,
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between"
+          justifyContent
         }}
       >
         {iconLeft ? (
@@ -71,4 +72,12 @@ interface HeaderProps {
   iconRight?: IconNode;
   onIconRightPress?: () => void;
   height?: number;
+  justifyContent?:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around"
+    | "space-evenly"
+    | undefined;
 }
