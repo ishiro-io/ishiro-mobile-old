@@ -4,6 +4,8 @@ import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import {
+  AnimeInfoModalRoutes,
+  AnimeInfoTabRoutes,
   AppRoutes,
   AuthenticationRoutes,
   ContentRoutes,
@@ -77,4 +79,18 @@ export interface StatusListsNavigationProps<
 > {
   navigation: StackNavigationProp<StatusListsRoutes, RouteName>;
   route: RouteProp<StatusListsRoutes, RouteName>;
+}
+
+export interface AnimeInfoModalNavigationProps<
+  RouteName extends keyof AnimeInfoModalRoutes
+> {
+  navigation: StackNavigationProp<AnimeInfoModalRoutes, RouteName>;
+  route: RouteProp<AnimeInfoModalRoutes, RouteName>;
+}
+
+export interface AnimeInfoTabNavigationProps<
+  RouteName extends keyof AnimeInfoTabRoutes
+> {
+  navigation: MaterialTopTabNavigationProp<AnimeInfoTabRoutes, RouteName>;
+  route: RouteProp<AnimeInfoTabRoutes, RouteName>;
 }

@@ -1,0 +1,14 @@
+fragment AnimeDataFields on Anime {
+  id
+  title
+  titleJapanese
+  bannerImage
+  posterImage
+  description
+  type
+  episodeCount
+  categories {
+    id
+    name
+  }
+}

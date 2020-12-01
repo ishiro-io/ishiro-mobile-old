@@ -1,0 +1,5 @@
+query animeAdditionalInfo($id: Float!) {
+  anime(id: $id) {
+    ...AnimeAdditionalInformationsFields
+  }
+}

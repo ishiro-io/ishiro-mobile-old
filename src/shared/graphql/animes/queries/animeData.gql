@@ -1,0 +1,5 @@
+query animeData($id: Float!) {
+    anime(id: $id) {
+      ...AnimeDataFields
+    }
+  }
