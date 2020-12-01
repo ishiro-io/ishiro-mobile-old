@@ -19,7 +19,7 @@ const IdentifierInputLabel: React.FC = () => {
           color: theme.colors?.white
         }}
       >
-        Numéro de téléphone
+        Nom d'utilisateur
       </Text>
       <Text
         style={{
@@ -38,7 +38,7 @@ const IdentifierInputLabel: React.FC = () => {
           color: theme.colors?.white
         }}
       >
-        nom d'utilisateur
+        Numéro de tel.
       </Text>
     </View>
   );

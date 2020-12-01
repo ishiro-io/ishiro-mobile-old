@@ -133,7 +133,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
       titleStyle={{
         color: theme.colors?.white,
         fontFamily: "Poppins_600SemiBold",
-        fontSize: 18,
+        fontSize: 15,
         textTransform: "uppercase",
         textAlign: "center",
         letterSpacing: 1
