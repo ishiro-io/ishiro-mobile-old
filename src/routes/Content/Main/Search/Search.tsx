@@ -9,6 +9,7 @@ import { SearchRoutes, SearchTabRoutes } from "shared/navigation/Routes";
 
 import { AnimeInfo } from "../shared/screens/AnimeInfo";
 import { CategoryList } from "../shared/screens/CategoryList";
+import { OpenSearchContent } from "./OpenSearchContent";
 import { SearchAll } from "./SearchAll";
 import { SearchGenres } from "./SearchGenres";
 import { SearchInput } from "./SearchInput";
@@ -38,13 +39,15 @@ const SearchContent = () => {
 
       <SearchInput
         isOpen={isSearchContentOpen}
+        setIsOpen={setIsSearchContentOpen}
         onFocus={() => setIsSearchContentOpen(true)}
-        onBlur={() => setIsSearchContentOpen(false)}
         {...{ value, setValue }}
       />
 
       {isSearchContentOpen ? (
-        <View style={{ flex: 1 }} />
+        <View style={{ flex: 1 }}>
+          <OpenSearchContent searchValue={value} />
+        </View>
       ) : (
         <View style={{ flex: 1 }}>
           <SearchTabs.Navigator

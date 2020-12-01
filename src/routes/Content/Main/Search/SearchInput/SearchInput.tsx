@@ -10,6 +10,7 @@ import { ClearInputButton } from "components";
 const SearchInput: React.FC<SearchInputProps> = ({
   isOpen,
   value,
+  setIsOpen,
   setValue,
   ...rest
 }: SearchInputProps) => {
@@ -50,6 +51,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           keyboardType="default"
           autoCompleteType="off"
           returnKeyType="search"
+          autoCorrect={false}
           blurOnSubmit={false}
           leftIcon={
             <MaterialIcons
@@ -67,6 +69,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
             ref.current?.blur();
             ref.current?.clear();
             setValue("");
+            setIsOpen(false);
           }}
         >
           <View
@@ -95,5 +98,6 @@ export default SearchInput;
 interface SearchInputProps extends RNTextInputProps {
   isOpen: boolean;
   value: string;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setValue: React.Dispatch<React.SetStateAction<string>>;
 }

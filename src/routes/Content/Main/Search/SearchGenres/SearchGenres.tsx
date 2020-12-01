@@ -12,7 +12,6 @@ const SearchGenres: React.FC<GenresProps> = ({}: GenresProps) => {
   const { theme } = useContext(ThemeContext);
 
   const { data, loading, networkStatus, refetch } = useCategoriesQuery({
-    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true
   });
 
