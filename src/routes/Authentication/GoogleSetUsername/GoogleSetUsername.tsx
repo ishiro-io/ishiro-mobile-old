@@ -1,4 +1,3 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
@@ -25,10 +24,6 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
 
   const route = useRoute<
     AuthenticationNavigationProps<"GoogleSetUsername">["route"]
-  >();
-
-  const navigation = useNavigation<
-    AuthenticationNavigationProps<"GoogleSetUsername">["navigation"]
   >();
 
   const rootNavigation = useNavigation<
