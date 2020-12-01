@@ -67,7 +67,7 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
         titleStyle={{
           fontFamily: "Poppins_600SemiBold",
           color: theme.colors?.white,
-          fontSize: 18,
+          fontSize: 15,
           textTransform: "uppercase",
           textAlign: "center",
           letterSpacing: 1
@@ -92,7 +92,7 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
         titleStyle={{
           color: theme.colors?.black,
           fontFamily: "Poppins_600SemiBold",
-          fontSize: 18,
+          fontSize: 15,
           textTransform: "uppercase",
           textAlign: "center",
           letterSpacing: 1
