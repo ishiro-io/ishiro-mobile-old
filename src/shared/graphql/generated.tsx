@@ -12,6 +12,7 @@ export type Exact<T extends { [key: string]: unknown }> = {
 export const namedOperations = {
   Query: {
     animes: "animes",
+    searchAnimes: "searchAnimes",
     categories: "categories",
     checkConfirmationCode: "checkConfirmationCode",
     isRegisteredWithGoogle: "isRegisteredWithGoogle",
@@ -195,6 +196,10 @@ export type CreateAnimeInput = {
   episodesIds: Array<Scalars["Float"]>;
 };
 
+export type SearchAnimesInput = {
+  textSearchField: Scalars["String"];
+};
+
 export type UpdateAnimeInput = {
   idMAL?: Maybe<Scalars["Float"]>;
   title?: Maybe<Scalars["String"]>;
@@ -296,6 +301,7 @@ export type Query = {
   anime?: Maybe<Anime>;
   /** Retourne les animes disponibles en base de données */
   animes: PaginatedAnimesOutput;
+  searchAnimes?: Maybe<PaginatedAnimesOutput>;
   /** Retourne toutes les catégories disponibles en base de données */
   categories: Array<Category>;
   /** Retourne les 10 premiers animes des 5 catégories de la home */
@@ -318,6 +324,11 @@ export type QueryAnimeArgs = {
 
 export type QueryAnimesArgs = {
   categoryId?: Maybe<Scalars["Float"]>;
+  options?: Maybe<PaginatedInput>;
+};
+
+export type QuerySearchAnimesArgs = {
+  input: SearchAnimesInput;
   options?: Maybe<PaginatedInput>;
 };
 
@@ -485,6 +496,20 @@ export type AnimesQuery = { __typename?: "Query" } & {
     PaginatedAnimesOutput,
     "hasMore"
   > & { fields: Array<{ __typename?: "Anime" } & AnimeFieldsFragment> };
+};
+
+export type SearchAnimesQueryVariables = Exact<{
+  input: SearchAnimesInput;
+  options?: Maybe<PaginatedInput>;
+}>;
+
+export type SearchAnimesQuery = { __typename?: "Query" } & {
+  searchAnimes?: Maybe<
+    { __typename?: "PaginatedAnimesOutput" } & Pick<
+      PaginatedAnimesOutput,
+      "hasMore"
+    > & { fields: Array<{ __typename?: "Anime" } & AnimeFieldsFragment> }
+  >;
 };
 
 export type CategoryFieldsFragment = { __typename?: "Category" } & Pick<
@@ -660,6 +685,67 @@ export type AnimesLazyQueryHookResult = ReturnType<typeof useAnimesLazyQuery>;
 export type AnimesQueryResult = Apollo.QueryResult<
   AnimesQuery,
   AnimesQueryVariables
+>;
+export const SearchAnimesDocument = gql`
+  query searchAnimes($input: SearchAnimesInput!, $options: PaginatedInput) {
+    searchAnimes(input: $input, options: $options) {
+      hasMore
+      fields {
+        ...AnimeFields
+      }
+    }
+  }
+  ${AnimeFieldsFragmentDoc}
+`;
+
+/**
+ * __useSearchAnimesQuery__
+ *
+ * To run a query within a React component, call `useSearchAnimesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchAnimesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchAnimesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useSearchAnimesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    SearchAnimesQuery,
+    SearchAnimesQueryVariables
+  >
+) {
+  return Apollo.useQuery<SearchAnimesQuery, SearchAnimesQueryVariables>(
+    SearchAnimesDocument,
+    baseOptions
+  );
+}
+export function useSearchAnimesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SearchAnimesQuery,
+    SearchAnimesQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<SearchAnimesQuery, SearchAnimesQueryVariables>(
+    SearchAnimesDocument,
+    baseOptions
+  );
+}
+export type SearchAnimesQueryHookResult = ReturnType<
+  typeof useSearchAnimesQuery
+>;
+export type SearchAnimesLazyQueryHookResult = ReturnType<
+  typeof useSearchAnimesLazyQuery
+>;
+export type SearchAnimesQueryResult = Apollo.QueryResult<
+  SearchAnimesQuery,
+  SearchAnimesQueryVariables
 >;
 export const CategoriesDocument = gql`
   query categories {
@@ -1380,6 +1466,7 @@ export type PopulateAnimeOutputFieldPolicy = {
 export type QueryKeySpecifier = (
   | "anime"
   | "animes"
+  | "searchAnimes"
   | "categories"
   | "categoriesPreviews"
   | "category"
@@ -1393,6 +1480,7 @@ export type QueryKeySpecifier = (
 export type QueryFieldPolicy = {
   anime?: FieldPolicy<any> | FieldReadFunction<any>;
   animes?: FieldPolicy<any> | FieldReadFunction<any>;
+  searchAnimes?: FieldPolicy<any> | FieldReadFunction<any>;
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   categoriesPreviews?: FieldPolicy<any> | FieldReadFunction<any>;
   category?: FieldPolicy<any> | FieldReadFunction<any>;
