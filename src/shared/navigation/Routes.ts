@@ -1,4 +1,7 @@
-import { AnimeViewingStatus } from "shared/graphql/generated";
+import {
+  AnimeDataFieldsFragment,
+  AnimeViewingStatus
+} from "shared/graphql/generated";
 
 export type AppRoutes = {
   Content: undefined;
@@ -54,4 +57,13 @@ export type StatusListsTabRoutes = {
   InProgress: { status: AnimeViewingStatus };
   Finished: { status: AnimeViewingStatus };
   Abandonned: { status: AnimeViewingStatus };
+};
+
+export type AnimeInfoModalRoutes = {
+  Main: { animeId: number; animeData: AnimeDataFieldsFragment };
+};
+
+export type AnimeInfoTabRoutes = {
+  Episodes: { animeId: number };
+  Informations: { animeId: number };
 };

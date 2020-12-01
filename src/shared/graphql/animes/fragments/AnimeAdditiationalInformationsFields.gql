@@ -1,0 +1,13 @@
+fragment AnimeAdditionalInformationsFields on Anime {
+  id
+  description
+  type
+  status
+  releaseDate
+  endDate
+  duration
+  categories {
+    id
+    name
+  }
+}

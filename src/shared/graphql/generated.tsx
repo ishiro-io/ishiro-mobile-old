@@ -11,6 +11,8 @@ export type Exact<T extends { [key: string]: unknown }> = {
 };
 export const namedOperations = {
   Query: {
+    animeAdditionalInfo: "animeAdditionalInfo",
+    animeData: "animeData",
     animes: "animes",
     categories: "categories",
     checkConfirmationCode: "checkConfirmationCode",
@@ -27,6 +29,8 @@ export const namedOperations = {
     resendConfirmationSMS: "resendConfirmationSMS"
   },
   Fragment: {
+    AnimeAdditionalInformationsFields: "AnimeAdditionalInformationsFields",
+    AnimeDataFields: "AnimeDataFields",
     AnimeFields: "AnimeFields",
     CategoryFields: "CategoryFields",
     UserFields: "UserFields"
@@ -132,6 +136,7 @@ export type Anime = {
   isAdult: Scalars["Boolean"];
   categories: Array<Category>;
   episodes: Array<Episode>;
+  episodeCount: Scalars["Float"];
 };
 
 export enum AnimeType {
@@ -193,6 +198,10 @@ export type CreateAnimeInput = {
   isAdult?: Maybe<Scalars["Boolean"]>;
   categoriesIds: Array<Scalars["Float"]>;
   episodesIds: Array<Scalars["Float"]>;
+};
+
+export type SearchAnimesInput = {
+  textSearchField: Scalars["String"];
 };
 
 export type UpdateAnimeInput = {
@@ -296,6 +305,7 @@ export type Query = {
   anime?: Maybe<Anime>;
   /** Retourne les animes disponibles en base de données */
   animes: PaginatedAnimesOutput;
+  searchAnimes?: Maybe<PaginatedAnimesOutput>;
   /** Retourne toutes les catégories disponibles en base de données */
   categories: Array<Category>;
   /** Retourne les 10 premiers animes des 5 catégories de la home */
@@ -318,6 +328,11 @@ export type QueryAnimeArgs = {
 
 export type QueryAnimesArgs = {
   categoryId?: Maybe<Scalars["Float"]>;
+  options?: Maybe<PaginatedInput>;
+};
+
+export type QuerySearchAnimesArgs = {
+  input: SearchAnimesInput;
   options?: Maybe<PaginatedInput>;
 };
 
@@ -470,10 +485,61 @@ export type MutationUpdateUsernameArgs = {
   input: UpdateUsernameInput;
 };
 
+export type AnimeAdditionalInformationsFieldsFragment = {
+  __typename?: "Anime";
+} & Pick<
+  Anime,
+  | "id"
+  | "description"
+  | "type"
+  | "status"
+  | "releaseDate"
+  | "endDate"
+  | "duration"
+> & {
+    categories: Array<
+      { __typename?: "Category" } & Pick<Category, "id" | "name">
+    >;
+  };
+
+export type AnimeDataFieldsFragment = { __typename?: "Anime" } & Pick<
+  Anime,
+  | "id"
+  | "title"
+  | "titleJapanese"
+  | "bannerImage"
+  | "posterImage"
+  | "description"
+  | "type"
+  | "episodeCount"
+> & {
+    categories: Array<
+      { __typename?: "Category" } & Pick<Category, "id" | "name">
+    >;
+  };
+
 export type AnimeFieldsFragment = { __typename?: "Anime" } & Pick<
   Anime,
-  "id" | "title" | "bannerImage" | "posterImage"
+  "id" | "title" | "posterImage"
 >;
+
+export type AnimeAdditionalInfoQueryVariables = Exact<{
+  id: Scalars["Float"];
+}>;
+
+export type AnimeAdditionalInfoQuery = { __typename?: "Query" } & {
+  anime?: Maybe<
+    { __typename?: "Anime" } & AnimeAdditionalInformationsFieldsFragment
+  >;
+};
+
+export type AnimeDataQueryVariables = Exact<{
+  id: Scalars["Float"];
+}>;
+
+export type AnimeDataQuery = { __typename?: "Query" } & {
+  anime?: Maybe<{ __typename?: "Anime" } & AnimeDataFieldsFragment>;
+};
 
 export type AnimesQueryVariables = Exact<{
   categoryId?: Maybe<Scalars["Float"]>;
@@ -588,11 +654,41 @@ export type MeQuery = { __typename?: "Query" } & {
   me?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
 };
 
+export const AnimeAdditionalInformationsFieldsFragmentDoc = gql`
+  fragment AnimeAdditionalInformationsFields on Anime {
+    id
+    description
+    type
+    status
+    releaseDate
+    endDate
+    duration
+    categories {
+      id
+      name
+    }
+  }
+`;
+export const AnimeDataFieldsFragmentDoc = gql`
+  fragment AnimeDataFields on Anime {
+    id
+    title
+    titleJapanese
+    bannerImage
+    posterImage
+    description
+    type
+    episodeCount
+    categories {
+      id
+      name
+    }
+  }
+`;
 export const AnimeFieldsFragmentDoc = gql`
   fragment AnimeFields on Anime {
     id
     title
-    bannerImage
     posterImage
   }
 `;
@@ -610,6 +706,115 @@ export const UserFieldsFragmentDoc = gql`
     phoneNumber
   }
 `;
+export const AnimeAdditionalInfoDocument = gql`
+  query animeAdditionalInfo($id: Float!) {
+    anime(id: $id) {
+      ...AnimeAdditionalInformationsFields
+    }
+  }
+  ${AnimeAdditionalInformationsFieldsFragmentDoc}
+`;
+
+/**
+ * __useAnimeAdditionalInfoQuery__
+ *
+ * To run a query within a React component, call `useAnimeAdditionalInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAnimeAdditionalInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAnimeAdditionalInfoQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAnimeAdditionalInfoQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    AnimeAdditionalInfoQuery,
+    AnimeAdditionalInfoQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    AnimeAdditionalInfoQuery,
+    AnimeAdditionalInfoQueryVariables
+  >(AnimeAdditionalInfoDocument, baseOptions);
+}
+export function useAnimeAdditionalInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AnimeAdditionalInfoQuery,
+    AnimeAdditionalInfoQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    AnimeAdditionalInfoQuery,
+    AnimeAdditionalInfoQueryVariables
+  >(AnimeAdditionalInfoDocument, baseOptions);
+}
+export type AnimeAdditionalInfoQueryHookResult = ReturnType<
+  typeof useAnimeAdditionalInfoQuery
+>;
+export type AnimeAdditionalInfoLazyQueryHookResult = ReturnType<
+  typeof useAnimeAdditionalInfoLazyQuery
+>;
+export type AnimeAdditionalInfoQueryResult = Apollo.QueryResult<
+  AnimeAdditionalInfoQuery,
+  AnimeAdditionalInfoQueryVariables
+>;
+export const AnimeDataDocument = gql`
+  query animeData($id: Float!) {
+    anime(id: $id) {
+      ...AnimeDataFields
+    }
+  }
+  ${AnimeDataFieldsFragmentDoc}
+`;
+
+/**
+ * __useAnimeDataQuery__
+ *
+ * To run a query within a React component, call `useAnimeDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAnimeDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAnimeDataQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAnimeDataQuery(
+  baseOptions?: Apollo.QueryHookOptions<AnimeDataQuery, AnimeDataQueryVariables>
+) {
+  return Apollo.useQuery<AnimeDataQuery, AnimeDataQueryVariables>(
+    AnimeDataDocument,
+    baseOptions
+  );
+}
+export function useAnimeDataLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AnimeDataQuery,
+    AnimeDataQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<AnimeDataQuery, AnimeDataQueryVariables>(
+    AnimeDataDocument,
+    baseOptions
+  );
+}
+export type AnimeDataQueryHookResult = ReturnType<typeof useAnimeDataQuery>;
+export type AnimeDataLazyQueryHookResult = ReturnType<
+  typeof useAnimeDataLazyQuery
+>;
+export type AnimeDataQueryResult = Apollo.QueryResult<
+  AnimeDataQuery,
+  AnimeDataQueryVariables
+>;
 export const AnimesDocument = gql`
   query animes($categoryId: Float, $options: PaginatedInput) {
     animes(categoryId: $categoryId, options: $options) {
@@ -1323,6 +1528,7 @@ export type AnimeKeySpecifier = (
   | "isAdult"
   | "categories"
   | "episodes"
+  | "episodeCount"
   | AnimeKeySpecifier
 )[];
 export type AnimeFieldPolicy = {
@@ -1347,6 +1553,7 @@ export type AnimeFieldPolicy = {
   isAdult?: FieldPolicy<any> | FieldReadFunction<any>;
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
+  episodeCount?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PaginatedAnimesOutputKeySpecifier = (
   | "hasMore"
@@ -1380,6 +1587,7 @@ export type PopulateAnimeOutputFieldPolicy = {
 export type QueryKeySpecifier = (
   | "anime"
   | "animes"
+  | "searchAnimes"
   | "categories"
   | "categoriesPreviews"
   | "category"
@@ -1393,6 +1601,7 @@ export type QueryKeySpecifier = (
 export type QueryFieldPolicy = {
   anime?: FieldPolicy<any> | FieldReadFunction<any>;
   animes?: FieldPolicy<any> | FieldReadFunction<any>;
+  searchAnimes?: FieldPolicy<any> | FieldReadFunction<any>;
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   categoriesPreviews?: FieldPolicy<any> | FieldReadFunction<any>;
   category?: FieldPolicy<any> | FieldReadFunction<any>;
