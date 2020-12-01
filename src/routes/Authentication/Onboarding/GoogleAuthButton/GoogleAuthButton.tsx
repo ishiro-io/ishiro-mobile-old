@@ -61,7 +61,6 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
 
   // ? Quand nous recevons une réponse de l'auth google, on récupère l'access token
   useEffect(() => {
-    console.log({ response });
     if (response?.type === "success") {
       const { authentication } = response;
       if (authentication) setAccessToken(authentication.accessToken);
@@ -79,7 +78,6 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
       );
 
       const userInfo: GoogleUser = await userInfoResponse.json();
-      console.log({ userInfo });
       setUserGoogleId(userInfo.id);
     };
 
