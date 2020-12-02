@@ -10,6 +10,7 @@ import { HomeRoutes } from "shared/navigation/Routes";
 
 import { AnimeInfo } from "../shared/screens/AnimeInfo";
 import { CategoryList } from "../shared/screens/CategoryList";
+import HomeFlatPreviewList from "./FlatPreviewList/FlatPreviewList";
 
 const HomeStack = createStackNavigator<HomeRoutes>();
 
@@ -44,6 +45,7 @@ const HomeContent: React.FC = () => {
         iconRight={<MaterialIcons name="person" size={32} color="white" />}
         onIconRightPress={() => navigation.navigate("Profile")}
       />
+      <HomeFlatPreviewList />
     </View>
   );
 };

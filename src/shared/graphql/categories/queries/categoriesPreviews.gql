@@ -1,0 +1,5 @@
+query CategoriesPreviews {
+  categoriesPreviews {
+    ...CategoryPreviewFields
+  }
+}

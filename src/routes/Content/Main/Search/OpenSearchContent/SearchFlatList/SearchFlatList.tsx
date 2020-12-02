@@ -1,24 +1,15 @@
 import { NetworkStatus } from "@apollo/client";
-import { useNavigation } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
-import { AnimeCard, AnimeCardWithBookmark, ListEmpty } from "components";
+import { AnimeCardWithBookmark, ListEmpty } from "components";
 import { useSearchAnimesQuery } from "shared/graphql/generated";
-import { SearchNavigationProps } from "shared/navigation/NavigationProps";
-
-const CARD_WIDTH = 160;
-const CARD_HEIGHT = 260;
 
 const SearchFlatList: React.FC<SearchFlatListProps> = ({
   searchValue
 }: SearchFlatListProps) => {
   const { theme } = useContext(ThemeContext);
-
-  const navigation = useNavigation<
-    SearchNavigationProps<"Search">["navigation"]
-  >();
 
   const { data, loading, fetchMore, networkStatus } = useSearchAnimesQuery({
     variables: {
