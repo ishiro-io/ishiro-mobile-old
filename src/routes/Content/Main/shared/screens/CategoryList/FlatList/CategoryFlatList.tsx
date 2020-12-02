@@ -1,20 +1,15 @@
 import { NetworkStatus } from "@apollo/client";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import React, { useContext } from "react";
-import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
-import { AnimeCard, ListEmpty } from "components";
+import { AnimeCardWithBookmark, ListEmpty } from "components";
 import { useAnimesQuery } from "shared/graphql/generated";
 import {
   HomeNavigationProps,
   SearchNavigationProps
 } from "shared/navigation/NavigationProps";
-
-const { width } = Dimensions.get("window");
-
-const CARD_WIDTH = 160;
-const CARD_HEIGHT = 260;
 
 const CategoryFlatList: React.FC<CategoryFlatListProps> = ({}: CategoryFlatListProps) => {
   const { theme } = useContext(ThemeContext);
@@ -24,13 +19,6 @@ const CategoryFlatList: React.FC<CategoryFlatListProps> = ({}: CategoryFlatListP
       | SearchNavigationProps<"CategoryList">
       | HomeNavigationProps<"CategoryList">
     )["route"]
-  >();
-
-  const navigation = useNavigation<
-    (
-      | SearchNavigationProps<"CategoryList">
-      | HomeNavigationProps<"CategoryList">
-    )["navigation"]
   >();
 
   const { data, loading, fetchMore, refetch, networkStatus } = useAnimesQuery({
@@ -80,18 +68,9 @@ const CategoryFlatList: React.FC<CategoryFlatListProps> = ({}: CategoryFlatListP
         paddingBottom: theme.spacing?.m
       }}
       data={data?.animes?.fields}
-      renderItem={({ item }) => (
-        <AnimeCard
-          title={item.title}
-          posterImageUrl={item.posterImage}
-          width={CARD_WIDTH}
-          height={CARD_HEIGHT}
-          // @ts-ignore
-          onPress={() => navigation.navigate("AnimeInfo", { animeId: item.id })}
-        />
-      )}
+      renderItem={({ item }) => <AnimeCardWithBookmark animeData={item} />}
       showsVerticalScrollIndicator={false}
-      numColumns={Math.floor((width * 0.8) / CARD_WIDTH)}
+      numColumns={2}
       keyExtractor={(item) => item.id.toString()}
       onEndReachedThreshold={4}
       onEndReached={loadMoreAnimes}
