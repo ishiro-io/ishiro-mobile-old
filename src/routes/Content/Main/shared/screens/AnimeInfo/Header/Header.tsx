@@ -13,6 +13,7 @@ import { useSetUserAnimeViewingStatus, useUpdateEffect } from "shared/hooks";
 import { HomeNavigationProps } from "shared/navigation/NavigationProps";
 
 const AnimeInfoHeader: React.FC<AnimeInfoHeaderProps> = ({
+  animeData,
   animeStatus,
   hideBookmark = false
 }: AnimeInfoHeaderProps) => {
@@ -37,7 +38,14 @@ const AnimeInfoHeader: React.FC<AnimeInfoHeaderProps> = ({
   useUpdateEffect(() => {
     if (isDirty) {
       setUserAnimeViewingStatus({
-        itemToUpdate: animeStatus!,
+        itemToUpdate: animeStatus ?? {
+          id: 0,
+          anime: animeData!,
+          status: AnimeViewingStatus.None,
+          episodesStatus: [],
+          lastEpisodeSeen: null,
+          nextEpisodeToSee: null
+        },
         newStatus: isChecked
           ? AnimeViewingStatus.ToSee
           : AnimeViewingStatus.None

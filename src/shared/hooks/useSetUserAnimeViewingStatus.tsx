@@ -4,6 +4,8 @@ import {
   AnimeViewingStatus,
   UserAnimeStatusFieldsFragment,
   UserAnimeStatusFieldsFragmentDoc,
+  UserAnimeViewingStatusDocument,
+  UserAnimeViewingStatusQuery,
   UserAnimesByViewingStatusDocument,
   UserAnimesByViewingStatusQuery,
   useSetUserAnimeViewingStatusMutation
@@ -28,6 +30,7 @@ const useSetUserAnimeViewingStatus = () => {
       optimisticResponse: {
         __typename: "Mutation",
         setUserAnimeViewingStatus: {
+          __typename: "UserAnimeStatus",
           ...itemToUpdate,
           status: newStatus
         }
@@ -47,6 +50,34 @@ const useSetUserAnimeViewingStatus = () => {
             id: `UserAnimeStatus:${itemToUpdate.id}`,
             fragment: UserAnimeStatusFieldsFragmentDoc,
             data: { ...cachedStatusFragment, status: newStatus }
+          });
+        }
+
+        const oldStatusCache = cache.readQuery<UserAnimeViewingStatusQuery>({
+          query: UserAnimeViewingStatusDocument,
+          variables: { animeId: itemToUpdate.anime.id }
+        });
+
+        if (oldStatusCache?.userAnimeViewingStatus) {
+          cache.writeQuery<UserAnimeViewingStatusQuery>({
+            query: UserAnimeViewingStatusDocument,
+            variables: { animeId: itemToUpdate.anime.id },
+            data: {
+              __typename: "Query",
+              userAnimeViewingStatus: {
+                ...oldStatusCache.userAnimeViewingStatus,
+                status: mutationData.setUserAnimeViewingStatus.status
+              }
+            }
+          });
+        } else {
+          cache.writeQuery<UserAnimeViewingStatusQuery>({
+            query: UserAnimeViewingStatusDocument,
+            variables: { animeId: itemToUpdate.anime.id },
+            data: {
+              __typename: "Query",
+              userAnimeViewingStatus: mutationData.setUserAnimeViewingStatus
+            }
           });
         }
 

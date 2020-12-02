@@ -27,7 +27,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
         alignItems: "center",
         justifyContent: "space-between",
         marginTop: isOpen ? top : 0,
-        marginHorizontal: theme.spacing?.s
+        marginHorizontal: theme.spacing?.s,
+        marginBottom: theme.spacing?.s
       }}
     >
       <View style={{ flexGrow: 1 }}>

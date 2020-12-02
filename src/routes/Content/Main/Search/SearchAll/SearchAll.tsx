@@ -5,7 +5,7 @@ import { ActivityIndicator, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { FlatList } from "react-native-gesture-handler";
 
-import { AnimeCard, ListEmpty } from "components";
+import { AnimeCard, AnimeCardWithBookmark, ListEmpty } from "components";
 import { useAnimesQuery } from "shared/graphql/generated";
 import { SearchTabNavigationProps } from "shared/navigation/NavigationProps";
 
@@ -62,15 +62,7 @@ const SearchAll: React.FC<SearchAllProps> = ({}: SearchAllProps) => {
         paddingVertical: theme.spacing?.m
       }}
       data={data?.animes?.fields}
-      renderItem={({ item }) => (
-        <AnimeCard
-          title={item.title}
-          posterImageUrl={item.posterImage}
-          width={CARD_WIDTH}
-          height={CARD_HEIGHT}
-          onPress={() => navigation.navigate("AnimeInfo", { animeId: item.id })}
-        />
-      )}
+      renderItem={({ item }) => <AnimeCardWithBookmark animeData={item} />}
       showsVerticalScrollIndicator={false}
       numColumns={2}
       keyExtractor={(item) => item.id.toString()}

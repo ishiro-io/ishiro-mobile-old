@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
-import { AnimeCard, ListEmpty } from "components";
+import { AnimeCard, AnimeCardWithBookmark, ListEmpty } from "components";
 import { useSearchAnimesQuery } from "shared/graphql/generated";
 import { SearchNavigationProps } from "shared/navigation/NavigationProps";
 
@@ -64,15 +64,7 @@ const SearchFlatList: React.FC<SearchFlatListProps> = ({
         paddingVertical: theme.spacing?.m
       }}
       data={data?.searchAnimes?.fields}
-      renderItem={({ item }) => (
-        <AnimeCard
-          title={item.title}
-          posterImageUrl={item.posterImage}
-          width={CARD_WIDTH}
-          height={CARD_HEIGHT}
-          onPress={() => navigation.navigate("AnimeInfo", { animeId: item.id })}
-        />
-      )}
+      renderItem={({ item }) => <AnimeCardWithBookmark animeData={item} />}
       showsVerticalScrollIndicator={false}
       numColumns={2}
       keyExtractor={(item) => item.id.toString()}
