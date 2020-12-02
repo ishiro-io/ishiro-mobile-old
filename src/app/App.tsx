@@ -41,12 +41,12 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <ApolloProvider {...{ client }}>
-        <ThemeProvider useDark {...{ theme }}>
-          <StatusBar style="light" />
+      <StatusBar style="light" />
+      <ThemeProvider useDark {...{ theme }}>
+        <ApolloProvider {...{ client }}>
           <AppNavigator />
-        </ThemeProvider>
-      </ApolloProvider>
+        </ApolloProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 };
