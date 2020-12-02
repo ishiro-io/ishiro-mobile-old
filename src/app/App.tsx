@@ -9,6 +9,7 @@ import {
   Poppins_700Bold,
   useFonts
 } from "@expo-google-fonts/poppins";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { AppLoading, registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
@@ -45,7 +46,9 @@ const App = () => {
       <StatusBar style="light" />
       <ThemeProvider useDark {...{ theme }}>
         <ApolloProvider {...{ client }}>
-          <AppNavigator />
+          <ActionSheetProvider>
+            <AppNavigator />
+          </ActionSheetProvider>
         </ApolloProvider>
       </ThemeProvider>
     </SafeAreaProvider>

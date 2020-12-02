@@ -6,14 +6,16 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
-import { Image, Text, ThemeContext } from "react-native-elements";
+import { IconNode, Image, Text, ThemeContext } from "react-native-elements";
 
 const AnimeCard: React.FC<AnimeCardProps> = ({
   title,
   posterImageUrl,
   height,
   width,
-  onPress
+  topRightIcon,
+  onPress,
+  onTopRightIconPress
 }: AnimeCardProps) => {
   const { theme } = useContext(ThemeContext);
 
@@ -23,8 +25,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
         style={{
           width,
           height,
-          margin: theme.spacing?.s,
-          marginHorizontal: theme.spacing?.s
+          margin: theme.spacing?.s
         }}
       >
         <View
@@ -66,6 +67,19 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
               borderRadius: theme.borderRadii?.m
             }}
           />
+
+          {topRightIcon && (
+            <TouchableWithoutFeedback onPress={onTopRightIconPress}>
+              <View
+                style={{
+                  marginTop: theme.spacing?.s,
+                  marginRight: theme.spacing?.xs
+                }}
+              >
+                {topRightIcon}
+              </View>
+            </TouchableWithoutFeedback>
+          )}
         </View>
 
         <Text
@@ -91,4 +105,6 @@ interface AnimeCardProps {
   width: number;
   height: number;
   onPress: () => void;
+  topRightIcon?: IconNode;
+  onTopRightIconPress?: () => void;
 }

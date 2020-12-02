@@ -1,30 +1,29 @@
-import { useRoute } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-import { AnimeViewingStatus } from "shared/graphql/generated";
+import {
+  AnimeViewingStatus,
+  UserAnimeStatusFieldsFragment
+} from "shared/graphql/generated";
 import { useSetUserAnimeViewingStatus } from "shared/hooks";
-import { AnimeInfoModalNavigationProps } from "shared/navigation/NavigationProps";
 
 const ChangeStatusButton: React.FC<ChangeStatusButtonProps> = ({
   label,
   icon,
-  status,
-  oldStatus
+  animeStatus,
+  newStatus
 }: ChangeStatusButtonProps) => {
   const { theme } = useContext(ThemeContext);
-
-  const route = useRoute<AnimeInfoModalNavigationProps<"Main">["route"]>();
 
   const setUserAnimeViewingStatus = useSetUserAnimeViewingStatus();
 
   const onPress = () => {
     setUserAnimeViewingStatus({
-      animeId: route.params.animeId,
-      oldStatus,
-      newStatus: status !== oldStatus ? status : AnimeViewingStatus.ToSee
+      itemToUpdate: animeStatus,
+      newStatus:
+        newStatus !== animeStatus.status ? newStatus : AnimeViewingStatus.ToSee
     });
   };
 
@@ -57,6 +56,6 @@ export default ChangeStatusButton;
 interface ChangeStatusButtonProps {
   label: string;
   icon: React.ReactElement;
-  status: AnimeViewingStatus;
-  oldStatus: AnimeViewingStatus;
+  animeStatus: UserAnimeStatusFieldsFragment;
+  newStatus: AnimeViewingStatus;
 }

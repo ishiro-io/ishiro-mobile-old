@@ -1,16 +1,14 @@
 import { NetworkStatus } from "@apollo/client";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { ListEmpty } from "components";
-import AnimeCard from "components/AnimeCard";
 import { useUserAnimesByViewingStatusQuery } from "shared/graphql/generated";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
-const CARD_WIDTH = 160;
-const CARD_HEIGHT = 260;
+import { StatusListAnimeCard } from "./StatusListAnimeCard";
 
 const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusListsTabContentProps) => {
   const { theme } = useContext(ThemeContext);
@@ -19,12 +17,6 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
     StatusListsTabNavigationProps<
       "ToSee" | "Abandonned" | "Finished" | "InProgress"
     >["route"]
-  >();
-
-  const navigation = useNavigation<
-    StatusListsTabNavigationProps<
-      "ToSee" | "Abandonned" | "Finished" | "InProgress"
-    >["navigation"]
   >();
 
   const {
@@ -84,15 +76,7 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
         paddingVertical: theme.spacing?.m
       }}
       data={data?.userAnimesByViewingStatus?.fields}
-      renderItem={({ item }) => (
-        <AnimeCard
-          title={item.anime.title}
-          posterImageUrl={item.anime.posterImage}
-          width={CARD_WIDTH}
-          height={CARD_HEIGHT}
-          onPress={() => navigation.navigate("AnimeInfo", { animeId: item.id })}
-        />
-      )}
+      renderItem={({ item }) => <StatusListAnimeCard {...{ item }} />}
       showsVerticalScrollIndicator={false}
       numColumns={2}
       keyExtractor={(item) => item.id.toString()}
@@ -101,7 +85,7 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
       ListEmptyComponent={
         <ListEmpty
           title={"Cette liste est vide..."}
-          subtitle={"Ca serait même mieux avec des animes non ?"}
+          subtitle={"Ca serait mieux avec des animes non ?"}
         />
       }
       refreshing={loading && networkStatus === NetworkStatus.refetch}

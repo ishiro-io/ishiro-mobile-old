@@ -5,8 +5,7 @@ import { ActivityIndicator, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { FlatList } from "react-native-gesture-handler";
 
-import { ListEmpty } from "components";
-import AnimeCard from "components/AnimeCard";
+import { AnimeCard, ListEmpty } from "components";
 import { useAnimesQuery } from "shared/graphql/generated";
 import { SearchTabNavigationProps } from "shared/navigation/NavigationProps";
 
