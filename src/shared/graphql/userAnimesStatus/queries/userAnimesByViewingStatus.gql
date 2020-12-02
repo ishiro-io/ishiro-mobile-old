@@ -1,0 +1,11 @@
+query userAnimesByViewingStatus(
+  $status: AnimeViewingStatus!
+  $options: PaginatedInput
+) {
+  userAnimesByViewingStatus(status: $status, options: $options) {
+    hasMore
+    fields {
+      ...UserAnimeStatusFields
+    }
+  }
+}

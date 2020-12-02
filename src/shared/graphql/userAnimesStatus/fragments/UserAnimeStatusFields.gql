@@ -1,0 +1,21 @@
+fragment UserAnimeStatusFields on UserAnimeStatus {
+  id
+  status
+  anime {
+    id
+    title
+    posterImage
+  }
+  episodesStatus {
+    hasBeenSeen
+    episode {
+      number
+    }
+  }
+  nextEpisodeToSee {
+    number
+  }
+  lastEpisodeSeen {
+    number
+  }
+}

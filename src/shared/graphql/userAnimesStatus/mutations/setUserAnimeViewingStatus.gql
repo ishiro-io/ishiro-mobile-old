@@ -1,0 +1,8 @@
+mutation setUserAnimeViewingStatus(
+  $status: AnimeViewingStatus!
+  $animeId: Float!
+) {
+  setUserAnimeViewingStatus(status: $status, animeId: $animeId) {
+    ...UserAnimeStatusFields
+  }
+}
