@@ -1,0 +1,7 @@
+fragment CategoryPreviewFields on CategoryPreview {
+    categoryId
+    title
+    animes {
+        ...AnimeFields
+    }
+}
