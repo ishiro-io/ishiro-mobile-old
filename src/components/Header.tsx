@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
 import { Button, IconNode, Text, ThemeContext } from "react-native-elements";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Header: React.FC<HeaderProps> = ({
@@ -32,7 +33,9 @@ const Header: React.FC<HeaderProps> = ({
         }}
       >
         {iconLeft ? (
-          <Button icon={iconLeft} type="clear" onPress={onIconLeftPress} />
+          <TouchableWithoutFeedback onPress={onIconLeftPress}>
+            {iconLeft}
+          </TouchableWithoutFeedback>
         ) : iconRight ? (
           <View style={{ width: 32, height: 32 }} />
         ) : (
@@ -52,7 +55,9 @@ const Header: React.FC<HeaderProps> = ({
         )}
 
         {iconRight ? (
-          <Button icon={iconRight} type="clear" onPress={onIconRightPress} />
+          <TouchableWithoutFeedback onPress={onIconRightPress}>
+            {iconRight}
+          </TouchableWithoutFeedback>
         ) : iconLeft ? (
           <View style={{ width: 32, height: 32 }} />
         ) : (
