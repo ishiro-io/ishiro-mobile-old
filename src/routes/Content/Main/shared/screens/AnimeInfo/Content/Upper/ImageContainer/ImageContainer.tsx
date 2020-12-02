@@ -3,11 +3,10 @@ import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { Image, Text, ThemeContext } from "react-native-elements";
 
+import { AnimeDataFieldsFragment } from "shared/graphql/generated";
+
 const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> = ({
-  title,
-  titleJapanese,
-  bannerImage,
-  episodeCount
+  animeData: { title, titleJapanese, bannerImage, episodeCount }
 }: AnimeInfoUpperImageContainerProps) => {
   const { theme } = useContext(ThemeContext);
 
@@ -92,8 +91,5 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
 export default AnimeInfoUpperImageContainer;
 
 interface AnimeInfoUpperImageContainerProps {
-  title: string;
-  titleJapanese?: string | null | undefined;
-  bannerImage: string;
-  episodeCount: number;
+  animeData: AnimeDataFieldsFragment;
 }

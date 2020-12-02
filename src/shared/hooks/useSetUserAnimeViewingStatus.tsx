@@ -2,8 +2,8 @@ import { useCallback } from "react";
 
 import {
   AnimeViewingStatus,
-  UserAnimeViewingStatusDocument,
-  UserAnimeViewingStatusQuery,
+  UserAnimeStatusFieldsFragment,
+  UserAnimeStatusFieldsFragmentDoc,
   UserAnimesByViewingStatusDocument,
   UserAnimesByViewingStatusQuery,
   useSetUserAnimeViewingStatusMutation
@@ -17,71 +17,45 @@ const useSetUserAnimeViewingStatus = () => {
   });
 
   const setUserAnimeViewingStatus = async ({
-    animeId,
-    oldStatus,
-    newStatus,
-    posterImage = "",
-    title = ""
+    itemToUpdate,
+    newStatus
   }: Options) => {
     setUserAnimeViewingStatusMutation({
       variables: {
-        animeId,
+        animeId: itemToUpdate.anime.id,
         status: newStatus
       },
       optimisticResponse: {
         __typename: "Mutation",
         setUserAnimeViewingStatus: {
-          id: 0,
-          status: newStatus,
-          __typename: "UserAnimeStatus",
-          anime: {
-            __typename: "Anime",
-            id: animeId,
-            posterImage,
-            title
-          },
-          episodesStatus: [],
-          lastEpisodeSeen: null,
-          nextEpisodeToSee: null
+          ...itemToUpdate,
+          status: newStatus
         }
       },
       update: (cache, { data: mutationData }) => {
         if (!mutationData?.setUserAnimeViewingStatus) return;
 
-        const oldStatusCache = cache.readQuery<UserAnimeViewingStatusQuery>({
-          query: UserAnimeViewingStatusDocument,
-          variables: { animeId }
-        });
+        const cachedStatusFragment = cache.readFragment<UserAnimeStatusFieldsFragment>(
+          {
+            id: `UserAnimeStatus:${itemToUpdate.id}`,
+            fragment: UserAnimeStatusFieldsFragmentDoc
+          }
+        );
 
-        if (oldStatusCache?.userAnimeViewingStatus) {
-          cache.writeQuery<UserAnimeViewingStatusQuery>({
-            query: UserAnimeViewingStatusDocument,
-            variables: { animeId },
-            data: {
-              __typename: "Query",
-              userAnimeViewingStatus: {
-                ...oldStatusCache.userAnimeViewingStatus,
-                status: mutationData.setUserAnimeViewingStatus.status
-              }
-            }
-          });
-        } else {
-          cache.writeQuery<UserAnimeViewingStatusQuery>({
-            query: UserAnimeViewingStatusDocument,
-            variables: { animeId },
-            data: {
-              __typename: "Query",
-              userAnimeViewingStatus: mutationData.setUserAnimeViewingStatus
-            }
+        if (cachedStatusFragment) {
+          cache.writeFragment<UserAnimeStatusFieldsFragment>({
+            id: `UserAnimeStatus:${itemToUpdate.id}`,
+            fragment: UserAnimeStatusFieldsFragmentDoc,
+            data: { ...cachedStatusFragment, status: newStatus }
           });
         }
 
-        if (oldStatus !== AnimeViewingStatus.None) {
+        if (itemToUpdate.status !== AnimeViewingStatus.None) {
           const oldStatusListCache = cache.readQuery<UserAnimesByViewingStatusQuery>(
             {
               query: UserAnimesByViewingStatusDocument,
               variables: {
-                status: oldStatus,
+                status: itemToUpdate.status,
                 options: { offset: 0, limit: 20 }
               }
             }
@@ -91,7 +65,7 @@ const useSetUserAnimeViewingStatus = () => {
             cache.writeQuery<UserAnimesByViewingStatusQuery>({
               query: UserAnimesByViewingStatusDocument,
               variables: {
-                status: oldStatus,
+                status: itemToUpdate.status,
                 options: { offset: 0, limit: 20 }
               },
               data: {
@@ -101,7 +75,7 @@ const useSetUserAnimeViewingStatus = () => {
                   fields: [
                     ...oldStatusListCache.userAnimesByViewingStatus.fields.filter(
                       (f) => {
-                        return f.anime.id !== animeId;
+                        return f.anime.id !== itemToUpdate.anime.id;
                       }
                     )
                   ]
@@ -155,11 +129,8 @@ const useSetUserAnimeViewingStatus = () => {
 };
 
 interface Options {
-  animeId: number;
-  oldStatus: AnimeViewingStatus;
+  itemToUpdate: UserAnimeStatusFieldsFragment;
   newStatus: AnimeViewingStatus;
-  posterImage?: string;
-  title?: string;
 }
 
 export default useSetUserAnimeViewingStatus;

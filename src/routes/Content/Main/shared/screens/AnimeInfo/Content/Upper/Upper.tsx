@@ -24,22 +24,15 @@ const AnimeInfoUpper: React.FC<AnimeInfoUpperProps> = ({}: AnimeInfoUpperProps) 
 
   return (
     <>
-      <AnimeInfoUpperImageContainer
-        title={animeData!.title}
-        titleJapanese={animeData!.titleJapanese}
-        bannerImage={animeData!.bannerImage}
-        episodeCount={animeData!.episodeCount}
-      />
+      <AnimeInfoUpperImageContainer {...{ animeData }} />
 
-      <AnimeInfoHeader
-        animeStatus={statusData?.userAnimeViewingStatus?.status}
-      />
+      <AnimeInfoHeader animeStatus={statusData?.userAnimeViewingStatus} />
 
       {statusData?.userAnimeViewingStatus &&
         statusData?.userAnimeViewingStatus?.status !==
           AnimeViewingStatus.None && (
           <AnimeStatusSelector
-            status={statusData?.userAnimeViewingStatus?.status}
+            animeStatus={statusData?.userAnimeViewingStatus}
           />
         )}
     </>

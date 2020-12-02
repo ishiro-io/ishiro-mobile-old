@@ -4,8 +4,7 @@ import React, { useContext } from "react";
 import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
-import { ListEmpty } from "components";
-import AnimeCard from "components/AnimeCard";
+import { AnimeCard, ListEmpty } from "components";
 import { useAnimesQuery } from "shared/graphql/generated";
 import {
   HomeNavigationProps,
