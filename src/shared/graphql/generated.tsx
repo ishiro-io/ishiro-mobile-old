@@ -18,7 +18,9 @@ export const namedOperations = {
     categories: "categories",
     checkConfirmationCode: "checkConfirmationCode",
     isRegisteredWithGoogle: "isRegisteredWithGoogle",
-    me: "me"
+    me: "me",
+    userAnimeViewingStatus: "userAnimeViewingStatus",
+    userAnimesByViewingStatus: "userAnimesByViewingStatus"
   },
   Mutation: {
     changeForgotPassword: "changeForgotPassword",
@@ -27,14 +29,16 @@ export const namedOperations = {
     login: "login",
     loginWithGoogle: "loginWithGoogle",
     register: "register",
-    resendConfirmationSMS: "resendConfirmationSMS"
+    resendConfirmationSMS: "resendConfirmationSMS",
+    setUserAnimeViewingStatus: "setUserAnimeViewingStatus"
   },
   Fragment: {
     AnimeAdditionalInformationsFields: "AnimeAdditionalInformationsFields",
     AnimeDataFields: "AnimeDataFields",
     AnimeFields: "AnimeFields",
     CategoryFields: "CategoryFields",
-    UserFields: "UserFields"
+    UserFields: "UserFields",
+    UserAnimeStatusFields: "UserAnimeStatusFields"
   }
 };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -104,6 +108,8 @@ export type UserAnimeStatus = {
   anime: Anime;
   user: User;
   episodesStatus: Array<UserEpisodeStatus>;
+  lastEpisodeSeen?: Maybe<Episode>;
+  nextEpisodeToSee?: Maybe<Episode>;
 };
 
 export enum AnimeViewingStatus {
@@ -173,6 +179,12 @@ export type PopulateAnimeOutput = {
   __typename?: "PopulateAnimeOutput";
   timeToPopulate: Scalars["String"];
   fields: Array<Anime>;
+};
+
+export type PaginatedUserAnimesByViewingStatusOutput = {
+  __typename?: "PaginatedUserAnimesByViewingStatusOutput";
+  hasMore: Scalars["Boolean"];
+  fields: Array<UserAnimeStatus>;
 };
 
 export type PaginatedInput = {
@@ -317,6 +329,8 @@ export type Query = {
   episode?: Maybe<Episode>;
   /** Retourne tous les épisodes d'un anime disponibles en base de données */
   episodes: Array<Episode>;
+  userAnimesByViewingStatus: PaginatedUserAnimesByViewingStatusOutput;
+  userAnimeViewingStatus?: Maybe<UserAnimeStatus>;
   isRegisteredWithGoogle: Scalars["Boolean"];
   checkConfirmationCode?: Maybe<Scalars["Boolean"]>;
   me?: Maybe<User>;
@@ -348,6 +362,15 @@ export type QueryEpisodeArgs = {
 };
 
 export type QueryEpisodesArgs = {
+  animeId: Scalars["Float"];
+};
+
+export type QueryUserAnimesByViewingStatusArgs = {
+  status: AnimeViewingStatus;
+  options?: Maybe<PaginatedInput>;
+};
+
+export type QueryUserAnimeViewingStatusArgs = {
   animeId: Scalars["Float"];
 };
 
@@ -388,6 +411,7 @@ export type Mutation = {
   deleteEpisodes: Scalars["Boolean"];
   /** Met à jour certaines données d'un épisode */
   updateEpisode?: Maybe<Episode>;
+  setUserAnimeViewingStatus?: Maybe<UserAnimeStatus>;
   loginWithGoogle: User;
   askPhoneNumberChange: Scalars["Boolean"];
   changeForgotPassword?: Maybe<User>;
@@ -444,6 +468,11 @@ export type MutationDeleteEpisodesArgs = {
 export type MutationUpdateEpisodeArgs = {
   input: UpdateEpisodeInput;
   id: Scalars["Float"];
+};
+
+export type MutationSetUserAnimeViewingStatusArgs = {
+  status: AnimeViewingStatus;
+  animeId: Scalars["Float"];
 };
 
 export type MutationLoginWithGoogleArgs = {
@@ -669,6 +698,63 @@ export type MeQuery = { __typename?: "Query" } & {
   me?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
 };
 
+export type UserAnimeStatusFieldsFragment = {
+  __typename?: "UserAnimeStatus";
+} & Pick<UserAnimeStatus, "id" | "status"> & {
+    anime: { __typename?: "Anime" } & Pick<
+      Anime,
+      "id" | "title" | "posterImage"
+    >;
+    episodesStatus: Array<
+      { __typename?: "UserEpisodeStatus" } & Pick<
+        UserEpisodeStatus,
+        "hasBeenSeen"
+      > & { episode: { __typename?: "Episode" } & Pick<Episode, "number"> }
+    >;
+    nextEpisodeToSee?: Maybe<
+      { __typename?: "Episode" } & Pick<Episode, "number">
+    >;
+    lastEpisodeSeen?: Maybe<
+      { __typename?: "Episode" } & Pick<Episode, "number">
+    >;
+  };
+
+export type SetUserAnimeViewingStatusMutationVariables = Exact<{
+  status: AnimeViewingStatus;
+  animeId: Scalars["Float"];
+}>;
+
+export type SetUserAnimeViewingStatusMutation = { __typename?: "Mutation" } & {
+  setUserAnimeViewingStatus?: Maybe<
+    { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
+  >;
+};
+
+export type UserAnimeViewingStatusQueryVariables = Exact<{
+  animeId: Scalars["Float"];
+}>;
+
+export type UserAnimeViewingStatusQuery = { __typename?: "Query" } & {
+  userAnimeViewingStatus?: Maybe<
+    { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
+  >;
+};
+
+export type UserAnimesByViewingStatusQueryVariables = Exact<{
+  status: AnimeViewingStatus;
+  options?: Maybe<PaginatedInput>;
+}>;
+
+export type UserAnimesByViewingStatusQuery = { __typename?: "Query" } & {
+  userAnimesByViewingStatus: {
+    __typename?: "PaginatedUserAnimesByViewingStatusOutput";
+  } & Pick<PaginatedUserAnimesByViewingStatusOutput, "hasMore"> & {
+      fields: Array<
+        { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
+      >;
+    };
+};
+
 export const AnimeAdditionalInformationsFieldsFragmentDoc = gql`
   fragment AnimeAdditionalInformationsFields on Anime {
     id
@@ -719,6 +805,29 @@ export const UserFieldsFragmentDoc = gql`
     id
     username
     phoneNumber
+  }
+`;
+export const UserAnimeStatusFieldsFragmentDoc = gql`
+  fragment UserAnimeStatusFields on UserAnimeStatus {
+    id
+    status
+    anime {
+      id
+      title
+      posterImage
+    }
+    episodesStatus {
+      hasBeenSeen
+      episode {
+        number
+      }
+    }
+    nextEpisodeToSee {
+      number
+    }
+    lastEpisodeSeen {
+      number
+    }
   }
 `;
 export const AnimeAdditionalInfoDocument = gql`
@@ -1480,6 +1589,180 @@ export function useMeLazyQuery(
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const SetUserAnimeViewingStatusDocument = gql`
+  mutation setUserAnimeViewingStatus(
+    $status: AnimeViewingStatus!
+    $animeId: Float!
+  ) {
+    setUserAnimeViewingStatus(status: $status, animeId: $animeId) {
+      ...UserAnimeStatusFields
+    }
+  }
+  ${UserAnimeStatusFieldsFragmentDoc}
+`;
+export type SetUserAnimeViewingStatusMutationFn = Apollo.MutationFunction<
+  SetUserAnimeViewingStatusMutation,
+  SetUserAnimeViewingStatusMutationVariables
+>;
+
+/**
+ * __useSetUserAnimeViewingStatusMutation__
+ *
+ * To run a mutation, you first call `useSetUserAnimeViewingStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetUserAnimeViewingStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setUserAnimeViewingStatusMutation, { data, loading, error }] = useSetUserAnimeViewingStatusMutation({
+ *   variables: {
+ *      status: // value for 'status'
+ *      animeId: // value for 'animeId'
+ *   },
+ * });
+ */
+export function useSetUserAnimeViewingStatusMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetUserAnimeViewingStatusMutation,
+    SetUserAnimeViewingStatusMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    SetUserAnimeViewingStatusMutation,
+    SetUserAnimeViewingStatusMutationVariables
+  >(SetUserAnimeViewingStatusDocument, baseOptions);
+}
+export type SetUserAnimeViewingStatusMutationHookResult = ReturnType<
+  typeof useSetUserAnimeViewingStatusMutation
+>;
+export type SetUserAnimeViewingStatusMutationResult = Apollo.MutationResult<SetUserAnimeViewingStatusMutation>;
+export type SetUserAnimeViewingStatusMutationOptions = Apollo.BaseMutationOptions<
+  SetUserAnimeViewingStatusMutation,
+  SetUserAnimeViewingStatusMutationVariables
+>;
+export const UserAnimeViewingStatusDocument = gql`
+  query userAnimeViewingStatus($animeId: Float!) {
+    userAnimeViewingStatus(animeId: $animeId) {
+      ...UserAnimeStatusFields
+    }
+  }
+  ${UserAnimeStatusFieldsFragmentDoc}
+`;
+
+/**
+ * __useUserAnimeViewingStatusQuery__
+ *
+ * To run a query within a React component, call `useUserAnimeViewingStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAnimeViewingStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserAnimeViewingStatusQuery({
+ *   variables: {
+ *      animeId: // value for 'animeId'
+ *   },
+ * });
+ */
+export function useUserAnimeViewingStatusQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    UserAnimeViewingStatusQuery,
+    UserAnimeViewingStatusQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    UserAnimeViewingStatusQuery,
+    UserAnimeViewingStatusQueryVariables
+  >(UserAnimeViewingStatusDocument, baseOptions);
+}
+export function useUserAnimeViewingStatusLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    UserAnimeViewingStatusQuery,
+    UserAnimeViewingStatusQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    UserAnimeViewingStatusQuery,
+    UserAnimeViewingStatusQueryVariables
+  >(UserAnimeViewingStatusDocument, baseOptions);
+}
+export type UserAnimeViewingStatusQueryHookResult = ReturnType<
+  typeof useUserAnimeViewingStatusQuery
+>;
+export type UserAnimeViewingStatusLazyQueryHookResult = ReturnType<
+  typeof useUserAnimeViewingStatusLazyQuery
+>;
+export type UserAnimeViewingStatusQueryResult = Apollo.QueryResult<
+  UserAnimeViewingStatusQuery,
+  UserAnimeViewingStatusQueryVariables
+>;
+export const UserAnimesByViewingStatusDocument = gql`
+  query userAnimesByViewingStatus(
+    $status: AnimeViewingStatus!
+    $options: PaginatedInput
+  ) {
+    userAnimesByViewingStatus(status: $status, options: $options) {
+      hasMore
+      fields {
+        ...UserAnimeStatusFields
+      }
+    }
+  }
+  ${UserAnimeStatusFieldsFragmentDoc}
+`;
+
+/**
+ * __useUserAnimesByViewingStatusQuery__
+ *
+ * To run a query within a React component, call `useUserAnimesByViewingStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAnimesByViewingStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserAnimesByViewingStatusQuery({
+ *   variables: {
+ *      status: // value for 'status'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useUserAnimesByViewingStatusQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    UserAnimesByViewingStatusQuery,
+    UserAnimesByViewingStatusQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    UserAnimesByViewingStatusQuery,
+    UserAnimesByViewingStatusQueryVariables
+  >(UserAnimesByViewingStatusDocument, baseOptions);
+}
+export function useUserAnimesByViewingStatusLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    UserAnimesByViewingStatusQuery,
+    UserAnimesByViewingStatusQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    UserAnimesByViewingStatusQuery,
+    UserAnimesByViewingStatusQueryVariables
+  >(UserAnimesByViewingStatusDocument, baseOptions);
+}
+export type UserAnimesByViewingStatusQueryHookResult = ReturnType<
+  typeof useUserAnimesByViewingStatusQuery
+>;
+export type UserAnimesByViewingStatusLazyQueryHookResult = ReturnType<
+  typeof useUserAnimesByViewingStatusLazyQuery
+>;
+export type UserAnimesByViewingStatusQueryResult = Apollo.QueryResult<
+  UserAnimesByViewingStatusQuery,
+  UserAnimesByViewingStatusQueryVariables
+>;
 export type BaseEntityKeySpecifier = (
   | "id"
   | "createdAt"
@@ -1571,6 +1854,8 @@ export type UserAnimeStatusKeySpecifier = (
   | "anime"
   | "user"
   | "episodesStatus"
+  | "lastEpisodeSeen"
+  | "nextEpisodeToSee"
   | UserAnimeStatusKeySpecifier
 )[];
 export type UserAnimeStatusFieldPolicy = {
@@ -1581,6 +1866,8 @@ export type UserAnimeStatusFieldPolicy = {
   anime?: FieldPolicy<any> | FieldReadFunction<any>;
   user?: FieldPolicy<any> | FieldReadFunction<any>;
   episodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  lastEpisodeSeen?: FieldPolicy<any> | FieldReadFunction<any>;
+  nextEpisodeToSee?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type AnimeKeySpecifier = (
   | "id"
@@ -1660,6 +1947,15 @@ export type PopulateAnimeOutputFieldPolicy = {
   timeToPopulate?: FieldPolicy<any> | FieldReadFunction<any>;
   fields?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PaginatedUserAnimesByViewingStatusOutputKeySpecifier = (
+  | "hasMore"
+  | "fields"
+  | PaginatedUserAnimesByViewingStatusOutputKeySpecifier
+)[];
+export type PaginatedUserAnimesByViewingStatusOutputFieldPolicy = {
+  hasMore?: FieldPolicy<any> | FieldReadFunction<any>;
+  fields?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type QueryKeySpecifier = (
   | "anime"
   | "animes"
@@ -1669,6 +1965,8 @@ export type QueryKeySpecifier = (
   | "category"
   | "episode"
   | "episodes"
+  | "userAnimesByViewingStatus"
+  | "userAnimeViewingStatus"
   | "isRegisteredWithGoogle"
   | "checkConfirmationCode"
   | "me"
@@ -1683,6 +1981,8 @@ export type QueryFieldPolicy = {
   category?: FieldPolicy<any> | FieldReadFunction<any>;
   episode?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
+  userAnimesByViewingStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  userAnimeViewingStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   isRegisteredWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
   checkConfirmationCode?: FieldPolicy<any> | FieldReadFunction<any>;
   me?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -1699,6 +1999,7 @@ export type MutationKeySpecifier = (
   | "populateCategories"
   | "deleteEpisodes"
   | "updateEpisode"
+  | "setUserAnimeViewingStatus"
   | "loginWithGoogle"
   | "askPhoneNumberChange"
   | "changeForgotPassword"
@@ -1724,6 +2025,7 @@ export type MutationFieldPolicy = {
   populateCategories?: FieldPolicy<any> | FieldReadFunction<any>;
   deleteEpisodes?: FieldPolicy<any> | FieldReadFunction<any>;
   updateEpisode?: FieldPolicy<any> | FieldReadFunction<any>;
+  setUserAnimeViewingStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   loginWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
   askPhoneNumberChange?: FieldPolicy<any> | FieldReadFunction<any>;
   changeForgotPassword?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -1833,6 +2135,18 @@ export type TypedTypePolicies = TypePolicies & {
     mutationType?: true;
     subscriptionType?: true;
     fields?: PopulateAnimeOutputFieldPolicy;
+  };
+  PaginatedUserAnimesByViewingStatusOutput?: {
+    keyFields?:
+      | false
+      | PaginatedUserAnimesByViewingStatusOutputKeySpecifier
+      | (() =>
+          | undefined
+          | PaginatedUserAnimesByViewingStatusOutputKeySpecifier);
+    queryType?: true;
+    mutationType?: true;
+    subscriptionType?: true;
+    fields?: PaginatedUserAnimesByViewingStatusOutputFieldPolicy;
   };
   Query?: {
     keyFields?:

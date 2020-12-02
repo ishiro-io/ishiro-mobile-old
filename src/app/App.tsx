@@ -24,7 +24,8 @@ import AppNavigator from "./AppNavigator";
 const App = () => {
   // TODO : Add scheme in app.json for production
   LogBox.ignoreLogs([
-    "Linking requires that you provide a `scheme` in app.json"
+    "Linking requires that you provide a `scheme` in app.json",
+    "source.uri should not be an empty string"
   ]);
 
   let [fontsLoaded] = useFonts({
