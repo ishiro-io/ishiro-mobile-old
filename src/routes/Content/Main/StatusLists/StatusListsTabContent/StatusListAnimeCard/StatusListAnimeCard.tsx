@@ -121,10 +121,38 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
     );
   };
 
+  const episodeText = (): string => {
+    switch (item.status) {
+      case AnimeViewingStatus.InProgress:
+        return "Prochain épisode";
+
+      case AnimeViewingStatus.Abandoned:
+        return "Dernier épisode vu";
+
+      default:
+        return "";
+    }
+  };
+
+  const episodeNumber = (): number | undefined => {
+    switch (item.status) {
+      case AnimeViewingStatus.InProgress:
+        return item.nextEpisodeToSee?.number;
+
+      case AnimeViewingStatus.Abandoned:
+        return item.lastEpisodeSeen?.number;
+
+      default:
+        return undefined;
+    }
+  };
+
   return (
     <AnimeCard
       title={item.anime.title}
       posterImageUrl={item.anime.posterImage}
+      episodeText={episodeText()}
+      episodeNumber={episodeNumber()}
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
       onPress={() =>
