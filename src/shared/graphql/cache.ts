@@ -16,6 +16,19 @@ const typePolicies: TypedTypePolicies = {
               }
             : incoming;
         }
+      },
+      userAnimesByViewingStatus: {
+        keyArgs: ["status"],
+        merge(existing, incoming, { args }) {
+          if (args?.options?.offset === 0) return incoming;
+
+          return existing
+            ? {
+                hasMore: incoming.hasMore,
+                fields: [...existing.fields, ...incoming.fields]
+              }
+            : incoming;
+        }
       }
     }
   }

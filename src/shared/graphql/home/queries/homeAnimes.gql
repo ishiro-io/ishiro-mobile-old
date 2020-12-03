@@ -1,0 +1,15 @@
+query homeAnimes {
+  categoriesPreviews {
+    ...CategoryPreviewFields
+  }
+
+  userAnimesByViewingStatus(
+    status: IN_PROGRESS
+    options: { limit: 10, offset: 0 }
+  ) {
+    hasMore
+    fields {
+      ...UserAnimeStatusFields
+    }
+  }
+}

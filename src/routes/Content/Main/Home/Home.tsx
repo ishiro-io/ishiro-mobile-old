@@ -45,6 +45,7 @@ const HomeContent: React.FC = () => {
         iconRight={<MaterialIcons name="person" size={32} color="white" />}
         onIconRightPress={() => navigation.navigate("Profile")}
       />
+
       <HomeFlatPreviewList />
     </View>
   );

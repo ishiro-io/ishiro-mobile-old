@@ -16,7 +16,7 @@ export const namedOperations = {
     animes: "animes",
     searchAnimes: "searchAnimes",
     categories: "categories",
-    CategoriesPreviews: "CategoriesPreviews",
+    homeAnimes: "homeAnimes",
     checkConfirmationCode: "checkConfirmationCode",
     isRegisteredWithGoogle: "isRegisteredWithGoogle",
     me: "me",
@@ -183,6 +183,13 @@ export type PopulateAnimeOutput = {
   fields: Array<Anime>;
 };
 
+export type Arc = {
+  __typename?: "Arc";
+  title?: Maybe<Scalars["String"]>;
+  firstEpisodeNumber: Scalars["Float"];
+  lastEpisodeNumber: Scalars["Float"];
+};
+
 export type PaginatedUserAnimesByViewingStatusOutput = {
   __typename?: "PaginatedUserAnimesByViewingStatusOutput";
   hasMore: Scalars["Boolean"];
@@ -343,6 +350,7 @@ export type Query = {
   categoriesPreviews: Array<CategoryPreview>;
   /** Retourne une categorie spécifique basé sur son id interne */
   category?: Maybe<Category>;
+  arcs?: Maybe<Array<Arc>>;
   /** Retourne un épisode spécifique basée sur son id interne ou l'id de son anime et son numéro d'épisode */
   episode?: Maybe<Episode>;
   /** Retourne tous les épisodes d'un anime disponibles en base de données */
@@ -372,6 +380,10 @@ export type QuerySearchAnimesArgs = {
 
 export type QueryCategoryArgs = {
   id: Scalars["Float"];
+};
+
+export type QueryArcsArgs = {
+  animeId: Scalars["Float"];
 };
 
 export type QueryEpisodeArgs = {
@@ -630,24 +642,31 @@ export type CategoryFieldsFragment = { __typename?: "Category" } & Pick<
   "id" | "name" | "coverImage"
 >;
 
-export type CategoryPreviewFieldsFragment = {
-  __typename?: "CategoryPreview";
-} & Pick<CategoryPreview, "categoryId" | "title"> & {
-    animes?: Maybe<Array<{ __typename?: "Anime" } & AnimeFieldsFragment>>;
-  };
-
 export type CategoriesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CategoriesQuery = { __typename?: "Query" } & {
   categories: Array<{ __typename?: "Category" } & CategoryFieldsFragment>;
 };
 
-export type CategoriesPreviewsQueryVariables = Exact<{ [key: string]: never }>;
+export type CategoryPreviewFieldsFragment = {
+  __typename?: "CategoryPreview";
+} & Pick<CategoryPreview, "categoryId" | "title"> & {
+    animes?: Maybe<Array<{ __typename?: "Anime" } & AnimeFieldsFragment>>;
+  };
 
-export type CategoriesPreviewsQuery = { __typename?: "Query" } & {
+export type HomeAnimesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type HomeAnimesQuery = { __typename?: "Query" } & {
   categoriesPreviews: Array<
     { __typename?: "CategoryPreview" } & CategoryPreviewFieldsFragment
   >;
+  userAnimesByViewingStatus: {
+    __typename?: "PaginatedUserAnimesByViewingStatusOutput";
+  } & Pick<PaginatedUserAnimesByViewingStatusOutput, "hasMore"> & {
+      fields: Array<
+        { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
+      >;
+    };
 };
 
 export type UserFieldsFragment = { __typename?: "User" } & Pick<
@@ -1157,61 +1176,69 @@ export type CategoriesQueryResult = Apollo.QueryResult<
   CategoriesQuery,
   CategoriesQueryVariables
 >;
-export const CategoriesPreviewsDocument = gql`
-  query CategoriesPreviews {
+export const HomeAnimesDocument = gql`
+  query homeAnimes {
     categoriesPreviews {
       ...CategoryPreviewFields
     }
+    userAnimesByViewingStatus(
+      status: IN_PROGRESS
+      options: { limit: 10, offset: 0 }
+    ) {
+      hasMore
+      fields {
+        ...UserAnimeStatusFields
+      }
+    }
   }
   ${CategoryPreviewFieldsFragmentDoc}
+  ${UserAnimeStatusFieldsFragmentDoc}
 `;
 
 /**
- * __useCategoriesPreviewsQuery__
+ * __useHomeAnimesQuery__
  *
- * To run a query within a React component, call `useCategoriesPreviewsQuery` and pass it any options that fit your needs.
- * When your component renders, `useCategoriesPreviewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useHomeAnimesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHomeAnimesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useCategoriesPreviewsQuery({
+ * const { data, loading, error } = useHomeAnimesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useCategoriesPreviewsQuery(
+export function useHomeAnimesQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    CategoriesPreviewsQuery,
-    CategoriesPreviewsQueryVariables
+    HomeAnimesQuery,
+    HomeAnimesQueryVariables
   >
 ) {
-  return Apollo.useQuery<
-    CategoriesPreviewsQuery,
-    CategoriesPreviewsQueryVariables
-  >(CategoriesPreviewsDocument, baseOptions);
+  return Apollo.useQuery<HomeAnimesQuery, HomeAnimesQueryVariables>(
+    HomeAnimesDocument,
+    baseOptions
+  );
 }
-export function useCategoriesPreviewsLazyQuery(
+export function useHomeAnimesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    CategoriesPreviewsQuery,
-    CategoriesPreviewsQueryVariables
+    HomeAnimesQuery,
+    HomeAnimesQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<
-    CategoriesPreviewsQuery,
-    CategoriesPreviewsQueryVariables
-  >(CategoriesPreviewsDocument, baseOptions);
+  return Apollo.useLazyQuery<HomeAnimesQuery, HomeAnimesQueryVariables>(
+    HomeAnimesDocument,
+    baseOptions
+  );
 }
-export type CategoriesPreviewsQueryHookResult = ReturnType<
-  typeof useCategoriesPreviewsQuery
+export type HomeAnimesQueryHookResult = ReturnType<typeof useHomeAnimesQuery>;
+export type HomeAnimesLazyQueryHookResult = ReturnType<
+  typeof useHomeAnimesLazyQuery
 >;
-export type CategoriesPreviewsLazyQueryHookResult = ReturnType<
-  typeof useCategoriesPreviewsLazyQuery
->;
-export type CategoriesPreviewsQueryResult = Apollo.QueryResult<
-  CategoriesPreviewsQuery,
-  CategoriesPreviewsQueryVariables
+export type HomeAnimesQueryResult = Apollo.QueryResult<
+  HomeAnimesQuery,
+  HomeAnimesQueryVariables
 >;
 export const ChangeForgotPasswordDocument = gql`
   mutation changeForgotPassword($input: UserChangeForgotPasswordInput!) {
@@ -2055,6 +2082,17 @@ export type PopulateAnimeOutputFieldPolicy = {
   timeToPopulate?: FieldPolicy<any> | FieldReadFunction<any>;
   fields?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type ArcKeySpecifier = (
+  | "title"
+  | "firstEpisodeNumber"
+  | "lastEpisodeNumber"
+  | ArcKeySpecifier
+)[];
+export type ArcFieldPolicy = {
+  title?: FieldPolicy<any> | FieldReadFunction<any>;
+  firstEpisodeNumber?: FieldPolicy<any> | FieldReadFunction<any>;
+  lastEpisodeNumber?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type PaginatedUserAnimesByViewingStatusOutputKeySpecifier = (
   | "hasMore"
   | "fields"
@@ -2080,6 +2118,7 @@ export type QueryKeySpecifier = (
   | "categories"
   | "categoriesPreviews"
   | "category"
+  | "arcs"
   | "episode"
   | "episodes"
   | "userAnimesByViewingStatus"
@@ -2097,6 +2136,7 @@ export type QueryFieldPolicy = {
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   categoriesPreviews?: FieldPolicy<any> | FieldReadFunction<any>;
   category?: FieldPolicy<any> | FieldReadFunction<any>;
+  arcs?: FieldPolicy<any> | FieldReadFunction<any>;
   episode?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
   userAnimesByViewingStatus?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -2256,6 +2296,13 @@ export type TypedTypePolicies = TypePolicies & {
     mutationType?: true;
     subscriptionType?: true;
     fields?: PopulateAnimeOutputFieldPolicy;
+  };
+  Arc?: {
+    keyFields?: false | ArcKeySpecifier | (() => undefined | ArcKeySpecifier);
+    queryType?: true;
+    mutationType?: true;
+    subscriptionType?: true;
+    fields?: ArcFieldPolicy;
   };
   PaginatedUserAnimesByViewingStatusOutput?: {
     keyFields?:
