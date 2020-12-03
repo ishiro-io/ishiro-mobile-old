@@ -1,26 +1,15 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-import { HomeNavigationProps } from "shared/navigation/NavigationProps";
-
 const SeeMoreCard: React.FC<SeeMoreCardProps> = ({
-  categoryName,
-  categoryId
+  onPress
 }: SeeMoreCardProps) => {
   const { theme } = useContext(ThemeContext);
-  //Gère la navigation pour retourner en arrière
-  const navigation = useNavigation<HomeNavigationProps<"Home">["navigation"]>();
-
   return (
-    <TouchableWithoutFeedback
-      onPress={() =>
-        navigation.navigate("CategoryList", { categoryId, categoryName })
-      }
-    >
+    <TouchableWithoutFeedback onPress={onPress}>
       <View
         style={{
           width: 125,
@@ -52,6 +41,5 @@ const SeeMoreCard: React.FC<SeeMoreCardProps> = ({
 export default SeeMoreCard;
 
 interface SeeMoreCardProps {
-  categoryId: number;
-  categoryName: string;
+  onPress: () => void;
 }

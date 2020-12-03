@@ -4,7 +4,6 @@ import { ScrollView, Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import AnimeCard from "components/AnimeCard";
-import { CategoryPreviewFieldsFragment } from "shared/graphql/generated";
 import { HomeNavigationProps } from "shared/navigation/NavigationProps";
 
 import { SeeMoreCard } from "./SeeMoreCard";
@@ -12,9 +11,11 @@ import { SeeMoreCard } from "./SeeMoreCard";
 const CARD_WIDTH = 125;
 const CARD_HEIGHT = 210;
 
-const HomePreviewList: React.FC<AnimePreviewListProps> = ({
-  categoryPreview
-}: AnimePreviewListProps) => {
+const HomePreviewList: React.FC<HomePreviewListProps> = ({
+  animes,
+  title,
+  onSeeMoreCardPress
+}: HomePreviewListProps) => {
   const { theme } = useContext(ThemeContext);
 
   const navigation = useNavigation<HomeNavigationProps<"Home">["navigation"]>();
@@ -34,15 +35,17 @@ const HomePreviewList: React.FC<AnimePreviewListProps> = ({
           color: theme.colors?.white
         }}
       >
-        {categoryPreview.title}
+        {title}
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {categoryPreview.animes?.map((item) => {
+        {animes?.map((item) => {
           return (
             <AnimeCard
               key={item.id}
               title={item.title}
               posterImageUrl={item.posterImage}
+              episodeText={item.nextEpisode ? "Prochain épisode" : undefined}
+              episodeNumber={item.nextEpisode}
               width={CARD_WIDTH}
               height={CARD_HEIGHT}
               onPress={() =>
@@ -51,10 +54,7 @@ const HomePreviewList: React.FC<AnimePreviewListProps> = ({
             />
           );
         })}
-        <SeeMoreCard
-          categoryName={categoryPreview.title}
-          categoryId={categoryPreview.categoryId!}
-        />
+        <SeeMoreCard onPress={onSeeMoreCardPress} />
       </ScrollView>
     </View>
   );
@@ -62,6 +62,15 @@ const HomePreviewList: React.FC<AnimePreviewListProps> = ({
 
 export default HomePreviewList;
 
-interface AnimePreviewListProps {
-  categoryPreview: CategoryPreviewFieldsFragment;
+export interface HomePreviewListProps {
+  animes?: AnimeCardData[] | null;
+  title: string;
+  onSeeMoreCardPress: () => void;
+}
+
+interface AnimeCardData {
+  id: number;
+  title: string;
+  nextEpisode?: number;
+  posterImage: string;
 }
