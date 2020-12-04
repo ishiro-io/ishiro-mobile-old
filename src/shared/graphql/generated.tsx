@@ -16,12 +16,15 @@ export const namedOperations = {
     animes: "animes",
     searchAnimes: "searchAnimes",
     categories: "categories",
+    arcs: "arcs",
+    episodes: "episodes",
     homeAnimes: "homeAnimes",
     checkConfirmationCode: "checkConfirmationCode",
     isRegisteredWithGoogle: "isRegisteredWithGoogle",
     me: "me",
     userAnimeViewingStatus: "userAnimeViewingStatus",
-    userAnimesByViewingStatus: "userAnimesByViewingStatus"
+    userAnimesByViewingStatus: "userAnimesByViewingStatus",
+    userEpisodesStatus: "userEpisodesStatus"
   },
   Mutation: {
     changeForgotPassword: "changeForgotPassword",
@@ -31,16 +34,21 @@ export const namedOperations = {
     loginWithGoogle: "loginWithGoogle",
     register: "register",
     resendConfirmationSMS: "resendConfirmationSMS",
-    setUserAnimeViewingStatus: "setUserAnimeViewingStatus"
+    setUserAnimeViewingStatus: "setUserAnimeViewingStatus",
+    setUserEpisodesStatus: "setUserEpisodesStatus"
   },
   Fragment: {
     AnimeAdditionalInformationsFields: "AnimeAdditionalInformationsFields",
     AnimeDataFields: "AnimeDataFields",
     AnimeFields: "AnimeFields",
     CategoryFields: "CategoryFields",
+    ArcFields: "ArcFields",
+    EpisodeFields: "EpisodeFields",
     CategoryPreviewFields: "CategoryPreviewFields",
     UserFields: "UserFields",
-    UserAnimeStatusFields: "UserAnimeStatusFields"
+    UserAnimeStatusFields: "UserAnimeStatusFields",
+    EpisodeWithStatusFields: "EpisodeWithStatusFields",
+    UserEpisodeStatusFields: "UserEpisodeStatusFields"
   }
 };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -648,6 +656,32 @@ export type CategoriesQuery = { __typename?: "Query" } & {
   categories: Array<{ __typename?: "Category" } & CategoryFieldsFragment>;
 };
 
+export type ArcFieldsFragment = { __typename?: "Arc" } & Pick<
+  Arc,
+  "title" | "firstEpisodeNumber" | "lastEpisodeNumber"
+>;
+
+export type EpisodeFieldsFragment = { __typename?: "Episode" } & Pick<
+  Episode,
+  "id" | "number" | "title" | "airedDate" | "arcName"
+>;
+
+export type ArcsQueryVariables = Exact<{
+  animeId: Scalars["Float"];
+}>;
+
+export type ArcsQuery = { __typename?: "Query" } & {
+  arcs?: Maybe<Array<{ __typename?: "Arc" } & ArcFieldsFragment>>;
+};
+
+export type EpisodesQueryVariables = Exact<{
+  animeId: Scalars["Float"];
+}>;
+
+export type EpisodesQuery = { __typename?: "Query" } & {
+  episodes: Array<{ __typename?: "Episode" } & EpisodeFieldsFragment>;
+};
+
 export type CategoryPreviewFieldsFragment = {
   __typename?: "CategoryPreview";
 } & Pick<CategoryPreview, "categoryId" | "title"> & {
@@ -816,6 +850,49 @@ export type UserAnimesByViewingStatusQuery = { __typename?: "Query" } & {
     };
 };
 
+export type EpisodeWithStatusFieldsFragment = {
+  __typename?: "EpisodeWithStatus";
+} & {
+  episode: { __typename?: "Episode" } & EpisodeFieldsFragment;
+  status?: Maybe<
+    { __typename?: "UserEpisodeStatus" } & UserEpisodeStatusFieldsFragment
+  >;
+};
+
+export type UserEpisodeStatusFieldsFragment = {
+  __typename?: "UserEpisodeStatus";
+} & Pick<UserEpisodeStatus, "hasBeenSeen"> & {
+    episode: { __typename?: "Episode" } & Pick<Episode, "number">;
+    animeStatus: { __typename?: "UserAnimeStatus" } & Pick<
+      UserAnimeStatus,
+      "id"
+    >;
+  };
+
+export type SetUserEpisodesStatusMutationVariables = Exact<{
+  input: SetUserEpisodesStatusInput;
+}>;
+
+export type SetUserEpisodesStatusMutation = { __typename?: "Mutation" } & {
+  setUserEpisodesStatus?: Maybe<
+    Array<
+      { __typename?: "UserEpisodeStatus" } & UserEpisodeStatusFieldsFragment
+    >
+  >;
+};
+
+export type UserEpisodesStatusQueryVariables = Exact<{
+  animeId: Scalars["Float"];
+}>;
+
+export type UserEpisodesStatusQuery = { __typename?: "Query" } & {
+  userEpisodesStatus?: Maybe<
+    Array<
+      { __typename?: "EpisodeWithStatus" } & EpisodeWithStatusFieldsFragment
+    >
+  >;
+};
+
 export const AnimeAdditionalInformationsFieldsFragmentDoc = gql`
   fragment AnimeAdditionalInformationsFields on Anime {
     id
@@ -852,6 +929,13 @@ export const CategoryFieldsFragmentDoc = gql`
     id
     name
     coverImage
+  }
+`;
+export const ArcFieldsFragmentDoc = gql`
+  fragment ArcFields on Arc {
+    title
+    firstEpisodeNumber
+    lastEpisodeNumber
   }
 `;
 export const AnimeFieldsFragmentDoc = gql`
@@ -900,6 +984,38 @@ export const UserAnimeStatusFieldsFragmentDoc = gql`
       number
     }
   }
+`;
+export const EpisodeFieldsFragmentDoc = gql`
+  fragment EpisodeFields on Episode {
+    id
+    number
+    title
+    airedDate
+    arcName
+  }
+`;
+export const UserEpisodeStatusFieldsFragmentDoc = gql`
+  fragment UserEpisodeStatusFields on UserEpisodeStatus {
+    hasBeenSeen
+    episode {
+      number
+    }
+    animeStatus {
+      id
+    }
+  }
+`;
+export const EpisodeWithStatusFieldsFragmentDoc = gql`
+  fragment EpisodeWithStatusFields on EpisodeWithStatus {
+    episode {
+      ...EpisodeFields
+    }
+    status {
+      ...UserEpisodeStatusFields
+    }
+  }
+  ${EpisodeFieldsFragmentDoc}
+  ${UserEpisodeStatusFieldsFragmentDoc}
 `;
 export const AnimeAdditionalInfoDocument = gql`
   query animeAdditionalInfo($id: Float!) {
@@ -1175,6 +1291,102 @@ export type CategoriesLazyQueryHookResult = ReturnType<
 export type CategoriesQueryResult = Apollo.QueryResult<
   CategoriesQuery,
   CategoriesQueryVariables
+>;
+export const ArcsDocument = gql`
+  query arcs($animeId: Float!) {
+    arcs(animeId: $animeId) {
+      ...ArcFields
+    }
+  }
+  ${ArcFieldsFragmentDoc}
+`;
+
+/**
+ * __useArcsQuery__
+ *
+ * To run a query within a React component, call `useArcsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useArcsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useArcsQuery({
+ *   variables: {
+ *      animeId: // value for 'animeId'
+ *   },
+ * });
+ */
+export function useArcsQuery(
+  baseOptions?: Apollo.QueryHookOptions<ArcsQuery, ArcsQueryVariables>
+) {
+  return Apollo.useQuery<ArcsQuery, ArcsQueryVariables>(
+    ArcsDocument,
+    baseOptions
+  );
+}
+export function useArcsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ArcsQuery, ArcsQueryVariables>
+) {
+  return Apollo.useLazyQuery<ArcsQuery, ArcsQueryVariables>(
+    ArcsDocument,
+    baseOptions
+  );
+}
+export type ArcsQueryHookResult = ReturnType<typeof useArcsQuery>;
+export type ArcsLazyQueryHookResult = ReturnType<typeof useArcsLazyQuery>;
+export type ArcsQueryResult = Apollo.QueryResult<ArcsQuery, ArcsQueryVariables>;
+export const EpisodesDocument = gql`
+  query episodes($animeId: Float!) {
+    episodes(animeId: $animeId) {
+      ...EpisodeFields
+    }
+  }
+  ${EpisodeFieldsFragmentDoc}
+`;
+
+/**
+ * __useEpisodesQuery__
+ *
+ * To run a query within a React component, call `useEpisodesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEpisodesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEpisodesQuery({
+ *   variables: {
+ *      animeId: // value for 'animeId'
+ *   },
+ * });
+ */
+export function useEpisodesQuery(
+  baseOptions?: Apollo.QueryHookOptions<EpisodesQuery, EpisodesQueryVariables>
+) {
+  return Apollo.useQuery<EpisodesQuery, EpisodesQueryVariables>(
+    EpisodesDocument,
+    baseOptions
+  );
+}
+export function useEpisodesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    EpisodesQuery,
+    EpisodesQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<EpisodesQuery, EpisodesQueryVariables>(
+    EpisodesDocument,
+    baseOptions
+  );
+}
+export type EpisodesQueryHookResult = ReturnType<typeof useEpisodesQuery>;
+export type EpisodesLazyQueryHookResult = ReturnType<
+  typeof useEpisodesLazyQuery
+>;
+export type EpisodesQueryResult = Apollo.QueryResult<
+  EpisodesQuery,
+  EpisodesQueryVariables
 >;
 export const HomeAnimesDocument = gql`
   query homeAnimes {
@@ -1897,6 +2109,112 @@ export type UserAnimesByViewingStatusLazyQueryHookResult = ReturnType<
 export type UserAnimesByViewingStatusQueryResult = Apollo.QueryResult<
   UserAnimesByViewingStatusQuery,
   UserAnimesByViewingStatusQueryVariables
+>;
+export const SetUserEpisodesStatusDocument = gql`
+  mutation setUserEpisodesStatus($input: SetUserEpisodesStatusInput!) {
+    setUserEpisodesStatus(input: $input) {
+      ...UserEpisodeStatusFields
+    }
+  }
+  ${UserEpisodeStatusFieldsFragmentDoc}
+`;
+export type SetUserEpisodesStatusMutationFn = Apollo.MutationFunction<
+  SetUserEpisodesStatusMutation,
+  SetUserEpisodesStatusMutationVariables
+>;
+
+/**
+ * __useSetUserEpisodesStatusMutation__
+ *
+ * To run a mutation, you first call `useSetUserEpisodesStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetUserEpisodesStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setUserEpisodesStatusMutation, { data, loading, error }] = useSetUserEpisodesStatusMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetUserEpisodesStatusMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetUserEpisodesStatusMutation,
+    SetUserEpisodesStatusMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    SetUserEpisodesStatusMutation,
+    SetUserEpisodesStatusMutationVariables
+  >(SetUserEpisodesStatusDocument, baseOptions);
+}
+export type SetUserEpisodesStatusMutationHookResult = ReturnType<
+  typeof useSetUserEpisodesStatusMutation
+>;
+export type SetUserEpisodesStatusMutationResult = Apollo.MutationResult<SetUserEpisodesStatusMutation>;
+export type SetUserEpisodesStatusMutationOptions = Apollo.BaseMutationOptions<
+  SetUserEpisodesStatusMutation,
+  SetUserEpisodesStatusMutationVariables
+>;
+export const UserEpisodesStatusDocument = gql`
+  query userEpisodesStatus($animeId: Float!) {
+    userEpisodesStatus(animeId: $animeId) {
+      ...EpisodeWithStatusFields
+    }
+  }
+  ${EpisodeWithStatusFieldsFragmentDoc}
+`;
+
+/**
+ * __useUserEpisodesStatusQuery__
+ *
+ * To run a query within a React component, call `useUserEpisodesStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserEpisodesStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserEpisodesStatusQuery({
+ *   variables: {
+ *      animeId: // value for 'animeId'
+ *   },
+ * });
+ */
+export function useUserEpisodesStatusQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    UserEpisodesStatusQuery,
+    UserEpisodesStatusQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    UserEpisodesStatusQuery,
+    UserEpisodesStatusQueryVariables
+  >(UserEpisodesStatusDocument, baseOptions);
+}
+export function useUserEpisodesStatusLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    UserEpisodesStatusQuery,
+    UserEpisodesStatusQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    UserEpisodesStatusQuery,
+    UserEpisodesStatusQueryVariables
+  >(UserEpisodesStatusDocument, baseOptions);
+}
+export type UserEpisodesStatusQueryHookResult = ReturnType<
+  typeof useUserEpisodesStatusQuery
+>;
+export type UserEpisodesStatusLazyQueryHookResult = ReturnType<
+  typeof useUserEpisodesStatusLazyQuery
+>;
+export type UserEpisodesStatusQueryResult = Apollo.QueryResult<
+  UserEpisodesStatusQuery,
+  UserEpisodesStatusQueryVariables
 >;
 export type BaseEntityKeySpecifier = (
   | "id"

@@ -29,6 +29,12 @@ const typePolicies: TypedTypePolicies = {
               }
             : incoming;
         }
+      },
+      userEpisodesStatus: {
+        keyArgs: ["animeId"],
+        merge(_, incoming) {
+          return incoming;
+        }
       }
     }
   }

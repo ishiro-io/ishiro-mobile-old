@@ -1,0 +1,8 @@
+fragment EpisodeWithStatusFields on EpisodeWithStatus {
+  episode {
+    ...EpisodeFields
+  }
+  status {
+    ...UserEpisodeStatusFields
+  }
+}

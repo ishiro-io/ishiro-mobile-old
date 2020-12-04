@@ -1,0 +1,5 @@
+query episodes($animeId: Float!) {
+  episodes(animeId: $animeId) {
+    ...EpisodeFields
+  }
+}
