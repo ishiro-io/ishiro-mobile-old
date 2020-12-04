@@ -1,0 +1,9 @@
+fragment UserEpisodeStatusFields on UserEpisodeStatus {
+  hasBeenSeen
+  episode {
+    number
+  }
+  animeStatus {
+    id
+  }
+}

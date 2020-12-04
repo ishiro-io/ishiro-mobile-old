@@ -1,0 +1,5 @@
+query arcs($animeId: Float!) {
+  arcs(animeId: $animeId) {
+    ...ArcFields
+  }
+}

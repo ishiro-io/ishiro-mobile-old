@@ -1,0 +1,7 @@
+fragment EpisodeFields on Episode {
+  id
+  number
+  title
+  airedDate
+  arcName
+}

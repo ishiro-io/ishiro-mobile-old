@@ -11,6 +11,7 @@ import { AnimeInfoModalRoutes } from "shared/navigation/Routes";
 
 import { AnimeInfoContent } from "./Content";
 import { AnimeInfoHeader } from "./Header";
+import { ArcListModal } from "./Modals";
 
 const AnimeInfoModalStack = createStackNavigator<AnimeInfoModalRoutes>();
 
@@ -68,6 +69,10 @@ const AnimeInfo: React.FC<AnimeDetailsProps> = ({}: AnimeDetailsProps) => {
           animeData: data.anime,
           animeId: route.params.animeId
         }}
+      />
+      <AnimeInfoModalStack.Screen
+        name="ArcListModal"
+        component={ArcListModal}
       />
     </AnimeInfoModalStack.Navigator>
   );

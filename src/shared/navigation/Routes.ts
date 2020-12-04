@@ -1,6 +1,7 @@
 import {
   AnimeDataFieldsFragment,
-  AnimeViewingStatus
+  AnimeViewingStatus,
+  Arc
 } from "shared/graphql/generated";
 
 export type AppRoutes = {
@@ -61,6 +62,11 @@ export type StatusListsTabRoutes = {
 
 export type AnimeInfoModalRoutes = {
   Main: { animeId: number; animeData: AnimeDataFieldsFragment };
+  ArcListModal: {
+    arcList: Arc[];
+    selectedArcIndex: number | undefined;
+    setSelectedArcIndex: React.Dispatch<React.SetStateAction<number>>;
+  };
 };
 
 export type AnimeInfoTabRoutes = {

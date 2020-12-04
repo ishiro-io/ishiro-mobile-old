@@ -1,0 +1,5 @@
+query userEpisodesStatus($animeId: Float!) {
+  userEpisodesStatus(animeId: $animeId) {
+    ...EpisodeWithStatusFields
+  }
+}

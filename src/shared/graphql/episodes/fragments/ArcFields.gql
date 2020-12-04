@@ -1,0 +1,5 @@
+fragment ArcFields on Arc {
+  title
+  firstEpisodeNumber
+  lastEpisodeNumber
+}
