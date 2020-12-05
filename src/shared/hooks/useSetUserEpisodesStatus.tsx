@@ -16,7 +16,8 @@ const useSetUserEpisodesStatus = () => {
 
   const setUserEpisodesStatus = async ({
     input: { animeId, newEpisodeStatus },
-    arcName
+    arcName,
+    animeStatusId
   }: Options) => {
     setUserEpisodesStatusMutation({
       variables: {
@@ -33,7 +34,7 @@ const useSetUserEpisodesStatus = () => {
               __typename: "Episode",
               number: episodeStatus.episodeNumber
             },
-            animeStatus: { id: animeId }
+            animeStatus: { id: animeStatusId }
           };
         })
       },
@@ -142,6 +143,7 @@ const useSetUserEpisodesStatus = () => {
 
 interface Options extends SetUserEpisodesStatusMutationVariables {
   arcName: string | null | undefined;
+  animeStatusId: number;
 }
 
 export default useSetUserEpisodesStatus;

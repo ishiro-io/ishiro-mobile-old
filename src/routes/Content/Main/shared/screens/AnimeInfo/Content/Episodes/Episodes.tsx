@@ -42,7 +42,9 @@ const Episodes: React.FC<EpisodesProps> = ({}: EpisodesProps) => {
     <View style={{ flex: 1 }}>
       {data?.arcs?.length && data.arcs.length > 1 ? (
         <ArcFlatList
+          animeData={route.params.animeData}
           arcName={data.arcs[selectedArcIndex].title}
+          isLastArc={selectedArcIndex === data.arcs.length - 1}
           displayHeaderArrow
           onHeaderArrowPress={() =>
             modalNavigation.navigate("ArcListModal", {
@@ -58,7 +60,7 @@ const Episodes: React.FC<EpisodesProps> = ({}: EpisodesProps) => {
           }
         />
       ) : (
-        <ArcFlatList />
+        <ArcFlatList animeData={route.params.animeData} isLastArc />
       )}
     </View>
   );

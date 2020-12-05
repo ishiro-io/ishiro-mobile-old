@@ -59,7 +59,7 @@ const AnimeInfoContent: React.FC<AnimeInfoContentProps> = ({}: AnimeInfoContentP
           <AnimeInfoTabs.Screen
             name="Episodes"
             component={Episodes}
-            initialParams={{ animeId: animeData.id }}
+            initialParams={{ animeId: animeData.id, animeData }}
           />
         )}
       </AnimeInfoTabs.Navigator>

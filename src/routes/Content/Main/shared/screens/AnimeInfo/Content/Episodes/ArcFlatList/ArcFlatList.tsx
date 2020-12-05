@@ -12,11 +12,18 @@ import { FlatList } from "react-native-gesture-handler";
 
 import { ListEmpty } from "components";
 import {
+  AnimeDataFieldsFragment,
+  AnimeViewingStatus,
   EpisodeWithStatusFieldsFragment,
   NewEpisodeStatus,
+  useUserAnimeViewingStatusQuery,
   useUserEpisodesStatusQuery
 } from "shared/graphql/generated";
-import { useSetUserEpisodesStatus, useUpdateEffect } from "shared/hooks";
+import {
+  useSetUserAnimeViewingStatus,
+  useSetUserEpisodesStatus,
+  useUpdateEffect
+} from "shared/hooks";
 import { AnimeInfoTabNavigationProps } from "shared/navigation/NavigationProps";
 
 import { ArcFooter } from "./ArcFooter";
@@ -26,7 +33,9 @@ import { EpisodeRow } from "./EpisodeRow";
 const { height } = Dimensions.get("screen");
 
 const ArcFlatList: React.FC<ArcFlatListProps> = ({
+  animeData,
   arcName,
+  isLastArc,
   displayHeaderArrow = false,
   onHeaderArrowPress,
   onNextEpisodePressed
@@ -39,6 +48,10 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
 
   const ref = useRef<FlatList<any> | null>(null);
 
+  const { data: animeStatusData } = useUserAnimeViewingStatusQuery({
+    variables: { animeId: route.params.animeId }
+  });
+
   const { data, loading } = useUserEpisodesStatusQuery({
     variables: {
       animeId: route.params.animeId
@@ -46,6 +59,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
   });
 
   const setUserEpisodesStatus = useSetUserEpisodesStatus();
+  const setUserAnimeViewingStatus = useSetUserAnimeViewingStatus();
 
   const [appState, setAppState] = useState(AppState.currentState);
   const [hasChanged, setHasChanged] = useState(false);
@@ -56,7 +70,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
   const [isListPopulated, setIsListPopulated] = useState(false);
 
   const [isCheckedList, setIsCheckedList] = useState<boolean[]>([]);
-  const [areAllChecked, setAreAllChecked] = useState(false);
+  const [areAllCheckedInList, setAreAllCheckedInList] = useState(false);
 
   const [maxCount, setMaxCount] = useState(0);
   const [checkedCount, setCheckedCount] = useState(0);
@@ -146,6 +160,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
 
       setUserEpisodesStatus({
         arcName,
+        animeStatusId: animeStatusData?.userAnimeViewingStatus?.id ?? 0,
         input: {
           animeId: route.params.animeId,
           newEpisodeStatus
@@ -163,10 +178,12 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
       return accumulator;
     }, 0);
 
-    if (count >= maxCount) setAreAllChecked(true);
-    else setAreAllChecked(false);
+    if (count >= maxCount) setAreAllCheckedInList(true);
+    else setAreAllCheckedInList(false);
 
     setCheckedCount(count);
+
+    if (count > 0) checkAndUpdateAnimeStatus(count);
   }, [isCheckedList]);
 
   // ? Call when check is pressed in EpisodeRow
@@ -192,6 +209,43 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
     setIsCheckedList(newIsCheckedList);
 
     setHasChanged(true);
+  };
+
+  // ? Change anime status to IN_PROGRESS if his status is at NONE or TO_SEE
+  const checkAndUpdateAnimeStatus = (count: number) => {
+    const status =
+      animeStatusData?.userAnimeViewingStatus?.status ||
+      AnimeViewingStatus.None;
+
+    if (count >= maxCount && isLastArc) {
+      setUserAnimeViewingStatus({
+        itemToUpdate: animeStatusData?.userAnimeViewingStatus ?? {
+          id: 0,
+          anime: animeData,
+          status: AnimeViewingStatus.None,
+          episodesStatus: [],
+          lastEpisodeSeen: null,
+          nextEpisodeToSee: null
+        },
+        newStatus: AnimeViewingStatus.Finished
+      });
+    } else {
+      if (
+        status === AnimeViewingStatus.None ||
+        status === AnimeViewingStatus.ToSee
+      )
+        setUserAnimeViewingStatus({
+          itemToUpdate: animeStatusData?.userAnimeViewingStatus ?? {
+            id: 0,
+            anime: animeData,
+            status: AnimeViewingStatus.None,
+            episodesStatus: [],
+            lastEpisodeSeen: null,
+            nextEpisodeToSee: null
+          },
+          newStatus: AnimeViewingStatus.InProgress
+        });
+    }
   };
 
   if (loading || !isListPopulated)
@@ -227,7 +281,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
             onArrowPress={onHeaderArrowPress}
             displayArrow={displayHeaderArrow}
             onCheckPress={onMultiCheckPress}
-            isChecked={areAllChecked}
+            isChecked={areAllCheckedInList}
             {...{ checkedCount, maxCount }}
           />
         }
@@ -256,7 +310,9 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
 export default ArcFlatList;
 
 interface ArcFlatListProps {
+  animeData: AnimeDataFieldsFragment;
   arcName?: string | null | undefined;
+  isLastArc: boolean;
   displayHeaderArrow?: boolean;
   onHeaderArrowPress?: () => void;
   onNextEpisodePressed?: () => void;

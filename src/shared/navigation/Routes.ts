@@ -70,6 +70,6 @@ export type AnimeInfoModalRoutes = {
 };
 
 export type AnimeInfoTabRoutes = {
-  Episodes: { animeId: number };
+  Episodes: { animeId: number; animeData: AnimeDataFieldsFragment };
   Informations: { animeId: number };
 };

@@ -48,7 +48,7 @@ const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
   useUpdateEffect(() => {
     if (isDirty && !loading) {
       setUserAnimeViewingStatus({
-        itemToUpdate: data?.userAnimeViewingStatus! ?? {
+        itemToUpdate: data?.userAnimeViewingStatus ?? {
           id: 0,
           anime: animeData,
           status: AnimeViewingStatus.None,
