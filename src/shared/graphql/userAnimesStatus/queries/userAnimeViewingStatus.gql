@@ -1,5 +1,0 @@
-query userAnimeViewingStatus($animeId: Float!) {
-  userAnimeViewingStatus(animeId: $animeId) {
-    ...UserAnimeStatusFields
-  }
-}

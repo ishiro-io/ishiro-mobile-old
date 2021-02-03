@@ -1,0 +1,5 @@
+mutation updateUsername($input: UpdateUsernameInput!) {
+  updateUsername(input: $input) {
+    ...UserFields
+  }
+}

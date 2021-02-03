@@ -1,15 +1,31 @@
 query homeAnimes {
-  categoriesPreviews {
+  action: categoryPreview(id: 4) {
     ...CategoryPreviewFields
   }
 
-  userAnimesByViewingStatus(
-    status: IN_PROGRESS
-    options: { limit: 10, offset: 0 }
-  ) {
-    hasMore
-    fields {
-      ...UserAnimeStatusFields
-    }
+  romance: categoryPreview(id: 3) {
+    ...CategoryPreviewFields
   }
+
+  comedie: categoryPreview(id: 1) {
+    ...CategoryPreviewFields
+  }
+
+  drame: categoryPreview(id: 6) {
+    ...CategoryPreviewFields
+  }
+
+  sf: categoryPreview(id: 10) {
+    ...CategoryPreviewFields
+  }
+
+  # userAnimesByViewingStatus(
+  #   status: IN_PROGRESS
+  #   options: { limit: 10, offset: 0 }
+  # ) {
+  #   hasMore
+  #   fields {
+  #     ...UserAnimeStatusFields
+  #   }
+  # }
 }

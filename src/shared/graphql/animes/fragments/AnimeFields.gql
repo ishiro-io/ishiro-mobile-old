@@ -2,4 +2,7 @@ fragment AnimeFields on Anime {
   id
   title
   posterImage
+  arcs {
+    ...ArcFields
+  }
 }

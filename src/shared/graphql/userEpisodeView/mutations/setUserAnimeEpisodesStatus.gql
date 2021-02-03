@@ -1,0 +1,5 @@
+mutation setUserAnimeEpisodesStatus($input: SetUserAnimeEpisodesStatusInput!) {
+  setUserAnimeEpisodesStatus(input: $input) {
+    ...UserEpisodeViewFields
+  }
+}

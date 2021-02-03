@@ -1,0 +1,3 @@
+mutation phoneAskConfirmationCode($input: PhoneAskConfirmationCodeInput!) {
+  phoneAskConfirmationCode(input: $input)
+}

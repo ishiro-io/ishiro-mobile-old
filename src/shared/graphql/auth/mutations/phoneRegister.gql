@@ -1,0 +1,5 @@
+mutation phoneRegister($input: PhoneRegisterInput!) {
+  phoneRegister(input: $input) {
+    ...UserFields
+  }
+}

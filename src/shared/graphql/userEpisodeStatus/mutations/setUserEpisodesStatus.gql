@@ -1,5 +1,0 @@
-mutation setUserEpisodesStatus($input: SetUserEpisodesStatusInput!) {
-  setUserEpisodesStatus(input: $input) {
-    ...UserEpisodeStatusFields
-  }
-}

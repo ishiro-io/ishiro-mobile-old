@@ -1,0 +1,9 @@
+fragment UserEpisodeViewFields on UserEpisodeView {
+  hasBeenSeen
+  episode {
+    number
+  }
+  animeView {
+    id
+  }
+}

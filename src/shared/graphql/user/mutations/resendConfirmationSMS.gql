@@ -1,3 +1,0 @@
-mutation resendConfirmationSMS($phoneNumber: String!) {
-    resendConfirmationSMS(phoneNumber: $phoneNumber)
-  }
