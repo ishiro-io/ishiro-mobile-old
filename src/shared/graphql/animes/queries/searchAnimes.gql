@@ -1,8 +1,8 @@
-query searchAnimes($input: SearchAnimesInput!, $options: PaginatedInput) {
-    searchAnimes(input: $input, options: $options) {
-      hasMore
-      fields {
-        ...AnimeFields
-      }
+query searchAnimes($input: SearchAnimesInput!, $options: PaginationInput) {
+  searchAnimes(input: $input, options: $options) {
+    hasMore
+    fields {
+      ...AnimeFields
     }
   }
+}

@@ -1,3 +1,0 @@
-query isRegisteredWithGoogle($accountId: String!) {
-  isRegisteredWithGoogle(accountId: $accountId)
-}

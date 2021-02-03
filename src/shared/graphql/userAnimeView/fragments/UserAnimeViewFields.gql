@@ -1,4 +1,4 @@
-fragment UserAnimeStatusFields on UserAnimeStatus {
+fragment UserAnimeViewFields on UserAnimeView {
   id
   status
   anime {
@@ -6,7 +6,7 @@ fragment UserAnimeStatusFields on UserAnimeStatus {
     title
     posterImage
   }
-  episodesStatus {
+  episodeViews {
     hasBeenSeen
     episode {
       number

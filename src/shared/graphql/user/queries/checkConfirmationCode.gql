@@ -1,7 +1,0 @@
-query checkConfirmationCode(
-    $token: String!
-    $type: ConfirmationCodeType!
-    $deleteToken: Boolean
-  ) {
-    checkConfirmationCode(token: $token, type: $type, deleteToken: $deleteToken)
-  }

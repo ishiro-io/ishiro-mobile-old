@@ -1,0 +1,5 @@
+mutation googleRegister($input: GoogleRegisterInput!) {
+  googleRegister(input: $input) {
+    ...UserFields
+  }
+}

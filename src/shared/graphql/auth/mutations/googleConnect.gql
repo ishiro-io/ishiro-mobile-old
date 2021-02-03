@@ -1,0 +1,7 @@
+mutation googleConnect($input: GoogleConnectInput!) {
+  googleConnect(input: $input) {
+    user {
+      ...UserFields
+    }
+  }
+}

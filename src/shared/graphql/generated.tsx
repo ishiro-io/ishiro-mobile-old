@@ -15,40 +15,37 @@ export const namedOperations = {
     animeData: "animeData",
     animes: "animes",
     searchAnimes: "searchAnimes",
+    me: "me",
     categories: "categories",
-    arcs: "arcs",
     episodes: "episodes",
     homeAnimes: "homeAnimes",
-    checkConfirmationCode: "checkConfirmationCode",
-    isRegisteredWithGoogle: "isRegisteredWithGoogle",
-    me: "me",
-    userAnimeViewingStatus: "userAnimeViewingStatus",
-    userAnimesByViewingStatus: "userAnimesByViewingStatus",
-    userEpisodesStatus: "userEpisodesStatus"
+    userAnimeView: "userAnimeView",
+    userAnimeViewsByStatus: "userAnimeViewsByStatus",
+    userAnimeEpisodesStatus: "userAnimeEpisodesStatus"
   },
   Mutation: {
-    changeForgotPassword: "changeForgotPassword",
-    confirmPhoneNumber: "confirmPhoneNumber",
-    forgotPassword: "forgotPassword",
-    login: "login",
-    loginWithGoogle: "loginWithGoogle",
-    register: "register",
-    resendConfirmationSMS: "resendConfirmationSMS",
-    setUserAnimeViewingStatus: "setUserAnimeViewingStatus",
-    setUserEpisodesStatus: "setUserEpisodesStatus"
+    googleConnect: "googleConnect",
+    googleRegister: "googleRegister",
+    logout: "logout",
+    phoneAskConfirmationCode: "phoneAskConfirmationCode",
+    phoneConnect: "phoneConnect",
+    phoneRegister: "phoneRegister",
+    updateUsername: "updateUsername",
+    setUserAnimeViewStatus: "setUserAnimeViewStatus",
+    setUserAnimeEpisodesStatus: "setUserAnimeEpisodesStatus"
   },
   Fragment: {
     AnimeAdditionalInformationsFields: "AnimeAdditionalInformationsFields",
     AnimeDataFields: "AnimeDataFields",
     AnimeFields: "AnimeFields",
-    CategoryFields: "CategoryFields",
     ArcFields: "ArcFields",
-    EpisodeFields: "EpisodeFields",
+    CategoryFields: "CategoryFields",
     CategoryPreviewFields: "CategoryPreviewFields",
+    EpisodeFields: "EpisodeFields",
     UserFields: "UserFields",
-    UserAnimeStatusFields: "UserAnimeStatusFields",
+    UserAnimeViewFields: "UserAnimeViewFields",
     EpisodeWithStatusFields: "EpisodeWithStatusFields",
-    UserEpisodeStatusFields: "UserEpisodeStatusFields"
+    UserEpisodeViewFields: "UserEpisodeViewFields"
   }
 };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -60,76 +57,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type BaseEntity = {
-  __typename?: "BaseEntity";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-};
-
-export type Category = {
-  __typename?: "Category";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-  name: Scalars["String"];
-  coverImage: Scalars["String"];
-  animes: Array<Anime>;
-};
-
-export type Episode = {
-  __typename?: "Episode";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-  title?: Maybe<Scalars["String"]>;
-  number: Scalars["Float"];
-  arcName?: Maybe<Scalars["String"]>;
-  thumbnail?: Maybe<Scalars["String"]>;
-  airedDate?: Maybe<Scalars["String"]>;
-  anime: Anime;
-};
-
-export type User = {
-  __typename?: "User";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-  username: Scalars["String"];
-  phoneNumber?: Maybe<Scalars["String"]>;
-};
-
-export type UserEpisodeStatus = {
-  __typename?: "UserEpisodeStatus";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-  hasBeenSeen?: Maybe<Scalars["Boolean"]>;
-  episode: Episode;
-  animeStatus: UserAnimeStatus;
-};
-
-export type UserAnimeStatus = {
-  __typename?: "UserAnimeStatus";
-  id: Scalars["Float"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
-  status: AnimeViewingStatus;
-  anime: Anime;
-  user: User;
-  episodesStatus: Array<UserEpisodeStatus>;
-  lastEpisodeSeen?: Maybe<Episode>;
-  nextEpisodeToSee?: Maybe<Episode>;
-};
-
-export enum AnimeViewingStatus {
-  None = "NONE",
-  InProgress = "IN_PROGRESS",
-  ToSee = "TO_SEE",
-  Finished = "FINISHED",
-  Abandoned = "ABANDONED"
-}
-
 export type Anime = {
   __typename?: "Anime";
   id: Scalars["Float"];
@@ -139,9 +66,9 @@ export type Anime = {
   title: Scalars["String"];
   titleEnglish?: Maybe<Scalars["String"]>;
   titleJapanese?: Maybe<Scalars["String"]>;
-  bannerImage: Scalars["String"];
-  posterImage: Scalars["String"];
-  description: Scalars["String"];
+  bannerImage?: Maybe<Scalars["String"]>;
+  posterImage?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
   MALRating?: Maybe<Scalars["Float"]>;
   type: AnimeType;
   status: AnimeStatus;
@@ -153,7 +80,8 @@ export type Anime = {
   isAdult: Scalars["Boolean"];
   categories: Array<Category>;
   episodes: Array<Episode>;
-  episodeCount: Scalars["Float"];
+  episodeCount: Scalars["Int"];
+  arcs?: Maybe<Array<Arc>>;
 };
 
 export enum AnimeType {
@@ -172,22 +100,78 @@ export enum AnimeStatus {
   Cancelled = "CANCELLED"
 }
 
-export type PaginatedAnimesOutput = {
-  __typename?: "PaginatedAnimesOutput";
-  hasMore: Scalars["Boolean"];
-  fields: Array<Anime>;
+export type Category = {
+  __typename?: "Category";
+  id: Scalars["Float"];
+  createdAt: Scalars["String"];
+  updatedAt: Scalars["String"];
+  name: Scalars["String"];
+  coverImage?: Maybe<Scalars["String"]>;
+  animes: Array<Anime>;
+};
+
+export type Episode = {
+  __typename?: "Episode";
+  id: Scalars["Float"];
+  createdAt: Scalars["String"];
+  updatedAt: Scalars["String"];
+  title?: Maybe<Scalars["String"]>;
+  number: Scalars["Float"];
+  arcName?: Maybe<Scalars["String"]>;
+  airedDate?: Maybe<Scalars["String"]>;
+  anime: Anime;
+};
+
+export type User = {
+  __typename?: "User";
+  id: Scalars["Float"];
+  createdAt: Scalars["String"];
+  updatedAt: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type UserAnimeView = {
+  __typename?: "UserAnimeView";
+  id: Scalars["Float"];
+  createdAt: Scalars["String"];
+  updatedAt: Scalars["String"];
+  status: AnimeViewStatus;
+  anime: Anime;
+  user: User;
+  episodeViews: Array<UserEpisodeView>;
+  lastEpisodeSeen?: Maybe<Episode>;
+  nextEpisodeToSee?: Maybe<Episode>;
+};
+
+export enum AnimeViewStatus {
+  None = "NONE",
+  InProgress = "IN_PROGRESS",
+  ToSee = "TO_SEE",
+  Finished = "FINISHED",
+  Abandoned = "ABANDONED"
+}
+
+export type UserEpisodeView = {
+  __typename?: "UserEpisodeView";
+  id: Scalars["Float"];
+  createdAt: Scalars["String"];
+  updatedAt: Scalars["String"];
+  hasBeenSeen?: Maybe<Scalars["Boolean"]>;
+  episode: Episode;
+  animeView: UserAnimeView;
 };
 
 export type CategoryPreview = {
   __typename?: "CategoryPreview";
-  title: Scalars["String"];
-  animes?: Maybe<Array<Anime>>;
-  categoryId?: Maybe<Scalars["Float"]>;
+  id: Scalars["Float"];
+  name: Scalars["String"];
+  animes: Array<Anime>;
 };
 
-export type PopulateAnimeOutput = {
-  __typename?: "PopulateAnimeOutput";
-  timeToPopulate: Scalars["String"];
+export type AnimesOutput = {
+  __typename?: "AnimesOutput";
+  hasMore: Scalars["Boolean"];
+  total: Scalars["Int"];
   fields: Array<Anime>;
 };
 
@@ -198,369 +182,179 @@ export type Arc = {
   lastEpisodeNumber: Scalars["Float"];
 };
 
-export type PaginatedUserAnimesByViewingStatusOutput = {
-  __typename?: "PaginatedUserAnimesByViewingStatusOutput";
+export type GoogleConnectOutput = {
+  __typename?: "GoogleConnectOutput";
+  user?: Maybe<User>;
+};
+
+export type PhoneConnectOutput = {
+  __typename?: "PhoneConnectOutput";
+  user?: Maybe<User>;
+};
+
+export type UserAnimeViewsByStatusOutput = {
+  __typename?: "UserAnimeViewsByStatusOutput";
   hasMore: Scalars["Boolean"];
-  fields: Array<UserAnimeStatus>;
+  total: Scalars["Int"];
+  fields: Array<UserAnimeView>;
 };
 
 export type EpisodeWithStatus = {
   __typename?: "EpisodeWithStatus";
   episode: Episode;
-  status?: Maybe<UserEpisodeStatus>;
-};
-
-export type PaginatedInput = {
-  limit: Scalars["Float"];
-  offset: Scalars["Float"];
-};
-
-export type CreateAnimeInput = {
-  idMAL?: Maybe<Scalars["Float"]>;
-  title: Scalars["String"];
-  titleEnglish?: Maybe<Scalars["String"]>;
-  titleJapanese?: Maybe<Scalars["String"]>;
-  bannerImage: Scalars["String"];
-  posterImage: Scalars["String"];
-  description: Scalars["String"];
-  MALRating?: Maybe<Scalars["Float"]>;
-  type: AnimeType;
-  status: AnimeStatus;
-  releaseDate?: Maybe<Scalars["String"]>;
-  endDate?: Maybe<Scalars["String"]>;
-  author?: Maybe<Scalars["String"]>;
-  editor?: Maybe<Scalars["String"]>;
-  duration?: Maybe<Scalars["String"]>;
-  isAdult?: Maybe<Scalars["Boolean"]>;
-  categoriesIds: Array<Scalars["Float"]>;
-  episodesIds: Array<Scalars["Float"]>;
-};
-
-export type SearchAnimesInput = {
-  textSearchField: Scalars["String"];
-};
-
-export type UpdateAnimeInput = {
-  idMAL?: Maybe<Scalars["Float"]>;
-  title?: Maybe<Scalars["String"]>;
-  titleEnglish?: Maybe<Scalars["String"]>;
-  titleJapanese?: Maybe<Scalars["String"]>;
-  bannerImage?: Maybe<Scalars["String"]>;
-  posterImage?: Maybe<Scalars["String"]>;
-  description?: Maybe<Scalars["String"]>;
-  MALRating?: Maybe<Scalars["Float"]>;
-  type?: Maybe<AnimeType>;
-  status?: Maybe<AnimeStatus>;
-  releaseDate?: Maybe<Scalars["String"]>;
-  endDate?: Maybe<Scalars["String"]>;
-  author?: Maybe<Scalars["String"]>;
-  editor?: Maybe<Scalars["String"]>;
-  duration?: Maybe<Scalars["String"]>;
-  isAdult?: Maybe<Scalars["Boolean"]>;
-};
-
-export type CategoriesInput = {
-  categoriesIdsToAdd?: Maybe<Array<Scalars["Float"]>>;
-  categoriesIdsToDelete?: Maybe<Array<Scalars["Float"]>>;
-};
-
-export type CreateCategoriesInput = {
-  name: Scalars["String"];
-  coverImage: Scalars["String"];
-};
-
-export type UpdateCategoryInput = {
-  name?: Maybe<Scalars["String"]>;
-  coverImage?: Maybe<Scalars["String"]>;
-};
-
-export type CreateEpisodesInput = {
-  title?: Maybe<Scalars["String"]>;
-  number: Scalars["Float"];
-  arcName?: Maybe<Scalars["String"]>;
-  thumbnail?: Maybe<Scalars["String"]>;
-  airedDate?: Maybe<Scalars["String"]>;
-};
-
-export type PopulateAnimesInput = {
-  animeAmount: Scalars["Float"];
-  offset?: Maybe<Scalars["Float"]>;
-  doPopulateEpisodes?: Maybe<Scalars["Boolean"]>;
-  doTranslateDescription?: Maybe<Scalars["Boolean"]>;
-};
-
-export type UpdateEpisodeInput = {
-  title?: Maybe<Scalars["String"]>;
-  number?: Maybe<Scalars["Float"]>;
-  arcName?: Maybe<Scalars["String"]>;
-  thumbnail?: Maybe<Scalars["String"]>;
-  airedDate?: Maybe<Scalars["String"]>;
-};
-
-export type UserGoogleLoginInput = {
-  accountId: Scalars["String"];
-  username?: Maybe<Scalars["String"]>;
-};
-
-export type AskPhoneNumberChangeInput = {
-  phoneNumber: Scalars["String"];
-};
-
-export type PasswordInput = {
-  password: Scalars["String"];
-};
-
-export type UserChangeForgotPasswordInput = {
-  password: Scalars["String"];
-  token: Scalars["String"];
-};
-
-export type UserLoginInput = {
-  phoneNumberOrUsername: Scalars["String"];
-  password: Scalars["String"];
-};
-
-export type UserRegisterInput = {
-  password: Scalars["String"];
-  username: Scalars["String"];
-  phoneNumber: Scalars["String"];
-};
-
-export type UpdateInternalIdentifiersInput = {
-  phoneNumber?: Maybe<Scalars["String"]>;
-  password?: Maybe<Scalars["String"]>;
-};
-
-export type UpdateUsernameInput = {
-  username: Scalars["String"];
-};
-
-export type SetUserEpisodesStatusInput = {
-  animeId: Scalars["Float"];
-  newEpisodeStatus: Array<NewEpisodeStatus>;
-};
-
-export type NewEpisodeStatus = {
-  episodeNumber: Scalars["Float"];
-  toSeen: Scalars["Boolean"];
+  view?: Maybe<UserEpisodeView>;
 };
 
 export type Query = {
   __typename?: "Query";
-  /** Retourne un anime spécifique basé sur son id interne ou son id MyAnimeList */
   anime?: Maybe<Anime>;
-  /** Retourne les animes disponibles en base de données */
-  animes: PaginatedAnimesOutput;
-  searchAnimes?: Maybe<PaginatedAnimesOutput>;
-  /** Retourne toutes les catégories disponibles en base de données */
-  categories: Array<Category>;
-  /** Retourne les 10 premiers animes des 5 catégories de la home */
-  categoriesPreviews: Array<CategoryPreview>;
-  /** Retourne une categorie spécifique basé sur son id interne */
+  animes: AnimesOutput;
+  searchAnimes?: Maybe<AnimesOutput>;
   category?: Maybe<Category>;
-  arcs?: Maybe<Array<Arc>>;
-  /** Retourne un épisode spécifique basée sur son id interne ou l'id de son anime et son numéro d'épisode */
+  categories: Array<Category>;
+  categoryPreview?: Maybe<CategoryPreview>;
   episode?: Maybe<Episode>;
-  /** Retourne tous les épisodes d'un anime disponibles en base de données */
   episodes: Array<Episode>;
-  userAnimesByViewingStatus: PaginatedUserAnimesByViewingStatusOutput;
-  userAnimeViewingStatus?: Maybe<UserAnimeStatus>;
-  isRegisteredWithGoogle: Scalars["Boolean"];
-  checkConfirmationCode?: Maybe<Scalars["Boolean"]>;
   me?: Maybe<User>;
-  userEpisodesStatus?: Maybe<Array<EpisodeWithStatus>>;
+  userAnimeViewsByStatus?: Maybe<UserAnimeViewsByStatusOutput>;
+  userAnimeView?: Maybe<UserAnimeView>;
+  userAnimeEpisodesStatus?: Maybe<Array<EpisodeWithStatus>>;
 };
 
 export type QueryAnimeArgs = {
-  idMAL?: Maybe<Scalars["Float"]>;
-  id?: Maybe<Scalars["Float"]>;
+  id: Scalars["Float"];
 };
 
 export type QueryAnimesArgs = {
   categoryId?: Maybe<Scalars["Float"]>;
-  options?: Maybe<PaginatedInput>;
+  options?: Maybe<PaginationInput>;
 };
 
 export type QuerySearchAnimesArgs = {
   input: SearchAnimesInput;
-  options?: Maybe<PaginatedInput>;
+  options?: Maybe<PaginationInput>;
 };
 
 export type QueryCategoryArgs = {
-  id: Scalars["Float"];
+  id: Scalars["Int"];
 };
 
-export type QueryArcsArgs = {
-  animeId: Scalars["Float"];
+export type QueryCategoryPreviewArgs = {
+  id: Scalars["Int"];
 };
 
 export type QueryEpisodeArgs = {
-  animeId?: Maybe<Scalars["Float"]>;
-  number?: Maybe<Scalars["Float"]>;
-  id?: Maybe<Scalars["Float"]>;
+  id: Scalars["Int"];
 };
 
 export type QueryEpisodesArgs = {
   animeId: Scalars["Float"];
 };
 
-export type QueryUserAnimesByViewingStatusArgs = {
-  status: AnimeViewingStatus;
-  options?: Maybe<PaginatedInput>;
+export type QueryUserAnimeViewsByStatusArgs = {
+  status: AnimeViewStatus;
+  options?: Maybe<PaginationInput>;
 };
 
-export type QueryUserAnimeViewingStatusArgs = {
+export type QueryUserAnimeViewArgs = {
   animeId: Scalars["Float"];
 };
 
-export type QueryIsRegisteredWithGoogleArgs = {
-  accountId: Scalars["String"];
-};
-
-export type QueryCheckConfirmationCodeArgs = {
-  deleteToken?: Maybe<Scalars["Boolean"]>;
-  type: ConfirmationCodeType;
-  token: Scalars["String"];
-};
-
-export type QueryUserEpisodesStatusArgs = {
+export type QueryUserAnimeEpisodesStatusArgs = {
   animeId: Scalars["Float"];
 };
 
-export enum ConfirmationCodeType {
-  PhoneNumber = "PHONE_NUMBER",
-  Password = "PASSWORD"
-}
+export type PaginationInput = {
+  limit: Scalars["Float"];
+  offset: Scalars["Float"];
+};
+
+export type SearchAnimesInput = {
+  textSearchField: Scalars["String"];
+};
 
 export type Mutation = {
   __typename?: "Mutation";
-  /** Créer un anime */
-  createAnime?: Maybe<Anime>;
-  /** Supprime un anime de la base de données */
-  deleteAnime?: Maybe<Scalars["Boolean"]>;
-  /** Met à jour certaines données d'un anime */
-  updateAnime?: Maybe<Anime>;
-  /** Créer des catégories basées sur les données passées en Input */
-  createCategories?: Maybe<Array<Category>>;
-  /** Supprime une ou des catégories de la base de données */
-  deleteCategories: Scalars["Boolean"];
-  /** Met à jour certaines données d'une catégorie */
-  updateCategory?: Maybe<Category>;
-  /** Créer des épisodes basés sur les données passées en Input */
-  createEpisodes?: Maybe<Array<Episode>>;
-  populateAnimes?: Maybe<PopulateAnimeOutput>;
-  populateCategories?: Maybe<Array<Category>>;
-  /** Supprime une ou des épisodes de la base de données */
-  deleteEpisodes: Scalars["Boolean"];
-  /** Met à jour certaines données d'un épisode */
-  updateEpisode?: Maybe<Episode>;
-  setUserAnimeViewingStatus?: Maybe<UserAnimeStatus>;
-  loginWithGoogle: User;
-  askPhoneNumberChange: Scalars["Boolean"];
-  changeForgotPassword?: Maybe<User>;
-  confirmPhoneNumber?: Maybe<User>;
-  forgotPassword: Scalars["Boolean"];
-  login?: Maybe<User>;
   logout: Scalars["Boolean"];
-  register: Scalars["Boolean"];
-  resendConfirmationSMS: Scalars["Boolean"];
-  updateInternalIdentifiers?: Maybe<User>;
+  phoneAskConfirmationCode: Scalars["Boolean"];
+  phoneConnect?: Maybe<PhoneConnectOutput>;
+  phoneRegister: User;
+  googleConnect?: Maybe<GoogleConnectOutput>;
+  googleRegister: User;
   updateUsername?: Maybe<User>;
-  setUserEpisodesStatus?: Maybe<Array<UserEpisodeStatus>>;
+  setUserAnimeViewStatus?: Maybe<UserAnimeView>;
+  setUserAnimeEpisodesStatus?: Maybe<Array<UserEpisodeView>>;
 };
 
-export type MutationCreateAnimeArgs = {
-  input: CreateAnimeInput;
+export type MutationPhoneAskConfirmationCodeArgs = {
+  input: PhoneAskConfirmationCodeInput;
 };
 
-export type MutationDeleteAnimeArgs = {
-  id: Scalars["Float"];
+export type MutationPhoneConnectArgs = {
+  input: PhoneConnectInput;
 };
 
-export type MutationUpdateAnimeArgs = {
-  categoriesInput?: Maybe<CategoriesInput>;
-  input: UpdateAnimeInput;
-  id: Scalars["Float"];
+export type MutationPhoneRegisterArgs = {
+  input: PhoneRegisterInput;
 };
 
-export type MutationCreateCategoriesArgs = {
-  input: Array<CreateCategoriesInput>;
+export type MutationGoogleConnectArgs = {
+  input: GoogleConnectInput;
 };
 
-export type MutationDeleteCategoriesArgs = {
-  ids: Array<Scalars["Float"]>;
-};
-
-export type MutationUpdateCategoryArgs = {
-  input: UpdateCategoryInput;
-  id: Scalars["Float"];
-};
-
-export type MutationCreateEpisodesArgs = {
-  animeId?: Maybe<Scalars["Float"]>;
-  input: Array<CreateEpisodesInput>;
-};
-
-export type MutationPopulateAnimesArgs = {
-  input: PopulateAnimesInput;
-};
-
-export type MutationDeleteEpisodesArgs = {
-  ids: Array<Scalars["Float"]>;
-};
-
-export type MutationUpdateEpisodeArgs = {
-  input: UpdateEpisodeInput;
-  id: Scalars["Float"];
-};
-
-export type MutationSetUserAnimeViewingStatusArgs = {
-  status: AnimeViewingStatus;
-  animeId: Scalars["Float"];
-};
-
-export type MutationLoginWithGoogleArgs = {
-  input: UserGoogleLoginInput;
-};
-
-export type MutationAskPhoneNumberChangeArgs = {
-  input: AskPhoneNumberChangeInput;
-};
-
-export type MutationChangeForgotPasswordArgs = {
-  input: UserChangeForgotPasswordInput;
-};
-
-export type MutationConfirmPhoneNumberArgs = {
-  token: Scalars["String"];
-};
-
-export type MutationForgotPasswordArgs = {
-  phoneNumber: Scalars["String"];
-};
-
-export type MutationLoginArgs = {
-  input: UserLoginInput;
-};
-
-export type MutationRegisterArgs = {
-  input: UserRegisterInput;
-};
-
-export type MutationResendConfirmationSmsArgs = {
-  phoneNumber: Scalars["String"];
-};
-
-export type MutationUpdateInternalIdentifiersArgs = {
-  input: UpdateInternalIdentifiersInput;
+export type MutationGoogleRegisterArgs = {
+  input: GoogleRegisterInput;
 };
 
 export type MutationUpdateUsernameArgs = {
   input: UpdateUsernameInput;
 };
 
-export type MutationSetUserEpisodesStatusArgs = {
-  input: SetUserEpisodesStatusInput;
+export type MutationSetUserAnimeViewStatusArgs = {
+  status: AnimeViewStatus;
+  animeId: Scalars["Float"];
+};
+
+export type MutationSetUserAnimeEpisodesStatusArgs = {
+  input: SetUserAnimeEpisodesStatusInput;
+};
+
+export type PhoneAskConfirmationCodeInput = {
+  phoneNumber: Scalars["String"];
+};
+
+export type PhoneConnectInput = {
+  phoneNumber: Scalars["String"];
+  code: Scalars["String"];
+};
+
+export type PhoneRegisterInput = {
+  phoneNumber: Scalars["String"];
+  username: Scalars["String"];
+  code: Scalars["String"];
+};
+
+export type GoogleConnectInput = {
+  accountId: Scalars["String"];
+};
+
+export type GoogleRegisterInput = {
+  accountId: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type UpdateUsernameInput = {
+  username: Scalars["String"];
+};
+
+export type SetUserAnimeEpisodesStatusInput = {
+  animeId: Scalars["Float"];
+  newEpisodeViews: Array<NewEpisodeView>;
+};
+
+export type NewEpisodeView = {
+  episodeNumber: Scalars["Float"];
+  toSeen: Scalars["Boolean"];
 };
 
 export type AnimeAdditionalInformationsFieldsFragment = {
@@ -599,6 +393,11 @@ export type AnimeDataFieldsFragment = { __typename?: "Anime" } & Pick<
 export type AnimeFieldsFragment = { __typename?: "Anime" } & Pick<
   Anime,
   "id" | "title" | "posterImage"
+> & { arcs?: Maybe<Array<{ __typename?: "Arc" } & ArcFieldsFragment>> };
+
+export type ArcFieldsFragment = { __typename?: "Arc" } & Pick<
+  Arc,
+  "title" | "firstEpisodeNumber" | "lastEpisodeNumber"
 >;
 
 export type AnimeAdditionalInfoQueryVariables = Exact<{
@@ -621,28 +420,95 @@ export type AnimeDataQuery = { __typename?: "Query" } & {
 
 export type AnimesQueryVariables = Exact<{
   categoryId?: Maybe<Scalars["Float"]>;
-  options?: Maybe<PaginatedInput>;
+  options?: Maybe<PaginationInput>;
 }>;
 
 export type AnimesQuery = { __typename?: "Query" } & {
-  animes: { __typename?: "PaginatedAnimesOutput" } & Pick<
-    PaginatedAnimesOutput,
-    "hasMore"
-  > & { fields: Array<{ __typename?: "Anime" } & AnimeFieldsFragment> };
+  animes: { __typename?: "AnimesOutput" } & Pick<AnimesOutput, "hasMore"> & {
+      fields: Array<{ __typename?: "Anime" } & AnimeFieldsFragment>;
+    };
 };
 
 export type SearchAnimesQueryVariables = Exact<{
   input: SearchAnimesInput;
-  options?: Maybe<PaginatedInput>;
+  options?: Maybe<PaginationInput>;
 }>;
 
 export type SearchAnimesQuery = { __typename?: "Query" } & {
   searchAnimes?: Maybe<
-    { __typename?: "PaginatedAnimesOutput" } & Pick<
-      PaginatedAnimesOutput,
-      "hasMore"
-    > & { fields: Array<{ __typename?: "Anime" } & AnimeFieldsFragment> }
+    { __typename?: "AnimesOutput" } & Pick<AnimesOutput, "hasMore"> & {
+        fields: Array<{ __typename?: "Anime" } & AnimeFieldsFragment>;
+      }
   >;
+};
+
+export type GoogleConnectMutationVariables = Exact<{
+  input: GoogleConnectInput;
+}>;
+
+export type GoogleConnectMutation = { __typename?: "Mutation" } & {
+  googleConnect?: Maybe<
+    { __typename?: "GoogleConnectOutput" } & {
+      user?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
+    }
+  >;
+};
+
+export type GoogleRegisterMutationVariables = Exact<{
+  input: GoogleRegisterInput;
+}>;
+
+export type GoogleRegisterMutation = { __typename?: "Mutation" } & {
+  googleRegister: { __typename?: "User" } & UserFieldsFragment;
+};
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
+
+export type LogoutMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "logout"
+>;
+
+export type PhoneAskConfirmationCodeMutationVariables = Exact<{
+  input: PhoneAskConfirmationCodeInput;
+}>;
+
+export type PhoneAskConfirmationCodeMutation = {
+  __typename?: "Mutation";
+} & Pick<Mutation, "phoneAskConfirmationCode">;
+
+export type PhoneConnectMutationVariables = Exact<{
+  input: PhoneConnectInput;
+}>;
+
+export type PhoneConnectMutation = { __typename?: "Mutation" } & {
+  phoneConnect?: Maybe<
+    { __typename?: "PhoneConnectOutput" } & {
+      user?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
+    }
+  >;
+};
+
+export type PhoneRegisterMutationVariables = Exact<{
+  input: PhoneRegisterInput;
+}>;
+
+export type PhoneRegisterMutation = { __typename?: "Mutation" } & {
+  phoneRegister: { __typename?: "User" } & UserFieldsFragment;
+};
+
+export type UpdateUsernameMutationVariables = Exact<{
+  input: UpdateUsernameInput;
+}>;
+
+export type UpdateUsernameMutation = { __typename?: "Mutation" } & {
+  updateUsername?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
+};
+
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type MeQuery = { __typename?: "Query" } & {
+  me?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
 };
 
 export type CategoryFieldsFragment = { __typename?: "Category" } & Pick<
@@ -650,29 +516,22 @@ export type CategoryFieldsFragment = { __typename?: "Category" } & Pick<
   "id" | "name" | "coverImage"
 >;
 
+export type CategoryPreviewFieldsFragment = {
+  __typename?: "CategoryPreview";
+} & Pick<CategoryPreview, "id" | "name"> & {
+    animes: Array<{ __typename?: "Anime" } & AnimeFieldsFragment>;
+  };
+
 export type CategoriesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CategoriesQuery = { __typename?: "Query" } & {
   categories: Array<{ __typename?: "Category" } & CategoryFieldsFragment>;
 };
 
-export type ArcFieldsFragment = { __typename?: "Arc" } & Pick<
-  Arc,
-  "title" | "firstEpisodeNumber" | "lastEpisodeNumber"
->;
-
 export type EpisodeFieldsFragment = { __typename?: "Episode" } & Pick<
   Episode,
   "id" | "number" | "title" | "airedDate" | "arcName"
 >;
-
-export type ArcsQueryVariables = Exact<{
-  animeId: Scalars["Float"];
-}>;
-
-export type ArcsQuery = { __typename?: "Query" } & {
-  arcs?: Maybe<Array<{ __typename?: "Arc" } & ArcFieldsFragment>>;
-};
 
 export type EpisodesQueryVariables = Exact<{
   animeId: Scalars["Float"];
@@ -682,127 +541,41 @@ export type EpisodesQuery = { __typename?: "Query" } & {
   episodes: Array<{ __typename?: "Episode" } & EpisodeFieldsFragment>;
 };
 
-export type CategoryPreviewFieldsFragment = {
-  __typename?: "CategoryPreview";
-} & Pick<CategoryPreview, "categoryId" | "title"> & {
-    animes?: Maybe<Array<{ __typename?: "Anime" } & AnimeFieldsFragment>>;
-  };
-
 export type HomeAnimesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HomeAnimesQuery = { __typename?: "Query" } & {
-  categoriesPreviews: Array<
+  action?: Maybe<
     { __typename?: "CategoryPreview" } & CategoryPreviewFieldsFragment
   >;
-  userAnimesByViewingStatus: {
-    __typename?: "PaginatedUserAnimesByViewingStatusOutput";
-  } & Pick<PaginatedUserAnimesByViewingStatusOutput, "hasMore"> & {
-      fields: Array<
-        { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
-      >;
-    };
+  romance?: Maybe<
+    { __typename?: "CategoryPreview" } & CategoryPreviewFieldsFragment
+  >;
+  comedie?: Maybe<
+    { __typename?: "CategoryPreview" } & CategoryPreviewFieldsFragment
+  >;
+  drame?: Maybe<
+    { __typename?: "CategoryPreview" } & CategoryPreviewFieldsFragment
+  >;
+  sf?: Maybe<
+    { __typename?: "CategoryPreview" } & CategoryPreviewFieldsFragment
+  >;
 };
 
 export type UserFieldsFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "username" | "phoneNumber"
+  "id" | "username"
 >;
 
-export type ChangeForgotPasswordMutationVariables = Exact<{
-  input: UserChangeForgotPasswordInput;
-}>;
-
-export type ChangeForgotPasswordMutation = { __typename?: "Mutation" } & {
-  changeForgotPassword?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
-};
-
-export type ConfirmPhoneNumberMutationVariables = Exact<{
-  token: Scalars["String"];
-}>;
-
-export type ConfirmPhoneNumberMutation = { __typename?: "Mutation" } & {
-  confirmPhoneNumber?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
-};
-
-export type ForgotPasswordMutationVariables = Exact<{
-  phoneNumber: Scalars["String"];
-}>;
-
-export type ForgotPasswordMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "forgotPassword"
->;
-
-export type LoginMutationVariables = Exact<{
-  input: UserLoginInput;
-}>;
-
-export type LoginMutation = { __typename?: "Mutation" } & {
-  login?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
-};
-
-export type LoginWithGoogleMutationVariables = Exact<{
-  input: UserGoogleLoginInput;
-}>;
-
-export type LoginWithGoogleMutation = { __typename?: "Mutation" } & {
-  loginWithGoogle: { __typename?: "User" } & UserFieldsFragment;
-};
-
-export type RegisterMutationVariables = Exact<{
-  input: UserRegisterInput;
-}>;
-
-export type RegisterMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "register"
->;
-
-export type ResendConfirmationSmsMutationVariables = Exact<{
-  phoneNumber: Scalars["String"];
-}>;
-
-export type ResendConfirmationSmsMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "resendConfirmationSMS"
->;
-
-export type CheckConfirmationCodeQueryVariables = Exact<{
-  token: Scalars["String"];
-  type: ConfirmationCodeType;
-  deleteToken?: Maybe<Scalars["Boolean"]>;
-}>;
-
-export type CheckConfirmationCodeQuery = { __typename?: "Query" } & Pick<
-  Query,
-  "checkConfirmationCode"
->;
-
-export type IsRegisteredWithGoogleQueryVariables = Exact<{
-  accountId: Scalars["String"];
-}>;
-
-export type IsRegisteredWithGoogleQuery = { __typename?: "Query" } & Pick<
-  Query,
-  "isRegisteredWithGoogle"
->;
-
-export type MeQueryVariables = Exact<{ [key: string]: never }>;
-
-export type MeQuery = { __typename?: "Query" } & {
-  me?: Maybe<{ __typename?: "User" } & UserFieldsFragment>;
-};
-
-export type UserAnimeStatusFieldsFragment = {
-  __typename?: "UserAnimeStatus";
-} & Pick<UserAnimeStatus, "id" | "status"> & {
+export type UserAnimeViewFieldsFragment = {
+  __typename?: "UserAnimeView";
+} & Pick<UserAnimeView, "id" | "status"> & {
     anime: { __typename?: "Anime" } & Pick<
       Anime,
       "id" | "title" | "posterImage"
     >;
-    episodesStatus: Array<
-      { __typename?: "UserEpisodeStatus" } & Pick<
-        UserEpisodeStatus,
+    episodeViews: Array<
+      { __typename?: "UserEpisodeView" } & Pick<
+        UserEpisodeView,
         "hasBeenSeen"
       > & { episode: { __typename?: "Episode" } & Pick<Episode, "number"> }
     >;
@@ -814,79 +587,77 @@ export type UserAnimeStatusFieldsFragment = {
     >;
   };
 
-export type SetUserAnimeViewingStatusMutationVariables = Exact<{
-  status: AnimeViewingStatus;
+export type SetUserAnimeViewStatusMutationVariables = Exact<{
+  status: AnimeViewStatus;
   animeId: Scalars["Float"];
 }>;
 
-export type SetUserAnimeViewingStatusMutation = { __typename?: "Mutation" } & {
-  setUserAnimeViewingStatus?: Maybe<
-    { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
+export type SetUserAnimeViewStatusMutation = { __typename?: "Mutation" } & {
+  setUserAnimeViewStatus?: Maybe<
+    { __typename?: "UserAnimeView" } & UserAnimeViewFieldsFragment
   >;
 };
 
-export type UserAnimeViewingStatusQueryVariables = Exact<{
+export type UserAnimeViewQueryVariables = Exact<{
   animeId: Scalars["Float"];
 }>;
 
-export type UserAnimeViewingStatusQuery = { __typename?: "Query" } & {
-  userAnimeViewingStatus?: Maybe<
-    { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
+export type UserAnimeViewQuery = { __typename?: "Query" } & {
+  userAnimeView?: Maybe<
+    { __typename?: "UserAnimeView" } & UserAnimeViewFieldsFragment
   >;
 };
 
-export type UserAnimesByViewingStatusQueryVariables = Exact<{
-  status: AnimeViewingStatus;
-  options?: Maybe<PaginatedInput>;
+export type UserAnimeViewsByStatusQueryVariables = Exact<{
+  status: AnimeViewStatus;
+  options?: Maybe<PaginationInput>;
 }>;
 
-export type UserAnimesByViewingStatusQuery = { __typename?: "Query" } & {
-  userAnimesByViewingStatus: {
-    __typename?: "PaginatedUserAnimesByViewingStatusOutput";
-  } & Pick<PaginatedUserAnimesByViewingStatusOutput, "hasMore"> & {
-      fields: Array<
-        { __typename?: "UserAnimeStatus" } & UserAnimeStatusFieldsFragment
-      >;
-    };
+export type UserAnimeViewsByStatusQuery = { __typename?: "Query" } & {
+  userAnimeViewsByStatus?: Maybe<
+    { __typename?: "UserAnimeViewsByStatusOutput" } & Pick<
+      UserAnimeViewsByStatusOutput,
+      "hasMore" | "total"
+    > & {
+        fields: Array<
+          { __typename?: "UserAnimeView" } & UserAnimeViewFieldsFragment
+        >;
+      }
+  >;
 };
 
 export type EpisodeWithStatusFieldsFragment = {
   __typename?: "EpisodeWithStatus";
 } & {
   episode: { __typename?: "Episode" } & EpisodeFieldsFragment;
-  status?: Maybe<
-    { __typename?: "UserEpisodeStatus" } & UserEpisodeStatusFieldsFragment
+  view?: Maybe<
+    { __typename?: "UserEpisodeView" } & UserEpisodeViewFieldsFragment
   >;
 };
 
-export type UserEpisodeStatusFieldsFragment = {
-  __typename?: "UserEpisodeStatus";
-} & Pick<UserEpisodeStatus, "hasBeenSeen"> & {
+export type UserEpisodeViewFieldsFragment = {
+  __typename?: "UserEpisodeView";
+} & Pick<UserEpisodeView, "hasBeenSeen"> & {
     episode: { __typename?: "Episode" } & Pick<Episode, "number">;
-    animeStatus: { __typename?: "UserAnimeStatus" } & Pick<
-      UserAnimeStatus,
-      "id"
-    >;
+    animeView: { __typename?: "UserAnimeView" } & Pick<UserAnimeView, "id">;
   };
 
-export type SetUserEpisodesStatusMutationVariables = Exact<{
-  input: SetUserEpisodesStatusInput;
+export type SetUserAnimeEpisodesStatusMutationVariables = Exact<{
+  input: SetUserAnimeEpisodesStatusInput;
 }>;
 
-export type SetUserEpisodesStatusMutation = { __typename?: "Mutation" } & {
-  setUserEpisodesStatus?: Maybe<
-    Array<
-      { __typename?: "UserEpisodeStatus" } & UserEpisodeStatusFieldsFragment
-    >
+export type SetUserAnimeEpisodesStatusMutation = { __typename?: "Mutation" } & {
+  setUserAnimeEpisodesStatus?: Maybe<
+    Array<{ __typename?: "UserEpisodeView" } & UserEpisodeViewFieldsFragment>
   >;
 };
 
-export type UserEpisodesStatusQueryVariables = Exact<{
+export type UserAnimeEpisodesStatusQueryVariables = Exact<{
   animeId: Scalars["Float"];
 }>;
 
-export type UserEpisodesStatusQuery = { __typename?: "Query" } & {
-  userEpisodesStatus?: Maybe<
+export type UserAnimeEpisodesStatusQuery = { __typename?: "Query" } & {
+  userAnimeEpisodesStatus?: Maybe<
     Array<
       { __typename?: "EpisodeWithStatus" } & EpisodeWithStatusFieldsFragment
     >
@@ -943,12 +714,16 @@ export const AnimeFieldsFragmentDoc = gql`
     id
     title
     posterImage
+    arcs {
+      ...ArcFields
+    }
   }
+  ${ArcFieldsFragmentDoc}
 `;
 export const CategoryPreviewFieldsFragmentDoc = gql`
   fragment CategoryPreviewFields on CategoryPreview {
-    categoryId
-    title
+    id
+    name
     animes {
       ...AnimeFields
     }
@@ -959,11 +734,10 @@ export const UserFieldsFragmentDoc = gql`
   fragment UserFields on User {
     id
     username
-    phoneNumber
   }
 `;
-export const UserAnimeStatusFieldsFragmentDoc = gql`
-  fragment UserAnimeStatusFields on UserAnimeStatus {
+export const UserAnimeViewFieldsFragmentDoc = gql`
+  fragment UserAnimeViewFields on UserAnimeView {
     id
     status
     anime {
@@ -971,7 +745,7 @@ export const UserAnimeStatusFieldsFragmentDoc = gql`
       title
       posterImage
     }
-    episodesStatus {
+    episodeViews {
       hasBeenSeen
       episode {
         number
@@ -994,13 +768,13 @@ export const EpisodeFieldsFragmentDoc = gql`
     arcName
   }
 `;
-export const UserEpisodeStatusFieldsFragmentDoc = gql`
-  fragment UserEpisodeStatusFields on UserEpisodeStatus {
+export const UserEpisodeViewFieldsFragmentDoc = gql`
+  fragment UserEpisodeViewFields on UserEpisodeView {
     hasBeenSeen
     episode {
       number
     }
-    animeStatus {
+    animeView {
       id
     }
   }
@@ -1010,12 +784,12 @@ export const EpisodeWithStatusFieldsFragmentDoc = gql`
     episode {
       ...EpisodeFields
     }
-    status {
-      ...UserEpisodeStatusFields
+    view {
+      ...UserEpisodeViewFields
     }
   }
   ${EpisodeFieldsFragmentDoc}
-  ${UserEpisodeStatusFieldsFragmentDoc}
+  ${UserEpisodeViewFieldsFragmentDoc}
 `;
 export const AnimeAdditionalInfoDocument = gql`
   query animeAdditionalInfo($id: Float!) {
@@ -1127,7 +901,7 @@ export type AnimeDataQueryResult = Apollo.QueryResult<
   AnimeDataQueryVariables
 >;
 export const AnimesDocument = gql`
-  query animes($categoryId: Float, $options: PaginatedInput) {
+  query animes($categoryId: Float, $options: PaginationInput) {
     animes(categoryId: $categoryId, options: $options) {
       hasMore
       fields {
@@ -1178,7 +952,7 @@ export type AnimesQueryResult = Apollo.QueryResult<
   AnimesQueryVariables
 >;
 export const SearchAnimesDocument = gql`
-  query searchAnimes($input: SearchAnimesInput!, $options: PaginatedInput) {
+  query searchAnimes($input: SearchAnimesInput!, $options: PaginationInput) {
     searchAnimes(input: $input, options: $options) {
       hasMore
       fields {
@@ -1238,6 +1012,384 @@ export type SearchAnimesQueryResult = Apollo.QueryResult<
   SearchAnimesQuery,
   SearchAnimesQueryVariables
 >;
+export const GoogleConnectDocument = gql`
+  mutation googleConnect($input: GoogleConnectInput!) {
+    googleConnect(input: $input) {
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type GoogleConnectMutationFn = Apollo.MutationFunction<
+  GoogleConnectMutation,
+  GoogleConnectMutationVariables
+>;
+
+/**
+ * __useGoogleConnectMutation__
+ *
+ * To run a mutation, you first call `useGoogleConnectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGoogleConnectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [googleConnectMutation, { data, loading, error }] = useGoogleConnectMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGoogleConnectMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    GoogleConnectMutation,
+    GoogleConnectMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    GoogleConnectMutation,
+    GoogleConnectMutationVariables
+  >(GoogleConnectDocument, baseOptions);
+}
+export type GoogleConnectMutationHookResult = ReturnType<
+  typeof useGoogleConnectMutation
+>;
+export type GoogleConnectMutationResult = Apollo.MutationResult<GoogleConnectMutation>;
+export type GoogleConnectMutationOptions = Apollo.BaseMutationOptions<
+  GoogleConnectMutation,
+  GoogleConnectMutationVariables
+>;
+export const GoogleRegisterDocument = gql`
+  mutation googleRegister($input: GoogleRegisterInput!) {
+    googleRegister(input: $input) {
+      ...UserFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type GoogleRegisterMutationFn = Apollo.MutationFunction<
+  GoogleRegisterMutation,
+  GoogleRegisterMutationVariables
+>;
+
+/**
+ * __useGoogleRegisterMutation__
+ *
+ * To run a mutation, you first call `useGoogleRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGoogleRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [googleRegisterMutation, { data, loading, error }] = useGoogleRegisterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGoogleRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    GoogleRegisterMutation,
+    GoogleRegisterMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    GoogleRegisterMutation,
+    GoogleRegisterMutationVariables
+  >(GoogleRegisterDocument, baseOptions);
+}
+export type GoogleRegisterMutationHookResult = ReturnType<
+  typeof useGoogleRegisterMutation
+>;
+export type GoogleRegisterMutationResult = Apollo.MutationResult<GoogleRegisterMutation>;
+export type GoogleRegisterMutationOptions = Apollo.BaseMutationOptions<
+  GoogleRegisterMutation,
+  GoogleRegisterMutationVariables
+>;
+export const LogoutDocument = gql`
+  mutation logout {
+    logout
+  }
+`;
+export type LogoutMutationFn = Apollo.MutationFunction<
+  LogoutMutation,
+  LogoutMutationVariables
+>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LogoutMutation,
+    LogoutMutationVariables
+  >
+) {
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
+    LogoutDocument,
+    baseOptions
+  );
+}
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<
+  LogoutMutation,
+  LogoutMutationVariables
+>;
+export const PhoneAskConfirmationCodeDocument = gql`
+  mutation phoneAskConfirmationCode($input: PhoneAskConfirmationCodeInput!) {
+    phoneAskConfirmationCode(input: $input)
+  }
+`;
+export type PhoneAskConfirmationCodeMutationFn = Apollo.MutationFunction<
+  PhoneAskConfirmationCodeMutation,
+  PhoneAskConfirmationCodeMutationVariables
+>;
+
+/**
+ * __usePhoneAskConfirmationCodeMutation__
+ *
+ * To run a mutation, you first call `usePhoneAskConfirmationCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePhoneAskConfirmationCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [phoneAskConfirmationCodeMutation, { data, loading, error }] = usePhoneAskConfirmationCodeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePhoneAskConfirmationCodeMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PhoneAskConfirmationCodeMutation,
+    PhoneAskConfirmationCodeMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    PhoneAskConfirmationCodeMutation,
+    PhoneAskConfirmationCodeMutationVariables
+  >(PhoneAskConfirmationCodeDocument, baseOptions);
+}
+export type PhoneAskConfirmationCodeMutationHookResult = ReturnType<
+  typeof usePhoneAskConfirmationCodeMutation
+>;
+export type PhoneAskConfirmationCodeMutationResult = Apollo.MutationResult<PhoneAskConfirmationCodeMutation>;
+export type PhoneAskConfirmationCodeMutationOptions = Apollo.BaseMutationOptions<
+  PhoneAskConfirmationCodeMutation,
+  PhoneAskConfirmationCodeMutationVariables
+>;
+export const PhoneConnectDocument = gql`
+  mutation phoneConnect($input: PhoneConnectInput!) {
+    phoneConnect(input: $input) {
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type PhoneConnectMutationFn = Apollo.MutationFunction<
+  PhoneConnectMutation,
+  PhoneConnectMutationVariables
+>;
+
+/**
+ * __usePhoneConnectMutation__
+ *
+ * To run a mutation, you first call `usePhoneConnectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePhoneConnectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [phoneConnectMutation, { data, loading, error }] = usePhoneConnectMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePhoneConnectMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PhoneConnectMutation,
+    PhoneConnectMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    PhoneConnectMutation,
+    PhoneConnectMutationVariables
+  >(PhoneConnectDocument, baseOptions);
+}
+export type PhoneConnectMutationHookResult = ReturnType<
+  typeof usePhoneConnectMutation
+>;
+export type PhoneConnectMutationResult = Apollo.MutationResult<PhoneConnectMutation>;
+export type PhoneConnectMutationOptions = Apollo.BaseMutationOptions<
+  PhoneConnectMutation,
+  PhoneConnectMutationVariables
+>;
+export const PhoneRegisterDocument = gql`
+  mutation phoneRegister($input: PhoneRegisterInput!) {
+    phoneRegister(input: $input) {
+      ...UserFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type PhoneRegisterMutationFn = Apollo.MutationFunction<
+  PhoneRegisterMutation,
+  PhoneRegisterMutationVariables
+>;
+
+/**
+ * __usePhoneRegisterMutation__
+ *
+ * To run a mutation, you first call `usePhoneRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePhoneRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [phoneRegisterMutation, { data, loading, error }] = usePhoneRegisterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePhoneRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PhoneRegisterMutation,
+    PhoneRegisterMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    PhoneRegisterMutation,
+    PhoneRegisterMutationVariables
+  >(PhoneRegisterDocument, baseOptions);
+}
+export type PhoneRegisterMutationHookResult = ReturnType<
+  typeof usePhoneRegisterMutation
+>;
+export type PhoneRegisterMutationResult = Apollo.MutationResult<PhoneRegisterMutation>;
+export type PhoneRegisterMutationOptions = Apollo.BaseMutationOptions<
+  PhoneRegisterMutation,
+  PhoneRegisterMutationVariables
+>;
+export const UpdateUsernameDocument = gql`
+  mutation updateUsername($input: UpdateUsernameInput!) {
+    updateUsername(input: $input) {
+      ...UserFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export type UpdateUsernameMutationFn = Apollo.MutationFunction<
+  UpdateUsernameMutation,
+  UpdateUsernameMutationVariables
+>;
+
+/**
+ * __useUpdateUsernameMutation__
+ *
+ * To run a mutation, you first call `useUpdateUsernameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUsernameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUsernameMutation, { data, loading, error }] = useUpdateUsernameMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUsernameMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateUsernameMutation,
+    UpdateUsernameMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    UpdateUsernameMutation,
+    UpdateUsernameMutationVariables
+  >(UpdateUsernameDocument, baseOptions);
+}
+export type UpdateUsernameMutationHookResult = ReturnType<
+  typeof useUpdateUsernameMutation
+>;
+export type UpdateUsernameMutationResult = Apollo.MutationResult<UpdateUsernameMutation>;
+export type UpdateUsernameMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUsernameMutation,
+  UpdateUsernameMutationVariables
+>;
+export const MeDocument = gql`
+  query me {
+    me {
+      ...UserFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+`;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>
+) {
+  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+}
+export function useMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
+) {
+  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(
+    MeDocument,
+    baseOptions
+  );
+}
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const CategoriesDocument = gql`
   query categories {
     categories {
@@ -1292,50 +1444,6 @@ export type CategoriesQueryResult = Apollo.QueryResult<
   CategoriesQuery,
   CategoriesQueryVariables
 >;
-export const ArcsDocument = gql`
-  query arcs($animeId: Float!) {
-    arcs(animeId: $animeId) {
-      ...ArcFields
-    }
-  }
-  ${ArcFieldsFragmentDoc}
-`;
-
-/**
- * __useArcsQuery__
- *
- * To run a query within a React component, call `useArcsQuery` and pass it any options that fit your needs.
- * When your component renders, `useArcsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useArcsQuery({
- *   variables: {
- *      animeId: // value for 'animeId'
- *   },
- * });
- */
-export function useArcsQuery(
-  baseOptions?: Apollo.QueryHookOptions<ArcsQuery, ArcsQueryVariables>
-) {
-  return Apollo.useQuery<ArcsQuery, ArcsQueryVariables>(
-    ArcsDocument,
-    baseOptions
-  );
-}
-export function useArcsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<ArcsQuery, ArcsQueryVariables>
-) {
-  return Apollo.useLazyQuery<ArcsQuery, ArcsQueryVariables>(
-    ArcsDocument,
-    baseOptions
-  );
-}
-export type ArcsQueryHookResult = ReturnType<typeof useArcsQuery>;
-export type ArcsLazyQueryHookResult = ReturnType<typeof useArcsLazyQuery>;
-export type ArcsQueryResult = Apollo.QueryResult<ArcsQuery, ArcsQueryVariables>;
 export const EpisodesDocument = gql`
   query episodes($animeId: Float!) {
     episodes(animeId: $animeId) {
@@ -1390,21 +1498,23 @@ export type EpisodesQueryResult = Apollo.QueryResult<
 >;
 export const HomeAnimesDocument = gql`
   query homeAnimes {
-    categoriesPreviews {
+    action: categoryPreview(id: 4) {
       ...CategoryPreviewFields
     }
-    userAnimesByViewingStatus(
-      status: IN_PROGRESS
-      options: { limit: 10, offset: 0 }
-    ) {
-      hasMore
-      fields {
-        ...UserAnimeStatusFields
-      }
+    romance: categoryPreview(id: 3) {
+      ...CategoryPreviewFields
+    }
+    comedie: categoryPreview(id: 1) {
+      ...CategoryPreviewFields
+    }
+    drame: categoryPreview(id: 6) {
+      ...CategoryPreviewFields
+    }
+    sf: categoryPreview(id: 10) {
+      ...CategoryPreviewFields
     }
   }
   ${CategoryPreviewFieldsFragmentDoc}
-  ${UserAnimeStatusFieldsFragmentDoc}
 `;
 
 /**
@@ -1452,716 +1562,232 @@ export type HomeAnimesQueryResult = Apollo.QueryResult<
   HomeAnimesQuery,
   HomeAnimesQueryVariables
 >;
-export const ChangeForgotPasswordDocument = gql`
-  mutation changeForgotPassword($input: UserChangeForgotPasswordInput!) {
-    changeForgotPassword(input: $input) {
-      ...UserFields
+export const SetUserAnimeViewStatusDocument = gql`
+  mutation setUserAnimeViewStatus($status: AnimeViewStatus!, $animeId: Float!) {
+    setUserAnimeViewStatus(status: $status, animeId: $animeId) {
+      ...UserAnimeViewFields
     }
   }
-  ${UserFieldsFragmentDoc}
+  ${UserAnimeViewFieldsFragmentDoc}
 `;
-export type ChangeForgotPasswordMutationFn = Apollo.MutationFunction<
-  ChangeForgotPasswordMutation,
-  ChangeForgotPasswordMutationVariables
+export type SetUserAnimeViewStatusMutationFn = Apollo.MutationFunction<
+  SetUserAnimeViewStatusMutation,
+  SetUserAnimeViewStatusMutationVariables
 >;
 
 /**
- * __useChangeForgotPasswordMutation__
+ * __useSetUserAnimeViewStatusMutation__
  *
- * To run a mutation, you first call `useChangeForgotPasswordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useChangeForgotPasswordMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSetUserAnimeViewStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetUserAnimeViewStatusMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [changeForgotPasswordMutation, { data, loading, error }] = useChangeForgotPasswordMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useChangeForgotPasswordMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ChangeForgotPasswordMutation,
-    ChangeForgotPasswordMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    ChangeForgotPasswordMutation,
-    ChangeForgotPasswordMutationVariables
-  >(ChangeForgotPasswordDocument, baseOptions);
-}
-export type ChangeForgotPasswordMutationHookResult = ReturnType<
-  typeof useChangeForgotPasswordMutation
->;
-export type ChangeForgotPasswordMutationResult = Apollo.MutationResult<ChangeForgotPasswordMutation>;
-export type ChangeForgotPasswordMutationOptions = Apollo.BaseMutationOptions<
-  ChangeForgotPasswordMutation,
-  ChangeForgotPasswordMutationVariables
->;
-export const ConfirmPhoneNumberDocument = gql`
-  mutation confirmPhoneNumber($token: String!) {
-    confirmPhoneNumber(token: $token) {
-      ...UserFields
-    }
-  }
-  ${UserFieldsFragmentDoc}
-`;
-export type ConfirmPhoneNumberMutationFn = Apollo.MutationFunction<
-  ConfirmPhoneNumberMutation,
-  ConfirmPhoneNumberMutationVariables
->;
-
-/**
- * __useConfirmPhoneNumberMutation__
- *
- * To run a mutation, you first call `useConfirmPhoneNumberMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useConfirmPhoneNumberMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [confirmPhoneNumberMutation, { data, loading, error }] = useConfirmPhoneNumberMutation({
- *   variables: {
- *      token: // value for 'token'
- *   },
- * });
- */
-export function useConfirmPhoneNumberMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ConfirmPhoneNumberMutation,
-    ConfirmPhoneNumberMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    ConfirmPhoneNumberMutation,
-    ConfirmPhoneNumberMutationVariables
-  >(ConfirmPhoneNumberDocument, baseOptions);
-}
-export type ConfirmPhoneNumberMutationHookResult = ReturnType<
-  typeof useConfirmPhoneNumberMutation
->;
-export type ConfirmPhoneNumberMutationResult = Apollo.MutationResult<ConfirmPhoneNumberMutation>;
-export type ConfirmPhoneNumberMutationOptions = Apollo.BaseMutationOptions<
-  ConfirmPhoneNumberMutation,
-  ConfirmPhoneNumberMutationVariables
->;
-export const ForgotPasswordDocument = gql`
-  mutation forgotPassword($phoneNumber: String!) {
-    forgotPassword(phoneNumber: $phoneNumber)
-  }
-`;
-export type ForgotPasswordMutationFn = Apollo.MutationFunction<
-  ForgotPasswordMutation,
-  ForgotPasswordMutationVariables
->;
-
-/**
- * __useForgotPasswordMutation__
- *
- * To run a mutation, you first call `useForgotPasswordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useForgotPasswordMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [forgotPasswordMutation, { data, loading, error }] = useForgotPasswordMutation({
- *   variables: {
- *      phoneNumber: // value for 'phoneNumber'
- *   },
- * });
- */
-export function useForgotPasswordMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ForgotPasswordMutation,
-    ForgotPasswordMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    ForgotPasswordMutation,
-    ForgotPasswordMutationVariables
-  >(ForgotPasswordDocument, baseOptions);
-}
-export type ForgotPasswordMutationHookResult = ReturnType<
-  typeof useForgotPasswordMutation
->;
-export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
-export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<
-  ForgotPasswordMutation,
-  ForgotPasswordMutationVariables
->;
-export const LoginDocument = gql`
-  mutation login($input: UserLoginInput!) {
-    login(input: $input) {
-      ...UserFields
-    }
-  }
-  ${UserFieldsFragmentDoc}
-`;
-export type LoginMutationFn = Apollo.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >
-) {
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    baseOptions
-  );
-}
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->;
-export const LoginWithGoogleDocument = gql`
-  mutation loginWithGoogle($input: UserGoogleLoginInput!) {
-    loginWithGoogle(input: $input) {
-      ...UserFields
-    }
-  }
-  ${UserFieldsFragmentDoc}
-`;
-export type LoginWithGoogleMutationFn = Apollo.MutationFunction<
-  LoginWithGoogleMutation,
-  LoginWithGoogleMutationVariables
->;
-
-/**
- * __useLoginWithGoogleMutation__
- *
- * To run a mutation, you first call `useLoginWithGoogleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginWithGoogleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginWithGoogleMutation, { data, loading, error }] = useLoginWithGoogleMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useLoginWithGoogleMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginWithGoogleMutation,
-    LoginWithGoogleMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    LoginWithGoogleMutation,
-    LoginWithGoogleMutationVariables
-  >(LoginWithGoogleDocument, baseOptions);
-}
-export type LoginWithGoogleMutationHookResult = ReturnType<
-  typeof useLoginWithGoogleMutation
->;
-export type LoginWithGoogleMutationResult = Apollo.MutationResult<LoginWithGoogleMutation>;
-export type LoginWithGoogleMutationOptions = Apollo.BaseMutationOptions<
-  LoginWithGoogleMutation,
-  LoginWithGoogleMutationVariables
->;
-export const RegisterDocument = gql`
-  mutation register($input: UserRegisterInput!) {
-    register(input: $input)
-  }
-`;
-export type RegisterMutationFn = Apollo.MutationFunction<
-  RegisterMutation,
-  RegisterMutationVariables
->;
-
-/**
- * __useRegisterMutation__
- *
- * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRegisterMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [registerMutation, { data, loading, error }] = useRegisterMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useRegisterMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RegisterMutation,
-    RegisterMutationVariables
-  >
-) {
-  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
-    RegisterDocument,
-    baseOptions
-  );
-}
-export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
-export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<
-  RegisterMutation,
-  RegisterMutationVariables
->;
-export const ResendConfirmationSmsDocument = gql`
-  mutation resendConfirmationSMS($phoneNumber: String!) {
-    resendConfirmationSMS(phoneNumber: $phoneNumber)
-  }
-`;
-export type ResendConfirmationSmsMutationFn = Apollo.MutationFunction<
-  ResendConfirmationSmsMutation,
-  ResendConfirmationSmsMutationVariables
->;
-
-/**
- * __useResendConfirmationSmsMutation__
- *
- * To run a mutation, you first call `useResendConfirmationSmsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useResendConfirmationSmsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [resendConfirmationSmsMutation, { data, loading, error }] = useResendConfirmationSmsMutation({
- *   variables: {
- *      phoneNumber: // value for 'phoneNumber'
- *   },
- * });
- */
-export function useResendConfirmationSmsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ResendConfirmationSmsMutation,
-    ResendConfirmationSmsMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    ResendConfirmationSmsMutation,
-    ResendConfirmationSmsMutationVariables
-  >(ResendConfirmationSmsDocument, baseOptions);
-}
-export type ResendConfirmationSmsMutationHookResult = ReturnType<
-  typeof useResendConfirmationSmsMutation
->;
-export type ResendConfirmationSmsMutationResult = Apollo.MutationResult<ResendConfirmationSmsMutation>;
-export type ResendConfirmationSmsMutationOptions = Apollo.BaseMutationOptions<
-  ResendConfirmationSmsMutation,
-  ResendConfirmationSmsMutationVariables
->;
-export const CheckConfirmationCodeDocument = gql`
-  query checkConfirmationCode(
-    $token: String!
-    $type: ConfirmationCodeType!
-    $deleteToken: Boolean
-  ) {
-    checkConfirmationCode(token: $token, type: $type, deleteToken: $deleteToken)
-  }
-`;
-
-/**
- * __useCheckConfirmationCodeQuery__
- *
- * To run a query within a React component, call `useCheckConfirmationCodeQuery` and pass it any options that fit your needs.
- * When your component renders, `useCheckConfirmationCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCheckConfirmationCodeQuery({
- *   variables: {
- *      token: // value for 'token'
- *      type: // value for 'type'
- *      deleteToken: // value for 'deleteToken'
- *   },
- * });
- */
-export function useCheckConfirmationCodeQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    CheckConfirmationCodeQuery,
-    CheckConfirmationCodeQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    CheckConfirmationCodeQuery,
-    CheckConfirmationCodeQueryVariables
-  >(CheckConfirmationCodeDocument, baseOptions);
-}
-export function useCheckConfirmationCodeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    CheckConfirmationCodeQuery,
-    CheckConfirmationCodeQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    CheckConfirmationCodeQuery,
-    CheckConfirmationCodeQueryVariables
-  >(CheckConfirmationCodeDocument, baseOptions);
-}
-export type CheckConfirmationCodeQueryHookResult = ReturnType<
-  typeof useCheckConfirmationCodeQuery
->;
-export type CheckConfirmationCodeLazyQueryHookResult = ReturnType<
-  typeof useCheckConfirmationCodeLazyQuery
->;
-export type CheckConfirmationCodeQueryResult = Apollo.QueryResult<
-  CheckConfirmationCodeQuery,
-  CheckConfirmationCodeQueryVariables
->;
-export const IsRegisteredWithGoogleDocument = gql`
-  query isRegisteredWithGoogle($accountId: String!) {
-    isRegisteredWithGoogle(accountId: $accountId)
-  }
-`;
-
-/**
- * __useIsRegisteredWithGoogleQuery__
- *
- * To run a query within a React component, call `useIsRegisteredWithGoogleQuery` and pass it any options that fit your needs.
- * When your component renders, `useIsRegisteredWithGoogleQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useIsRegisteredWithGoogleQuery({
- *   variables: {
- *      accountId: // value for 'accountId'
- *   },
- * });
- */
-export function useIsRegisteredWithGoogleQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    IsRegisteredWithGoogleQuery,
-    IsRegisteredWithGoogleQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    IsRegisteredWithGoogleQuery,
-    IsRegisteredWithGoogleQueryVariables
-  >(IsRegisteredWithGoogleDocument, baseOptions);
-}
-export function useIsRegisteredWithGoogleLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    IsRegisteredWithGoogleQuery,
-    IsRegisteredWithGoogleQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    IsRegisteredWithGoogleQuery,
-    IsRegisteredWithGoogleQueryVariables
-  >(IsRegisteredWithGoogleDocument, baseOptions);
-}
-export type IsRegisteredWithGoogleQueryHookResult = ReturnType<
-  typeof useIsRegisteredWithGoogleQuery
->;
-export type IsRegisteredWithGoogleLazyQueryHookResult = ReturnType<
-  typeof useIsRegisteredWithGoogleLazyQuery
->;
-export type IsRegisteredWithGoogleQueryResult = Apollo.QueryResult<
-  IsRegisteredWithGoogleQuery,
-  IsRegisteredWithGoogleQueryVariables
->;
-export const MeDocument = gql`
-  query me {
-    me {
-      ...UserFields
-    }
-  }
-  ${UserFieldsFragmentDoc}
-`;
-
-/**
- * __useMeQuery__
- *
- * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMeQuery(
-  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
-}
-export function useMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(
-    MeDocument,
-    baseOptions
-  );
-}
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const SetUserAnimeViewingStatusDocument = gql`
-  mutation setUserAnimeViewingStatus(
-    $status: AnimeViewingStatus!
-    $animeId: Float!
-  ) {
-    setUserAnimeViewingStatus(status: $status, animeId: $animeId) {
-      ...UserAnimeStatusFields
-    }
-  }
-  ${UserAnimeStatusFieldsFragmentDoc}
-`;
-export type SetUserAnimeViewingStatusMutationFn = Apollo.MutationFunction<
-  SetUserAnimeViewingStatusMutation,
-  SetUserAnimeViewingStatusMutationVariables
->;
-
-/**
- * __useSetUserAnimeViewingStatusMutation__
- *
- * To run a mutation, you first call `useSetUserAnimeViewingStatusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetUserAnimeViewingStatusMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [setUserAnimeViewingStatusMutation, { data, loading, error }] = useSetUserAnimeViewingStatusMutation({
+ * const [setUserAnimeViewStatusMutation, { data, loading, error }] = useSetUserAnimeViewStatusMutation({
  *   variables: {
  *      status: // value for 'status'
  *      animeId: // value for 'animeId'
  *   },
  * });
  */
-export function useSetUserAnimeViewingStatusMutation(
+export function useSetUserAnimeViewStatusMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    SetUserAnimeViewingStatusMutation,
-    SetUserAnimeViewingStatusMutationVariables
+    SetUserAnimeViewStatusMutation,
+    SetUserAnimeViewStatusMutationVariables
   >
 ) {
   return Apollo.useMutation<
-    SetUserAnimeViewingStatusMutation,
-    SetUserAnimeViewingStatusMutationVariables
-  >(SetUserAnimeViewingStatusDocument, baseOptions);
+    SetUserAnimeViewStatusMutation,
+    SetUserAnimeViewStatusMutationVariables
+  >(SetUserAnimeViewStatusDocument, baseOptions);
 }
-export type SetUserAnimeViewingStatusMutationHookResult = ReturnType<
-  typeof useSetUserAnimeViewingStatusMutation
+export type SetUserAnimeViewStatusMutationHookResult = ReturnType<
+  typeof useSetUserAnimeViewStatusMutation
 >;
-export type SetUserAnimeViewingStatusMutationResult = Apollo.MutationResult<SetUserAnimeViewingStatusMutation>;
-export type SetUserAnimeViewingStatusMutationOptions = Apollo.BaseMutationOptions<
-  SetUserAnimeViewingStatusMutation,
-  SetUserAnimeViewingStatusMutationVariables
+export type SetUserAnimeViewStatusMutationResult = Apollo.MutationResult<SetUserAnimeViewStatusMutation>;
+export type SetUserAnimeViewStatusMutationOptions = Apollo.BaseMutationOptions<
+  SetUserAnimeViewStatusMutation,
+  SetUserAnimeViewStatusMutationVariables
 >;
-export const UserAnimeViewingStatusDocument = gql`
-  query userAnimeViewingStatus($animeId: Float!) {
-    userAnimeViewingStatus(animeId: $animeId) {
-      ...UserAnimeStatusFields
+export const UserAnimeViewDocument = gql`
+  query userAnimeView($animeId: Float!) {
+    userAnimeView(animeId: $animeId) {
+      ...UserAnimeViewFields
     }
   }
-  ${UserAnimeStatusFieldsFragmentDoc}
+  ${UserAnimeViewFieldsFragmentDoc}
 `;
 
 /**
- * __useUserAnimeViewingStatusQuery__
+ * __useUserAnimeViewQuery__
  *
- * To run a query within a React component, call `useUserAnimeViewingStatusQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserAnimeViewingStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserAnimeViewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAnimeViewQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserAnimeViewingStatusQuery({
+ * const { data, loading, error } = useUserAnimeViewQuery({
  *   variables: {
  *      animeId: // value for 'animeId'
  *   },
  * });
  */
-export function useUserAnimeViewingStatusQuery(
+export function useUserAnimeViewQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    UserAnimeViewingStatusQuery,
-    UserAnimeViewingStatusQueryVariables
+    UserAnimeViewQuery,
+    UserAnimeViewQueryVariables
   >
 ) {
-  return Apollo.useQuery<
-    UserAnimeViewingStatusQuery,
-    UserAnimeViewingStatusQueryVariables
-  >(UserAnimeViewingStatusDocument, baseOptions);
+  return Apollo.useQuery<UserAnimeViewQuery, UserAnimeViewQueryVariables>(
+    UserAnimeViewDocument,
+    baseOptions
+  );
 }
-export function useUserAnimeViewingStatusLazyQuery(
+export function useUserAnimeViewLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    UserAnimeViewingStatusQuery,
-    UserAnimeViewingStatusQueryVariables
+    UserAnimeViewQuery,
+    UserAnimeViewQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<
-    UserAnimeViewingStatusQuery,
-    UserAnimeViewingStatusQueryVariables
-  >(UserAnimeViewingStatusDocument, baseOptions);
+  return Apollo.useLazyQuery<UserAnimeViewQuery, UserAnimeViewQueryVariables>(
+    UserAnimeViewDocument,
+    baseOptions
+  );
 }
-export type UserAnimeViewingStatusQueryHookResult = ReturnType<
-  typeof useUserAnimeViewingStatusQuery
+export type UserAnimeViewQueryHookResult = ReturnType<
+  typeof useUserAnimeViewQuery
 >;
-export type UserAnimeViewingStatusLazyQueryHookResult = ReturnType<
-  typeof useUserAnimeViewingStatusLazyQuery
+export type UserAnimeViewLazyQueryHookResult = ReturnType<
+  typeof useUserAnimeViewLazyQuery
 >;
-export type UserAnimeViewingStatusQueryResult = Apollo.QueryResult<
-  UserAnimeViewingStatusQuery,
-  UserAnimeViewingStatusQueryVariables
+export type UserAnimeViewQueryResult = Apollo.QueryResult<
+  UserAnimeViewQuery,
+  UserAnimeViewQueryVariables
 >;
-export const UserAnimesByViewingStatusDocument = gql`
-  query userAnimesByViewingStatus(
-    $status: AnimeViewingStatus!
-    $options: PaginatedInput
+export const UserAnimeViewsByStatusDocument = gql`
+  query userAnimeViewsByStatus(
+    $status: AnimeViewStatus!
+    $options: PaginationInput
   ) {
-    userAnimesByViewingStatus(status: $status, options: $options) {
+    userAnimeViewsByStatus(status: $status, options: $options) {
       hasMore
+      total
       fields {
-        ...UserAnimeStatusFields
+        ...UserAnimeViewFields
       }
     }
   }
-  ${UserAnimeStatusFieldsFragmentDoc}
+  ${UserAnimeViewFieldsFragmentDoc}
 `;
 
 /**
- * __useUserAnimesByViewingStatusQuery__
+ * __useUserAnimeViewsByStatusQuery__
  *
- * To run a query within a React component, call `useUserAnimesByViewingStatusQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserAnimesByViewingStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserAnimeViewsByStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAnimeViewsByStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserAnimesByViewingStatusQuery({
+ * const { data, loading, error } = useUserAnimeViewsByStatusQuery({
  *   variables: {
  *      status: // value for 'status'
  *      options: // value for 'options'
  *   },
  * });
  */
-export function useUserAnimesByViewingStatusQuery(
+export function useUserAnimeViewsByStatusQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    UserAnimesByViewingStatusQuery,
-    UserAnimesByViewingStatusQueryVariables
+    UserAnimeViewsByStatusQuery,
+    UserAnimeViewsByStatusQueryVariables
   >
 ) {
   return Apollo.useQuery<
-    UserAnimesByViewingStatusQuery,
-    UserAnimesByViewingStatusQueryVariables
-  >(UserAnimesByViewingStatusDocument, baseOptions);
+    UserAnimeViewsByStatusQuery,
+    UserAnimeViewsByStatusQueryVariables
+  >(UserAnimeViewsByStatusDocument, baseOptions);
 }
-export function useUserAnimesByViewingStatusLazyQuery(
+export function useUserAnimeViewsByStatusLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    UserAnimesByViewingStatusQuery,
-    UserAnimesByViewingStatusQueryVariables
+    UserAnimeViewsByStatusQuery,
+    UserAnimeViewsByStatusQueryVariables
   >
 ) {
   return Apollo.useLazyQuery<
-    UserAnimesByViewingStatusQuery,
-    UserAnimesByViewingStatusQueryVariables
-  >(UserAnimesByViewingStatusDocument, baseOptions);
+    UserAnimeViewsByStatusQuery,
+    UserAnimeViewsByStatusQueryVariables
+  >(UserAnimeViewsByStatusDocument, baseOptions);
 }
-export type UserAnimesByViewingStatusQueryHookResult = ReturnType<
-  typeof useUserAnimesByViewingStatusQuery
+export type UserAnimeViewsByStatusQueryHookResult = ReturnType<
+  typeof useUserAnimeViewsByStatusQuery
 >;
-export type UserAnimesByViewingStatusLazyQueryHookResult = ReturnType<
-  typeof useUserAnimesByViewingStatusLazyQuery
+export type UserAnimeViewsByStatusLazyQueryHookResult = ReturnType<
+  typeof useUserAnimeViewsByStatusLazyQuery
 >;
-export type UserAnimesByViewingStatusQueryResult = Apollo.QueryResult<
-  UserAnimesByViewingStatusQuery,
-  UserAnimesByViewingStatusQueryVariables
+export type UserAnimeViewsByStatusQueryResult = Apollo.QueryResult<
+  UserAnimeViewsByStatusQuery,
+  UserAnimeViewsByStatusQueryVariables
 >;
-export const SetUserEpisodesStatusDocument = gql`
-  mutation setUserEpisodesStatus($input: SetUserEpisodesStatusInput!) {
-    setUserEpisodesStatus(input: $input) {
-      ...UserEpisodeStatusFields
+export const SetUserAnimeEpisodesStatusDocument = gql`
+  mutation setUserAnimeEpisodesStatus(
+    $input: SetUserAnimeEpisodesStatusInput!
+  ) {
+    setUserAnimeEpisodesStatus(input: $input) {
+      ...UserEpisodeViewFields
     }
   }
-  ${UserEpisodeStatusFieldsFragmentDoc}
+  ${UserEpisodeViewFieldsFragmentDoc}
 `;
-export type SetUserEpisodesStatusMutationFn = Apollo.MutationFunction<
-  SetUserEpisodesStatusMutation,
-  SetUserEpisodesStatusMutationVariables
+export type SetUserAnimeEpisodesStatusMutationFn = Apollo.MutationFunction<
+  SetUserAnimeEpisodesStatusMutation,
+  SetUserAnimeEpisodesStatusMutationVariables
 >;
 
 /**
- * __useSetUserEpisodesStatusMutation__
+ * __useSetUserAnimeEpisodesStatusMutation__
  *
- * To run a mutation, you first call `useSetUserEpisodesStatusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetUserEpisodesStatusMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSetUserAnimeEpisodesStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetUserAnimeEpisodesStatusMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [setUserEpisodesStatusMutation, { data, loading, error }] = useSetUserEpisodesStatusMutation({
+ * const [setUserAnimeEpisodesStatusMutation, { data, loading, error }] = useSetUserAnimeEpisodesStatusMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useSetUserEpisodesStatusMutation(
+export function useSetUserAnimeEpisodesStatusMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    SetUserEpisodesStatusMutation,
-    SetUserEpisodesStatusMutationVariables
+    SetUserAnimeEpisodesStatusMutation,
+    SetUserAnimeEpisodesStatusMutationVariables
   >
 ) {
   return Apollo.useMutation<
-    SetUserEpisodesStatusMutation,
-    SetUserEpisodesStatusMutationVariables
-  >(SetUserEpisodesStatusDocument, baseOptions);
+    SetUserAnimeEpisodesStatusMutation,
+    SetUserAnimeEpisodesStatusMutationVariables
+  >(SetUserAnimeEpisodesStatusDocument, baseOptions);
 }
-export type SetUserEpisodesStatusMutationHookResult = ReturnType<
-  typeof useSetUserEpisodesStatusMutation
+export type SetUserAnimeEpisodesStatusMutationHookResult = ReturnType<
+  typeof useSetUserAnimeEpisodesStatusMutation
 >;
-export type SetUserEpisodesStatusMutationResult = Apollo.MutationResult<SetUserEpisodesStatusMutation>;
-export type SetUserEpisodesStatusMutationOptions = Apollo.BaseMutationOptions<
-  SetUserEpisodesStatusMutation,
-  SetUserEpisodesStatusMutationVariables
+export type SetUserAnimeEpisodesStatusMutationResult = Apollo.MutationResult<SetUserAnimeEpisodesStatusMutation>;
+export type SetUserAnimeEpisodesStatusMutationOptions = Apollo.BaseMutationOptions<
+  SetUserAnimeEpisodesStatusMutation,
+  SetUserAnimeEpisodesStatusMutationVariables
 >;
-export const UserEpisodesStatusDocument = gql`
-  query userEpisodesStatus($animeId: Float!) {
-    userEpisodesStatus(animeId: $animeId) {
+export const UserAnimeEpisodesStatusDocument = gql`
+  query userAnimeEpisodesStatus($animeId: Float!) {
+    userAnimeEpisodesStatus(animeId: $animeId) {
       ...EpisodeWithStatusFields
     }
   }
@@ -2169,159 +1795,53 @@ export const UserEpisodesStatusDocument = gql`
 `;
 
 /**
- * __useUserEpisodesStatusQuery__
+ * __useUserAnimeEpisodesStatusQuery__
  *
- * To run a query within a React component, call `useUserEpisodesStatusQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserEpisodesStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserAnimeEpisodesStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAnimeEpisodesStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserEpisodesStatusQuery({
+ * const { data, loading, error } = useUserAnimeEpisodesStatusQuery({
  *   variables: {
  *      animeId: // value for 'animeId'
  *   },
  * });
  */
-export function useUserEpisodesStatusQuery(
+export function useUserAnimeEpisodesStatusQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    UserEpisodesStatusQuery,
-    UserEpisodesStatusQueryVariables
+    UserAnimeEpisodesStatusQuery,
+    UserAnimeEpisodesStatusQueryVariables
   >
 ) {
   return Apollo.useQuery<
-    UserEpisodesStatusQuery,
-    UserEpisodesStatusQueryVariables
-  >(UserEpisodesStatusDocument, baseOptions);
+    UserAnimeEpisodesStatusQuery,
+    UserAnimeEpisodesStatusQueryVariables
+  >(UserAnimeEpisodesStatusDocument, baseOptions);
 }
-export function useUserEpisodesStatusLazyQuery(
+export function useUserAnimeEpisodesStatusLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    UserEpisodesStatusQuery,
-    UserEpisodesStatusQueryVariables
+    UserAnimeEpisodesStatusQuery,
+    UserAnimeEpisodesStatusQueryVariables
   >
 ) {
   return Apollo.useLazyQuery<
-    UserEpisodesStatusQuery,
-    UserEpisodesStatusQueryVariables
-  >(UserEpisodesStatusDocument, baseOptions);
+    UserAnimeEpisodesStatusQuery,
+    UserAnimeEpisodesStatusQueryVariables
+  >(UserAnimeEpisodesStatusDocument, baseOptions);
 }
-export type UserEpisodesStatusQueryHookResult = ReturnType<
-  typeof useUserEpisodesStatusQuery
+export type UserAnimeEpisodesStatusQueryHookResult = ReturnType<
+  typeof useUserAnimeEpisodesStatusQuery
 >;
-export type UserEpisodesStatusLazyQueryHookResult = ReturnType<
-  typeof useUserEpisodesStatusLazyQuery
+export type UserAnimeEpisodesStatusLazyQueryHookResult = ReturnType<
+  typeof useUserAnimeEpisodesStatusLazyQuery
 >;
-export type UserEpisodesStatusQueryResult = Apollo.QueryResult<
-  UserEpisodesStatusQuery,
-  UserEpisodesStatusQueryVariables
+export type UserAnimeEpisodesStatusQueryResult = Apollo.QueryResult<
+  UserAnimeEpisodesStatusQuery,
+  UserAnimeEpisodesStatusQueryVariables
 >;
-export type BaseEntityKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | BaseEntityKeySpecifier
-)[];
-export type BaseEntityFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CategoryKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | "name"
-  | "coverImage"
-  | "animes"
-  | CategoryKeySpecifier
-)[];
-export type CategoryFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  name?: FieldPolicy<any> | FieldReadFunction<any>;
-  coverImage?: FieldPolicy<any> | FieldReadFunction<any>;
-  animes?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type EpisodeKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | "title"
-  | "number"
-  | "arcName"
-  | "thumbnail"
-  | "airedDate"
-  | "anime"
-  | EpisodeKeySpecifier
-)[];
-export type EpisodeFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  title?: FieldPolicy<any> | FieldReadFunction<any>;
-  number?: FieldPolicy<any> | FieldReadFunction<any>;
-  arcName?: FieldPolicy<any> | FieldReadFunction<any>;
-  thumbnail?: FieldPolicy<any> | FieldReadFunction<any>;
-  airedDate?: FieldPolicy<any> | FieldReadFunction<any>;
-  anime?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type UserKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | "username"
-  | "phoneNumber"
-  | UserKeySpecifier
-)[];
-export type UserFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  username?: FieldPolicy<any> | FieldReadFunction<any>;
-  phoneNumber?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type UserEpisodeStatusKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | "hasBeenSeen"
-  | "episode"
-  | "animeStatus"
-  | UserEpisodeStatusKeySpecifier
-)[];
-export type UserEpisodeStatusFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  hasBeenSeen?: FieldPolicy<any> | FieldReadFunction<any>;
-  episode?: FieldPolicy<any> | FieldReadFunction<any>;
-  animeStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type UserAnimeStatusKeySpecifier = (
-  | "id"
-  | "createdAt"
-  | "updatedAt"
-  | "status"
-  | "anime"
-  | "user"
-  | "episodesStatus"
-  | "lastEpisodeSeen"
-  | "nextEpisodeToSee"
-  | UserAnimeStatusKeySpecifier
-)[];
-export type UserAnimeStatusFieldPolicy = {
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  status?: FieldPolicy<any> | FieldReadFunction<any>;
-  anime?: FieldPolicy<any> | FieldReadFunction<any>;
-  user?: FieldPolicy<any> | FieldReadFunction<any>;
-  episodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  lastEpisodeSeen?: FieldPolicy<any> | FieldReadFunction<any>;
-  nextEpisodeToSee?: FieldPolicy<any> | FieldReadFunction<any>;
-};
 export type AnimeKeySpecifier = (
   | "id"
   | "createdAt"
@@ -2345,6 +1865,7 @@ export type AnimeKeySpecifier = (
   | "categories"
   | "episodes"
   | "episodeCount"
+  | "arcs"
   | AnimeKeySpecifier
 )[];
 export type AnimeFieldPolicy = {
@@ -2370,34 +1891,119 @@ export type AnimeFieldPolicy = {
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
   episodeCount?: FieldPolicy<any> | FieldReadFunction<any>;
+  arcs?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type PaginatedAnimesOutputKeySpecifier = (
-  | "hasMore"
-  | "fields"
-  | PaginatedAnimesOutputKeySpecifier
+export type CategoryKeySpecifier = (
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "name"
+  | "coverImage"
+  | "animes"
+  | CategoryKeySpecifier
 )[];
-export type PaginatedAnimesOutputFieldPolicy = {
-  hasMore?: FieldPolicy<any> | FieldReadFunction<any>;
-  fields?: FieldPolicy<any> | FieldReadFunction<any>;
+export type CategoryFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
+  coverImage?: FieldPolicy<any> | FieldReadFunction<any>;
+  animes?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type EpisodeKeySpecifier = (
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "title"
+  | "number"
+  | "arcName"
+  | "airedDate"
+  | "anime"
+  | EpisodeKeySpecifier
+)[];
+export type EpisodeFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  title?: FieldPolicy<any> | FieldReadFunction<any>;
+  number?: FieldPolicy<any> | FieldReadFunction<any>;
+  arcName?: FieldPolicy<any> | FieldReadFunction<any>;
+  airedDate?: FieldPolicy<any> | FieldReadFunction<any>;
+  anime?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type UserKeySpecifier = (
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "username"
+  | UserKeySpecifier
+)[];
+export type UserFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  username?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type UserAnimeViewKeySpecifier = (
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "status"
+  | "anime"
+  | "user"
+  | "episodeViews"
+  | "lastEpisodeSeen"
+  | "nextEpisodeToSee"
+  | UserAnimeViewKeySpecifier
+)[];
+export type UserAnimeViewFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  status?: FieldPolicy<any> | FieldReadFunction<any>;
+  anime?: FieldPolicy<any> | FieldReadFunction<any>;
+  user?: FieldPolicy<any> | FieldReadFunction<any>;
+  episodeViews?: FieldPolicy<any> | FieldReadFunction<any>;
+  lastEpisodeSeen?: FieldPolicy<any> | FieldReadFunction<any>;
+  nextEpisodeToSee?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type UserEpisodeViewKeySpecifier = (
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "hasBeenSeen"
+  | "episode"
+  | "animeView"
+  | UserEpisodeViewKeySpecifier
+)[];
+export type UserEpisodeViewFieldPolicy = {
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasBeenSeen?: FieldPolicy<any> | FieldReadFunction<any>;
+  episode?: FieldPolicy<any> | FieldReadFunction<any>;
+  animeView?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CategoryPreviewKeySpecifier = (
-  | "title"
+  | "id"
+  | "name"
   | "animes"
-  | "categoryId"
   | CategoryPreviewKeySpecifier
 )[];
 export type CategoryPreviewFieldPolicy = {
-  title?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  name?: FieldPolicy<any> | FieldReadFunction<any>;
   animes?: FieldPolicy<any> | FieldReadFunction<any>;
-  categoryId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type PopulateAnimeOutputKeySpecifier = (
-  | "timeToPopulate"
+export type AnimesOutputKeySpecifier = (
+  | "hasMore"
+  | "total"
   | "fields"
-  | PopulateAnimeOutputKeySpecifier
+  | AnimesOutputKeySpecifier
 )[];
-export type PopulateAnimeOutputFieldPolicy = {
-  timeToPopulate?: FieldPolicy<any> | FieldReadFunction<any>;
+export type AnimesOutputFieldPolicy = {
+  hasMore?: FieldPolicy<any> | FieldReadFunction<any>;
+  total?: FieldPolicy<any> | FieldReadFunction<any>;
   fields?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ArcKeySpecifier = (
@@ -2411,122 +2017,102 @@ export type ArcFieldPolicy = {
   firstEpisodeNumber?: FieldPolicy<any> | FieldReadFunction<any>;
   lastEpisodeNumber?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type PaginatedUserAnimesByViewingStatusOutputKeySpecifier = (
-  | "hasMore"
-  | "fields"
-  | PaginatedUserAnimesByViewingStatusOutputKeySpecifier
+export type GoogleConnectOutputKeySpecifier = (
+  | "user"
+  | GoogleConnectOutputKeySpecifier
 )[];
-export type PaginatedUserAnimesByViewingStatusOutputFieldPolicy = {
+export type GoogleConnectOutputFieldPolicy = {
+  user?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type PhoneConnectOutputKeySpecifier = (
+  | "user"
+  | PhoneConnectOutputKeySpecifier
+)[];
+export type PhoneConnectOutputFieldPolicy = {
+  user?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type UserAnimeViewsByStatusOutputKeySpecifier = (
+  | "hasMore"
+  | "total"
+  | "fields"
+  | UserAnimeViewsByStatusOutputKeySpecifier
+)[];
+export type UserAnimeViewsByStatusOutputFieldPolicy = {
   hasMore?: FieldPolicy<any> | FieldReadFunction<any>;
+  total?: FieldPolicy<any> | FieldReadFunction<any>;
   fields?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type EpisodeWithStatusKeySpecifier = (
   | "episode"
-  | "status"
+  | "view"
   | EpisodeWithStatusKeySpecifier
 )[];
 export type EpisodeWithStatusFieldPolicy = {
   episode?: FieldPolicy<any> | FieldReadFunction<any>;
-  status?: FieldPolicy<any> | FieldReadFunction<any>;
+  view?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type QueryKeySpecifier = (
   | "anime"
   | "animes"
   | "searchAnimes"
-  | "categories"
-  | "categoriesPreviews"
   | "category"
-  | "arcs"
+  | "categories"
+  | "categoryPreview"
   | "episode"
   | "episodes"
-  | "userAnimesByViewingStatus"
-  | "userAnimeViewingStatus"
-  | "isRegisteredWithGoogle"
-  | "checkConfirmationCode"
   | "me"
-  | "userEpisodesStatus"
+  | "userAnimeViewsByStatus"
+  | "userAnimeView"
+  | "userAnimeEpisodesStatus"
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
   anime?: FieldPolicy<any> | FieldReadFunction<any>;
   animes?: FieldPolicy<any> | FieldReadFunction<any>;
   searchAnimes?: FieldPolicy<any> | FieldReadFunction<any>;
-  categories?: FieldPolicy<any> | FieldReadFunction<any>;
-  categoriesPreviews?: FieldPolicy<any> | FieldReadFunction<any>;
   category?: FieldPolicy<any> | FieldReadFunction<any>;
-  arcs?: FieldPolicy<any> | FieldReadFunction<any>;
+  categories?: FieldPolicy<any> | FieldReadFunction<any>;
+  categoryPreview?: FieldPolicy<any> | FieldReadFunction<any>;
   episode?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
-  userAnimesByViewingStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  userAnimeViewingStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  isRegisteredWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
-  checkConfirmationCode?: FieldPolicy<any> | FieldReadFunction<any>;
   me?: FieldPolicy<any> | FieldReadFunction<any>;
-  userEpisodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  userAnimeViewsByStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  userAnimeView?: FieldPolicy<any> | FieldReadFunction<any>;
+  userAnimeEpisodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MutationKeySpecifier = (
-  | "createAnime"
-  | "deleteAnime"
-  | "updateAnime"
-  | "createCategories"
-  | "deleteCategories"
-  | "updateCategory"
-  | "createEpisodes"
-  | "populateAnimes"
-  | "populateCategories"
-  | "deleteEpisodes"
-  | "updateEpisode"
-  | "setUserAnimeViewingStatus"
-  | "loginWithGoogle"
-  | "askPhoneNumberChange"
-  | "changeForgotPassword"
-  | "confirmPhoneNumber"
-  | "forgotPassword"
-  | "login"
   | "logout"
-  | "register"
-  | "resendConfirmationSMS"
-  | "updateInternalIdentifiers"
+  | "phoneAskConfirmationCode"
+  | "phoneConnect"
+  | "phoneRegister"
+  | "googleConnect"
+  | "googleRegister"
   | "updateUsername"
-  | "setUserEpisodesStatus"
+  | "setUserAnimeViewStatus"
+  | "setUserAnimeEpisodesStatus"
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
-  createAnime?: FieldPolicy<any> | FieldReadFunction<any>;
-  deleteAnime?: FieldPolicy<any> | FieldReadFunction<any>;
-  updateAnime?: FieldPolicy<any> | FieldReadFunction<any>;
-  createCategories?: FieldPolicy<any> | FieldReadFunction<any>;
-  deleteCategories?: FieldPolicy<any> | FieldReadFunction<any>;
-  updateCategory?: FieldPolicy<any> | FieldReadFunction<any>;
-  createEpisodes?: FieldPolicy<any> | FieldReadFunction<any>;
-  populateAnimes?: FieldPolicy<any> | FieldReadFunction<any>;
-  populateCategories?: FieldPolicy<any> | FieldReadFunction<any>;
-  deleteEpisodes?: FieldPolicy<any> | FieldReadFunction<any>;
-  updateEpisode?: FieldPolicy<any> | FieldReadFunction<any>;
-  setUserAnimeViewingStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  loginWithGoogle?: FieldPolicy<any> | FieldReadFunction<any>;
-  askPhoneNumberChange?: FieldPolicy<any> | FieldReadFunction<any>;
-  changeForgotPassword?: FieldPolicy<any> | FieldReadFunction<any>;
-  confirmPhoneNumber?: FieldPolicy<any> | FieldReadFunction<any>;
-  forgotPassword?: FieldPolicy<any> | FieldReadFunction<any>;
-  login?: FieldPolicy<any> | FieldReadFunction<any>;
   logout?: FieldPolicy<any> | FieldReadFunction<any>;
-  register?: FieldPolicy<any> | FieldReadFunction<any>;
-  resendConfirmationSMS?: FieldPolicy<any> | FieldReadFunction<any>;
-  updateInternalIdentifiers?: FieldPolicy<any> | FieldReadFunction<any>;
+  phoneAskConfirmationCode?: FieldPolicy<any> | FieldReadFunction<any>;
+  phoneConnect?: FieldPolicy<any> | FieldReadFunction<any>;
+  phoneRegister?: FieldPolicy<any> | FieldReadFunction<any>;
+  googleConnect?: FieldPolicy<any> | FieldReadFunction<any>;
+  googleRegister?: FieldPolicy<any> | FieldReadFunction<any>;
   updateUsername?: FieldPolicy<any> | FieldReadFunction<any>;
-  setUserEpisodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  setUserAnimeViewStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  setUserAnimeEpisodesStatus?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type TypedTypePolicies = TypePolicies & {
-  BaseEntity?: {
+  Anime?: {
     keyFields?:
       | false
-      | BaseEntityKeySpecifier
-      | (() => undefined | BaseEntityKeySpecifier);
+      | AnimeKeySpecifier
+      | (() => undefined | AnimeKeySpecifier);
     queryType?: true;
     mutationType?: true;
     subscriptionType?: true;
-    fields?: BaseEntityFieldPolicy;
+    fields?: AnimeFieldPolicy;
   };
   Category?: {
     keyFields?:
@@ -2555,45 +2141,25 @@ export type TypedTypePolicies = TypePolicies & {
     subscriptionType?: true;
     fields?: UserFieldPolicy;
   };
-  UserEpisodeStatus?: {
+  UserAnimeView?: {
     keyFields?:
       | false
-      | UserEpisodeStatusKeySpecifier
-      | (() => undefined | UserEpisodeStatusKeySpecifier);
+      | UserAnimeViewKeySpecifier
+      | (() => undefined | UserAnimeViewKeySpecifier);
     queryType?: true;
     mutationType?: true;
     subscriptionType?: true;
-    fields?: UserEpisodeStatusFieldPolicy;
+    fields?: UserAnimeViewFieldPolicy;
   };
-  UserAnimeStatus?: {
+  UserEpisodeView?: {
     keyFields?:
       | false
-      | UserAnimeStatusKeySpecifier
-      | (() => undefined | UserAnimeStatusKeySpecifier);
+      | UserEpisodeViewKeySpecifier
+      | (() => undefined | UserEpisodeViewKeySpecifier);
     queryType?: true;
     mutationType?: true;
     subscriptionType?: true;
-    fields?: UserAnimeStatusFieldPolicy;
-  };
-  Anime?: {
-    keyFields?:
-      | false
-      | AnimeKeySpecifier
-      | (() => undefined | AnimeKeySpecifier);
-    queryType?: true;
-    mutationType?: true;
-    subscriptionType?: true;
-    fields?: AnimeFieldPolicy;
-  };
-  PaginatedAnimesOutput?: {
-    keyFields?:
-      | false
-      | PaginatedAnimesOutputKeySpecifier
-      | (() => undefined | PaginatedAnimesOutputKeySpecifier);
-    queryType?: true;
-    mutationType?: true;
-    subscriptionType?: true;
-    fields?: PaginatedAnimesOutputFieldPolicy;
+    fields?: UserEpisodeViewFieldPolicy;
   };
   CategoryPreview?: {
     keyFields?:
@@ -2605,15 +2171,15 @@ export type TypedTypePolicies = TypePolicies & {
     subscriptionType?: true;
     fields?: CategoryPreviewFieldPolicy;
   };
-  PopulateAnimeOutput?: {
+  AnimesOutput?: {
     keyFields?:
       | false
-      | PopulateAnimeOutputKeySpecifier
-      | (() => undefined | PopulateAnimeOutputKeySpecifier);
+      | AnimesOutputKeySpecifier
+      | (() => undefined | AnimesOutputKeySpecifier);
     queryType?: true;
     mutationType?: true;
     subscriptionType?: true;
-    fields?: PopulateAnimeOutputFieldPolicy;
+    fields?: AnimesOutputFieldPolicy;
   };
   Arc?: {
     keyFields?: false | ArcKeySpecifier | (() => undefined | ArcKeySpecifier);
@@ -2622,17 +2188,35 @@ export type TypedTypePolicies = TypePolicies & {
     subscriptionType?: true;
     fields?: ArcFieldPolicy;
   };
-  PaginatedUserAnimesByViewingStatusOutput?: {
+  GoogleConnectOutput?: {
     keyFields?:
       | false
-      | PaginatedUserAnimesByViewingStatusOutputKeySpecifier
-      | (() =>
-          | undefined
-          | PaginatedUserAnimesByViewingStatusOutputKeySpecifier);
+      | GoogleConnectOutputKeySpecifier
+      | (() => undefined | GoogleConnectOutputKeySpecifier);
     queryType?: true;
     mutationType?: true;
     subscriptionType?: true;
-    fields?: PaginatedUserAnimesByViewingStatusOutputFieldPolicy;
+    fields?: GoogleConnectOutputFieldPolicy;
+  };
+  PhoneConnectOutput?: {
+    keyFields?:
+      | false
+      | PhoneConnectOutputKeySpecifier
+      | (() => undefined | PhoneConnectOutputKeySpecifier);
+    queryType?: true;
+    mutationType?: true;
+    subscriptionType?: true;
+    fields?: PhoneConnectOutputFieldPolicy;
+  };
+  UserAnimeViewsByStatusOutput?: {
+    keyFields?:
+      | false
+      | UserAnimeViewsByStatusOutputKeySpecifier
+      | (() => undefined | UserAnimeViewsByStatusOutputKeySpecifier);
+    queryType?: true;
+    mutationType?: true;
+    subscriptionType?: true;
+    fields?: UserAnimeViewsByStatusOutputFieldPolicy;
   };
   EpisodeWithStatus?: {
     keyFields?:

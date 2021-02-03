@@ -1,4 +1,4 @@
-query animes($categoryId: Float, $options: PaginatedInput) {
+query animes($categoryId: Float, $options: PaginationInput) {
   animes(categoryId: $categoryId, options: $options) {
     hasMore
     fields {

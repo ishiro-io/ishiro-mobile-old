@@ -1,5 +1,0 @@
-mutation loginWithGoogle($input: UserGoogleLoginInput!) {
-  loginWithGoogle(input: $input) {
-    ...UserFields
-  }
-}
