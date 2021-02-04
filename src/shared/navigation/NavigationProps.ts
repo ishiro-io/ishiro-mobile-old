@@ -11,6 +11,8 @@ import {
   ContentRoutes,
   HomeRoutes,
   MainTabsRoutes,
+  ProfileRoutes,
+  ProfileSettingsRoutes,
   SearchRoutes,
   SearchTabRoutes,
   StatusListsRoutes,
@@ -93,4 +95,16 @@ export interface AnimeInfoTabNavigationProps<
 > {
   navigation: MaterialTopTabNavigationProp<AnimeInfoTabRoutes, RouteName>;
   route: RouteProp<AnimeInfoTabRoutes, RouteName>;
+}
+
+export interface ProfileNavigationProps<RouteName extends keyof ProfileRoutes> {
+  navigation: StackNavigationProp<ProfileRoutes, RouteName>;
+  route: RouteProp<ProfileRoutes, RouteName>;
+}
+
+export interface ProfileSettingsNavigationProps<
+  RouteName extends keyof ProfileSettingsRoutes
+> {
+  navigation: StackNavigationProp<ProfileSettingsRoutes, RouteName>;
+  route: RouteProp<ProfileSettingsRoutes, RouteName>;
 }
