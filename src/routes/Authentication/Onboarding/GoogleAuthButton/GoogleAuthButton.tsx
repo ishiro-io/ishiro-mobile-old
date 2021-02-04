@@ -9,8 +9,7 @@ import GoogleLogoSvg from "components/svg/GoogleLogoSvg";
 import {
   MeDocument,
   MeQuery,
-  useIsRegisteredWithGoogleLazyQuery,
-  useLoginWithGoogleMutation
+  useGoogleConnectMutation
 } from "shared/graphql/generated";
 import { useUpdateEffect } from "shared/hooks";
 import {
@@ -31,14 +30,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
     AppNavigationProps<"Authentication">["navigation"]
   >();
 
-  const [
-    isRegisteredWithGoogle,
-    { data: isRegisteredData, loading: isRegisteredLoading }
-  ] = useIsRegisteredWithGoogleLazyQuery();
-  const [
-    loginWithGoogle,
-    { loading: loginLoading }
-  ] = useLoginWithGoogleMutation({
+  const [connect, { loading: connectLoading }] = useGoogleConnectMutation({
     errorPolicy: "all"
   });
 
@@ -86,41 +78,36 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
 
   // ? Dès qu'on a un id de user Google, on vérifie si il est déja register
   useUpdateEffect(() => {
-    if (userGoogleId)
-      isRegisteredWithGoogle({ variables: { accountId: userGoogleId } });
-  }, [userGoogleId]);
-
-  // ? Si le user est déja register on le login, sinon on affiche le screen pour qu'il choisisse un username
-  useUpdateEffect(() => {
-    const loginUser = async () => {
-      const loginResponse = await loginWithGoogle({
-        variables: { input: { accountId: userGoogleId! } },
-        update: (cache, { data: loginData }) => {
-          if (!loginData?.loginWithGoogle) return;
+    const connectUser = async (accountId: string) => {
+      const connectResponse = await connect({
+        variables: {
+          input: { accountId }
+        },
+        update: (cache, { data }) => {
+          if (!data?.googleConnect?.user) return;
           cache.writeQuery<MeQuery>({
             query: MeDocument,
-            data: { __typename: "Query", me: loginData.loginWithGoogle }
+            data: { __typename: "Query", me: data.googleConnect.user }
           });
         }
       });
 
-      if (loginResponse.data?.loginWithGoogle) {
-        rootNavigation.reset({
-          index: 0,
-          routes: [{ name: "Content" }]
-        });
+      if (connectResponse) {
+        if (connectResponse.data?.googleConnect?.user) {
+          rootNavigation.navigate("Content");
+        } else {
+          navigation.navigate("SetUsername", {
+            type: "Google",
+            accountId
+          });
+        }
       }
     };
 
-    if (isRegisteredData) {
-      if (isRegisteredData.isRegisteredWithGoogle) loginUser();
-      else {
-        navigation.navigate("GoogleSetUsername", {
-          accountId: userGoogleId!
-        });
-      }
+    if (userGoogleId) {
+      connectUser(userGoogleId);
     }
-  }, [isRegisteredData]);
+  }, [userGoogleId]);
 
   return (
     <Button
@@ -152,7 +139,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
       }
       onPress={() => promptAsync()}
       title="Continuer avec Google"
-      loading={isRegisteredLoading || loginLoading}
+      loading={connectLoading}
       loadingProps={{ color: theme.colors?.white }}
     />
   );

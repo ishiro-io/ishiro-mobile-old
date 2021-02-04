@@ -1,3 +1,4 @@
+import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect } from "react";
 import { Dimensions, Image, View } from "react-native";
@@ -61,45 +62,32 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
           borderWidth: 2,
           borderColor: theme.colors?.primaryLighter
         }}
+        disabledStyle={{ backgroundColor: theme.colors?.grey8 }}
         containerStyle={{
           marginBottom: theme.spacing?.m
         }}
         titleStyle={{
-          fontFamily: "Poppins_600SemiBold",
           color: theme.colors?.white,
+          fontFamily: "Poppins_600SemiBold",
           fontSize: 15,
           textTransform: "uppercase",
           textAlign: "center",
           letterSpacing: 1
         }}
-        onPress={() => navigation.navigate("Login")}
-        title="Se connecter"
+        icon={
+          <View style={{ marginRight: theme.spacing?.m }}>
+            <FontAwesome name="phone" size={24} color="white" />
+          </View>
+        }
+        onPress={() => navigation.navigate("AskConfirmPhoneNumberCode")}
+        title="Continuer avec mon numéro"
       />
+
+      {/* <FacebookAuthButton /> */}
 
       <GoogleAuthButton />
 
-      <Button
-        type="solid"
-        buttonStyle={{
-          backgroundColor: theme.colors?.primaryLighter,
-          width: width * 0.8,
-          height: 50,
-          borderRadius: theme.borderRadii?.xxl
-        }}
-        containerStyle={{
-          marginBottom: theme.spacing?.m
-        }}
-        titleStyle={{
-          color: theme.colors?.black,
-          fontFamily: "Poppins_600SemiBold",
-          fontSize: 15,
-          textTransform: "uppercase",
-          textAlign: "center",
-          letterSpacing: 1
-        }}
-        onPress={() => navigation.navigate("SignUp")}
-        title="S'inscrire"
-      />
+      {/* {Platform.OS === "ios" && <AppleAuthButton />} */}
     </View>
   );
 };

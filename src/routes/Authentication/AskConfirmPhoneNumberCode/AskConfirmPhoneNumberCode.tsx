@@ -1,39 +1,57 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Dimensions, View } from "react-native";
 import { Button, Input, ThemeContext } from "react-native-elements";
 
 import { ClearInputButton, DismissKeyboard, Header } from "components";
-import { useForgotPasswordMutation } from "shared/graphql/generated";
+import { usePhoneAskConfirmationCodeMutation } from "shared/graphql/generated";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
-import { ForgotPasswordSchema } from "../shared/schemas";
+import { ConnectSchema } from "../shared/schemas";
 
 const { width } = Dimensions.get("screen");
 
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({}: ForgotPasswordProps) => {
+const AskConfirmPhoneNumberCode: React.FC = () => {
   const { theme } = useContext(ThemeContext);
-
   const navigation = useNavigation<
-    AuthenticationNavigationProps<"ForgotPassword">["navigation"]
+    AuthenticationNavigationProps<"AskConfirmPhoneNumberCode">["navigation"]
   >();
 
-  const [forgotPassword, { loading }] = useForgotPasswordMutation({
+  const [connectError, setConnectError] = useState<string | undefined>(
+    undefined
+  );
+
+  const [
+    askConfirmationCode,
+    { loading }
+  ] = usePhoneAskConfirmationCodeMutation({
     errorPolicy: "all"
   });
 
   const onSubmit = async (values: { phoneNumber: string }) => {
-    const response = await forgotPassword({
-      variables: values
+    const response = await askConfirmationCode({
+      variables: { input: values }
     });
 
     if (response) {
-      if (response.data?.forgotPassword) {
-        navigation.navigate("ConfirmPasswordCode", {
+      if (response.data?.phoneAskConfirmationCode) {
+        navigation.navigate("ConfirmPhoneNumberCode", {
           phoneNumber: values.phoneNumber
         });
+      } else {
+        const badPhoneNumber = response.errors?.find(
+          (e) =>
+            e.extensions!.exception.response.message[0] ===
+            "phoneNumber must be a phone number"
+        );
+
+        if (badPhoneNumber) {
+          setConnectError("Votre numéro de téléphone est erroné.");
+        } else {
+          setConnectError("Erreur inconnue. Merci de contacter le support.");
+        }
       }
     }
   };
@@ -42,7 +60,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}: ForgotPasswordProps) 
     <DismissKeyboard>
       <View style={{ flex: 1 }}>
         <Header
-          label="Modifier son mot de passe"
+          label="Connexion"
           iconLeft={
             <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
           }
@@ -53,7 +71,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}: ForgotPasswordProps) 
           initialValues={{
             phoneNumber: ""
           }}
-          validationSchema={ForgotPasswordSchema}
+          validationSchema={ConnectSchema}
           validateOnChange={false}
           validateOnBlur={false}
           onSubmit={onSubmit}
@@ -86,17 +104,18 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}: ForgotPasswordProps) 
                 onChangeText={handleChange("phoneNumber")}
                 onBlur={handleBlur("phoneNumber")}
                 errorMessage={
-                  errors.phoneNumber ??
-                  "Un code vous sera envoyé par SMS pour modifier votre mot de passe."
+                  (errors.phoneNumber || connectError) ??
+                  "Il vous servira d'identifiant pour accéder à votre compte Ishiro."
                 }
                 errorStyle={{
-                  color: errors.phoneNumber
-                    ? theme.colors?.error
-                    : theme.colors?.grey5
+                  color:
+                    errors.phoneNumber || connectError
+                      ? theme.colors?.error
+                      : theme.colors?.grey5
                 }}
                 keyboardType="phone-pad"
                 autoCompleteType="off"
-                returnKeyType="next"
+                returnKeyType="done"
                 blurOnSubmit={false}
                 onSubmitEditing={() => handleSubmit()}
               />
@@ -115,13 +134,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}: ForgotPasswordProps) 
                 titleStyle={{
                   color: theme.colors?.black,
                   fontFamily: "Poppins_600SemiBold",
-                  fontSize: 18,
+                  fontSize: 15,
                   textTransform: "uppercase",
                   textAlign: "center",
                   letterSpacing: 1
                 }}
                 onPress={() => handleSubmit()}
-                title="Suivant"
+                title="Recevoir mon code"
                 {...{ loading }}
                 loadingProps={{ color: theme.colors?.black }}
               />
@@ -133,6 +152,4 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}: ForgotPasswordProps) 
   );
 };
 
-export default ForgotPassword;
-
-interface ForgotPasswordProps {}
+export default AskConfirmPhoneNumberCode;
