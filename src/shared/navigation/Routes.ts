@@ -74,3 +74,18 @@ export type AnimeInfoTabRoutes = {
   Episodes: { animeId: number; animeData: AnimeDataFieldsFragment };
   Informations: { animeId: number };
 };
+
+export type ProfileRoutes = {
+  ProfileMain: undefined;
+  Settings: undefined;
+};
+
+export type ProfileSettingsRoutes = {
+  SettingsMain: undefined;
+  ChangeUsername: undefined;
+  ChangePicture: undefined;
+  ChangePassword: undefined;
+  ChangeEmail: undefined;
+  ConfirmNewEmailCode: { email: string };
+  InfoParagraph: { title: string; text: string };
+};
