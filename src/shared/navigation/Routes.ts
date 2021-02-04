@@ -1,7 +1,7 @@
 import {
   AnimeDataFieldsFragment,
-  Arc,
-  UserAnimeView
+  AnimeViewStatus,
+  Arc
 } from "shared/graphql/generated";
 
 export type AppRoutes = {
@@ -55,10 +55,10 @@ export type StatusListsRoutes = {
 };
 
 export type StatusListsTabRoutes = {
-  ToSee: { view: UserAnimeView };
-  InProgress: { view: UserAnimeView };
-  Finished: { view: UserAnimeView };
-  Abandonned: { view: UserAnimeView };
+  ToSee: { status: AnimeViewStatus };
+  InProgress: { status: AnimeViewStatus };
+  Finished: { status: AnimeViewStatus };
+  Abandonned: { status: AnimeViewStatus };
 };
 
 export type AnimeInfoModalRoutes = {

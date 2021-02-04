@@ -147,7 +147,7 @@ export default AnimeCard;
 
 interface AnimeCardProps {
   title: string;
-  posterImageUrl: string;
+  posterImageUrl?: string;
   episodeText?: string;
   episodeNumber?: number;
   width: number;

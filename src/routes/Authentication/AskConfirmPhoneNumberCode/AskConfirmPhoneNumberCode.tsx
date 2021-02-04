@@ -114,7 +114,7 @@ const AskConfirmPhoneNumberCode: React.FC = () => {
                       : theme.colors?.grey5
                 }}
                 keyboardType="phone-pad"
-                autoCompleteType="off"
+                autoCompleteType="tel"
                 returnKeyType="done"
                 blurOnSubmit={false}
                 onSubmitEditing={() => handleSubmit()}

@@ -5,7 +5,7 @@ import { ActivityIndicator, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { ListEmpty } from "components";
-import { useUserAnimesByViewingStatusQuery } from "shared/graphql/generated";
+import { useUserAnimeViewsByStatusQuery } from "shared/graphql/generated";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
 import { StatusListAnimeCard } from "./StatusListAnimeCard";
@@ -25,7 +25,7 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
     fetchMore,
     refetch,
     networkStatus
-  } = useUserAnimesByViewingStatusQuery({
+  } = useUserAnimeViewsByStatusQuery({
     variables: {
       status: route.params.status,
       options: { limit: 20, offset: 0 }
@@ -52,11 +52,11 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
     );
 
   const loadMoreUserAnimes = () => {
-    if (data?.userAnimesByViewingStatus?.hasMore && fetchMore) {
+    if (data?.userAnimeViewsByStatus?.hasMore && fetchMore) {
       fetchMore({
         variables: {
           options: {
-            offset: data?.userAnimesByViewingStatus?.fields.length,
+            offset: data?.userAnimeViewsByStatus?.fields.length,
             limit: 20
           }
         }
@@ -75,7 +75,7 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
         alignItems: "center",
         paddingVertical: theme.spacing?.m
       }}
-      data={data?.userAnimesByViewingStatus?.fields}
+      data={data?.userAnimeViewsByStatus?.fields}
       renderItem={({ item }) => <StatusListAnimeCard {...{ item }} />}
       showsVerticalScrollIndicator={false}
       numColumns={2}

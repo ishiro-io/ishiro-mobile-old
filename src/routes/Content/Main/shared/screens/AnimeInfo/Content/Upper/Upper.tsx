@@ -2,8 +2,8 @@ import { useRoute } from "@react-navigation/native";
 import React from "react";
 
 import {
-  AnimeViewingStatus,
-  useUserAnimeViewingStatusQuery
+  AnimeViewStatus,
+  useUserAnimeViewQuery
 } from "shared/graphql/generated";
 import { AnimeInfoModalNavigationProps } from "shared/navigation/NavigationProps";
 
@@ -16,7 +16,7 @@ const AnimeInfoUpper: React.FC<AnimeInfoUpperProps> = ({}: AnimeInfoUpperProps) 
 
   const { animeData } = route.params;
 
-  const { data: statusData } = useUserAnimeViewingStatusQuery({
+  const { data } = useUserAnimeViewQuery({
     variables: {
       animeId: route.params.animeId
     }
@@ -26,17 +26,11 @@ const AnimeInfoUpper: React.FC<AnimeInfoUpperProps> = ({}: AnimeInfoUpperProps) 
     <>
       <AnimeInfoUpperImageContainer {...{ animeData }} />
 
-      <AnimeInfoHeader
-        animeStatus={statusData?.userAnimeViewingStatus}
-        {...{ animeData }}
-      />
+      <AnimeInfoHeader animeStatus={data?.userAnimeView} {...{ animeData }} />
 
-      {statusData?.userAnimeViewingStatus &&
-        statusData?.userAnimeViewingStatus?.status !==
-          AnimeViewingStatus.None && (
-          <AnimeStatusSelector
-            animeStatus={statusData?.userAnimeViewingStatus}
-          />
+      {data?.userAnimeView &&
+        data?.userAnimeView?.status !== AnimeViewStatus.None && (
+          <AnimeStatusSelector animeView={data?.userAnimeView} />
         )}
     </>
   );

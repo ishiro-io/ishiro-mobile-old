@@ -13,15 +13,15 @@ import { FlatList } from "react-native-gesture-handler";
 import { ListEmpty } from "components";
 import {
   AnimeDataFieldsFragment,
-  AnimeViewingStatus,
+  AnimeViewStatus,
   EpisodeWithStatusFieldsFragment,
-  NewEpisodeStatus,
-  useUserAnimeViewingStatusQuery,
-  useUserEpisodesStatusQuery
+  NewEpisodeView,
+  useUserAnimeEpisodesStatusQuery,
+  useUserAnimeViewQuery
 } from "shared/graphql/generated";
 import {
-  useSetUserAnimeViewingStatus,
-  useSetUserEpisodesStatus,
+  useSetUserAnimeEpisodesStatus,
+  useSetUserAnimeViewStatus,
   useUpdateEffect
 } from "shared/hooks";
 import { AnimeInfoTabNavigationProps } from "shared/navigation/NavigationProps";
@@ -48,18 +48,18 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
 
   const ref = useRef<FlatList<any> | null>(null);
 
-  const { data: animeStatusData } = useUserAnimeViewingStatusQuery({
+  const { data: animeViewData } = useUserAnimeViewQuery({
     variables: { animeId: route.params.animeId }
   });
 
-  const { data, loading } = useUserEpisodesStatusQuery({
+  const { data, loading } = useUserAnimeEpisodesStatusQuery({
     variables: {
       animeId: route.params.animeId
     }
   });
 
-  const setUserEpisodesStatus = useSetUserEpisodesStatus();
-  const setUserAnimeViewingStatus = useSetUserAnimeViewingStatus();
+  const setUserAnimeEpisodesStatus = useSetUserAnimeEpisodesStatus();
+  const setUserAnimeViewingStatus = useSetUserAnimeViewStatus();
 
   const [appState, setAppState] = useState(AppState.currentState);
   const [hasChanged, setHasChanged] = useState(false);
@@ -91,7 +91,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
   // ? Initialize arcEpisodeList when data is initialized & when arcName is updated
   useEffect(() => {
     if (!loading) {
-      const newArcEpisodeList = (data?.userEpisodesStatus ?? []).filter(
+      const newArcEpisodeList = (data?.userAnimeEpisodesStatus ?? []).filter(
         (ues) => {
           return !ues.episode.arcName || ues.episode.arcName === arcName;
         }
@@ -111,7 +111,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
       setHasChanged(false);
 
       const newIsCheckledList = arcEpisodeList.map(
-        (ues) => ues.status?.hasBeenSeen || false
+        (ues) => ues.view?.hasBeenSeen || false
       );
 
       setIsCheckedList(newIsCheckledList);
@@ -122,13 +122,13 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
   useUpdateEffect(() => {
     if (
       arcEpisodeList &&
-      data?.userEpisodesStatus &&
+      data?.userAnimeEpisodesStatus &&
       (!isFocused || appState.match(/inactive|background/)) &&
       hasChanged
     ) {
       setIsListPopulated(false);
 
-      const newCheckedEpisode: NewEpisodeStatus[] = isCheckedList.map(
+      const newCheckedEpisode: NewEpisodeView[] = isCheckedList.map(
         (isChecked, index) => {
           const ues = arcEpisodeList[index];
           return { episodeNumber: ues.episode.number, toSeen: isChecked };
@@ -139,14 +139,14 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
         (nes) => nes.toSeen === true
       );
 
-      let newEpisodeStatus = [...newCheckedEpisode];
+      let newEpisodeViews = [...newCheckedEpisode];
 
       if (firstSeenEpisode) {
-        const previousEpisodes = data?.userEpisodesStatus.filter(
+        const previousEpisodes = data?.userAnimeEpisodesStatus.filter(
           (ues) => ues.episode.number < firstSeenEpisode.episodeNumber
         );
 
-        const previousEpisodesNewStatus = previousEpisodes.map<NewEpisodeStatus>(
+        const previousEpisodeViews = previousEpisodes.map<NewEpisodeView>(
           (episodeStatus) => {
             return {
               episodeNumber: episodeStatus.episode.number,
@@ -155,15 +155,14 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
           }
         );
 
-        newEpisodeStatus = [...newCheckedEpisode, ...previousEpisodesNewStatus];
+        newEpisodeViews = [...newCheckedEpisode, ...previousEpisodeViews];
       }
 
-      setUserEpisodesStatus({
-        arcName,
-        animeStatusId: animeStatusData?.userAnimeViewingStatus?.id ?? 0,
+      setUserAnimeEpisodesStatus({
+        animeViewId: animeViewData?.userAnimeView?.id ?? 0,
         input: {
           animeId: route.params.animeId,
-          newEpisodeStatus
+          newEpisodeViews
         }
       });
 
@@ -190,7 +189,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
   // ? when the icon wasn't check, check every icon before it
   // ? when it was already checked, just uncheck this icon
   const onCheckPress = (index: number, toSeen: boolean) => {
-    if (data?.userEpisodesStatus) {
+    if (data?.userAnimeEpisodesStatus) {
       const newIsCheckedList = isCheckedList.map((check, i) => {
         if (toSeen && i === index) return !toSeen;
         else if (!toSeen && i <= index) return !toSeen;
@@ -213,37 +212,32 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
 
   // ? Change anime status to IN_PROGRESS if his status is at NONE or TO_SEE
   const checkAndUpdateAnimeStatus = (count: number) => {
-    const status =
-      animeStatusData?.userAnimeViewingStatus?.status ||
-      AnimeViewingStatus.None;
+    const status = animeViewData?.userAnimeView?.status || AnimeViewStatus.None;
 
     if (count >= maxCount && isLastArc) {
       setUserAnimeViewingStatus({
-        itemToUpdate: animeStatusData?.userAnimeViewingStatus ?? {
+        itemToUpdate: animeViewData?.userAnimeView ?? {
           id: 0,
           anime: animeData,
-          status: AnimeViewingStatus.None,
-          episodesStatus: [],
+          status: AnimeViewStatus.None,
+          episodeViews: [],
           lastEpisodeSeen: null,
           nextEpisodeToSee: null
         },
-        newStatus: AnimeViewingStatus.Finished
+        newStatus: AnimeViewStatus.Finished
       });
     } else {
-      if (
-        status === AnimeViewingStatus.None ||
-        status === AnimeViewingStatus.ToSee
-      )
+      if (status === AnimeViewStatus.None || status === AnimeViewStatus.ToSee)
         setUserAnimeViewingStatus({
-          itemToUpdate: animeStatusData?.userAnimeViewingStatus ?? {
+          itemToUpdate: animeViewData?.userAnimeView ?? {
             id: 0,
             anime: animeData,
-            status: AnimeViewingStatus.None,
-            episodesStatus: [],
+            status: AnimeViewStatus.None,
+            episodeViews: [],
             lastEpisodeSeen: null,
             nextEpisodeToSee: null
           },
-          newStatus: AnimeViewingStatus.InProgress
+          newStatus: AnimeViewStatus.InProgress
         });
     }
   };
@@ -311,7 +305,7 @@ export default ArcFlatList;
 
 interface ArcFlatListProps {
   animeData: AnimeDataFieldsFragment;
-  arcName?: string | null | undefined;
+  arcName?: string;
   isLastArc: boolean;
   displayHeaderArrow?: boolean;
   onHeaderArrowPress?: () => void;

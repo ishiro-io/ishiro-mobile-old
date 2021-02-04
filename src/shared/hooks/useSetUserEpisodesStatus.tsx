@@ -1,103 +1,119 @@
 import { useCallback } from "react";
 
 import {
-  SetUserEpisodesStatusMutationVariables,
-  UserAnimeStatusFieldsFragment,
-  UserAnimeStatusFieldsFragmentDoc,
-  UserEpisodesStatusDocument,
-  UserEpisodesStatusQuery,
-  useSetUserEpisodesStatusMutation
+  EpisodeWithStatusFieldsFragment,
+  SetUserAnimeEpisodesStatusMutationVariables,
+  UserAnimeEpisodesStatusDocument,
+  UserAnimeEpisodesStatusQuery,
+  UserAnimeViewFieldsFragment,
+  UserAnimeViewFieldsFragmentDoc,
+  useSetUserAnimeEpisodesStatusMutation
 } from "shared/graphql/generated";
 
-const useSetUserEpisodesStatus = () => {
-  const [setUserEpisodesStatusMutation] = useSetUserEpisodesStatusMutation({
+const useSetUserAnimeEpisodesStatus = () => {
+  const [
+    setUserAnimeEpisodesStatusMutation
+  ] = useSetUserAnimeEpisodesStatusMutation({
     errorPolicy: "all"
   });
 
-  const setUserEpisodesStatus = async ({
-    input: { animeId, newEpisodeStatus },
-    arcName,
-    animeStatusId
+  const setUserAnimeEpisodesStatus = async ({
+    input: { animeId, newEpisodeViews },
+    animeViewId: animeStatusId
   }: Options) => {
-    setUserEpisodesStatusMutation({
+    setUserAnimeEpisodesStatusMutation({
       variables: {
-        input: { animeId, newEpisodeStatus }
+        input: { animeId, newEpisodeViews }
       },
       optimisticResponse: {
         __typename: "Mutation",
-        setUserEpisodesStatus: newEpisodeStatus.map((episodeStatus) => {
+        setUserAnimeEpisodesStatus: newEpisodeViews.map((episodeView) => {
           return {
-            __typename: "UserEpisodeStatus",
+            __typename: "UserEpisodeView",
             id: 0,
-            hasBeenSeen: episodeStatus.toSeen,
+            hasBeenSeen: episodeView.toSeen,
             episode: {
               __typename: "Episode",
-              number: episodeStatus.episodeNumber
+              number: episodeView.episodeNumber
             },
-            animeStatus: { id: animeStatusId }
+            animeView: { id: animeStatusId }
           };
         })
       },
       update: (cache, { data: mutationData }) => {
-        if (!mutationData?.setUserEpisodesStatus) return;
-        const oldStatusListCache = cache.readQuery<UserEpisodesStatusQuery>({
-          query: UserEpisodesStatusDocument,
-          variables: {
-            animeId
-          }
-        });
+        if (!mutationData?.setUserAnimeEpisodesStatus) return;
 
-        if (oldStatusListCache?.userEpisodesStatus) {
-          cache.writeQuery<UserEpisodesStatusQuery>({
-            query: UserEpisodesStatusDocument,
+        // * Get the cached episode views list
+        const oldStatusListCache = cache.readQuery<UserAnimeEpisodesStatusQuery>(
+          {
+            query: UserAnimeEpisodesStatusDocument,
             variables: {
-              animeId,
-              arcName
+              animeId
+            }
+          }
+        );
+
+        console.log({ oldStatusListCache });
+
+        // * Edit the cached episode views list
+        if (oldStatusListCache?.userAnimeEpisodesStatus) {
+          cache.writeQuery<UserAnimeEpisodesStatusQuery>({
+            query: UserAnimeEpisodesStatusDocument,
+            variables: {
+              animeId
             },
             data: {
               ...oldStatusListCache,
-              // @ts-ignore
-              userEpisodesStatus: [
-                ...oldStatusListCache.userEpisodesStatus.map((ues) => {
-                  const episodeStatus = mutationData.setUserEpisodesStatus?.find(
-                    (es) => ues.episode.number === es.episode.number
-                  );
+              userAnimeEpisodesStatus: [
+                ...oldStatusListCache.userAnimeEpisodesStatus.map<EpisodeWithStatusFieldsFragment>(
+                  (cacheStatus) => {
+                    const episodeStatus = mutationData.setUserAnimeEpisodesStatus?.find(
+                      (mutationStatus) =>
+                        cacheStatus.episode.number ===
+                        mutationStatus.episode.number
+                    );
 
-                  if (!episodeStatus) return ues;
+                    if (!episodeStatus) return cacheStatus;
 
-                  return {
-                    ...ues,
-                    status: {
-                      __typename: "UserEpisodeStatus",
-                      animeStatus: {
-                        __typename: "UserAnimeStatus",
-                        id: animeId
-                      },
-                      episode: episodeStatus.episode,
-                      hasBeenSeen: episodeStatus.hasBeenSeen
-                    }
-                  };
-                })
+                    return {
+                      ...cacheStatus,
+                      view: {
+                        __typename: "UserEpisodeView",
+                        animeView: {
+                          __typename: "UserAnimeView",
+                          id: animeId
+                        },
+                        episode: episodeStatus.episode,
+                        hasBeenSeen: episodeStatus.hasBeenSeen
+                      }
+                    };
+                  }
+                )
               ]
             }
           });
         }
 
-        const newStatusListCache = cache.readQuery<UserEpisodesStatusQuery>({
-          query: UserEpisodesStatusDocument,
-          variables: {
-            animeId
+        // * Get the new cached list
+        const newStatusListCache = cache.readQuery<UserAnimeEpisodesStatusQuery>(
+          {
+            query: UserAnimeEpisodesStatusDocument,
+            variables: {
+              animeId
+            }
           }
-        });
+        );
 
-        const episodesStatus = [...newStatusListCache!.userEpisodesStatus!];
+        const episodesStatus = [
+          ...newStatusListCache!.userAnimeEpisodesStatus!
+        ];
 
         const sortedEpisodesStatus = episodesStatus.sort(
           (a, b) => a.episode.number - b.episode.number
         );
 
         const filteredEpisodesStatus = sortedEpisodesStatus.filter(
-          (e) => e.status?.hasBeenSeen
+          (e) => e.view?.hasBeenSeen
         );
 
         if (filteredEpisodesStatus.length) {
@@ -111,17 +127,17 @@ const useSetUserEpisodesStatus = () => {
           const nextEpisodeToSee =
             sortedEpisodesStatus[lastEpisodeSeenIndex + 1]?.episode ?? null;
 
-          const userAnimeStatusCache = cache.readFragment<UserAnimeStatusFieldsFragment>(
+          const userAnimeStatusCache = cache.readFragment<UserAnimeViewFieldsFragment>(
             {
-              fragment: UserAnimeStatusFieldsFragmentDoc,
-              id: `UserAnimeStatus:${mutationData.setUserEpisodesStatus[0].animeStatus.id}`
+              fragment: UserAnimeViewFieldsFragmentDoc,
+              id: `UserAnimeView:${mutationData.setUserAnimeEpisodesStatus[0].animeView.id}`
             }
           );
 
           if (userAnimeStatusCache) {
-            cache.writeFragment<UserAnimeStatusFieldsFragment>({
-              fragment: UserAnimeStatusFieldsFragmentDoc,
-              id: `UserAnimeStatus:${mutationData.setUserEpisodesStatus[0].animeStatus.id}`,
+            cache.writeFragment<UserAnimeViewFieldsFragment>({
+              fragment: UserAnimeViewFieldsFragmentDoc,
+              id: `UserAnimeView:${mutationData.setUserAnimeEpisodesStatus[0].animeView.id}`,
               data: {
                 ...userAnimeStatusCache,
                 lastEpisodeSeen,
@@ -134,16 +150,16 @@ const useSetUserEpisodesStatus = () => {
     });
   };
 
-  const setUserAnimeViewingStatusCallback = useCallback(setUserEpisodesStatus, [
-    setUserEpisodesStatus
-  ]);
+  const setUserAnimeEpisodesStatusCallback = useCallback(
+    setUserAnimeEpisodesStatus,
+    [setUserAnimeEpisodesStatus]
+  );
 
-  return setUserAnimeViewingStatusCallback;
+  return setUserAnimeEpisodesStatusCallback;
 };
 
-interface Options extends SetUserEpisodesStatusMutationVariables {
-  arcName: string | null | undefined;
-  animeStatusId: number;
+interface Options extends SetUserAnimeEpisodesStatusMutationVariables {
+  animeViewId: number;
 }
 
-export default useSetUserEpisodesStatus;
+export default useSetUserAnimeEpisodesStatus;

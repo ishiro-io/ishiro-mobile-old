@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { Button, Input, ThemeContext } from "react-native-elements";
 
 import { ClearInputButton, DismissKeyboard, Header } from "components";
@@ -16,7 +16,7 @@ import {
   AuthenticationNavigationProps
 } from "shared/navigation/NavigationProps";
 
-import { GoogleSetUsernameSchema } from "../shared/schemas";
+import { GoogleSetUsernameSchema } from "../../shared/schemas";
 
 const { width } = Dimensions.get("screen");
 

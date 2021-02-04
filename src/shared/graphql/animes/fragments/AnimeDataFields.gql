@@ -11,4 +11,9 @@ fragment AnimeDataFields on Anime {
     id
     name
   }
+  arcs {
+    title
+    firstEpisodeNumber
+    lastEpisodeNumber
+  }
 }

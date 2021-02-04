@@ -95,8 +95,8 @@ export default EpisodeRow;
 
 interface EpisodeRowProps {
   number: number;
-  title?: string | null | undefined;
-  airedDate?: string | null | undefined;
+  title?: string;
+  airedDate?: string;
   isChecked: boolean;
   onCheckPress: () => void;
 }

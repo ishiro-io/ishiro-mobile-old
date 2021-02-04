@@ -192,7 +192,7 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
         {data?.anime?.duration && (
           <Row
             title={
-              data?.anime.type === AnimeType.Tv ? "Durée moyenne" : "Durée"
+              data?.anime.type !== AnimeType.Movie ? "Durée moyenne" : "Durée"
             }
             data={data.anime.duration}
           />

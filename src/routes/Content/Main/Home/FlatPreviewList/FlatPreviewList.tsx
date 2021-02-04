@@ -5,10 +5,7 @@ import { ActivityIndicator, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { ListEmpty } from "components";
-import {
-  AnimeViewingStatus,
-  useHomeAnimesQuery
-} from "shared/graphql/generated";
+import { AnimeViewStatus, useHomeAnimesQuery } from "shared/graphql/generated";
 import {
   HomeNavigationProps,
   StatusListsTabNavigationProps
@@ -36,34 +33,63 @@ const HomeFlatPreviewList: React.FC<ListsScrollViewProps> = ({}: ListsScrollView
     if (!loading) {
       let newCardsList: HomePreviewListProps[] = [];
 
-      if (data?.userAnimesByViewingStatus.fields.length) {
+      if (data?.userAnimeViewsByStatus?.fields.length) {
         newCardsList.push({
           title: "En cours",
-          animes: data.userAnimesByViewingStatus.fields.map((f) => {
+          animes: data.userAnimeViewsByStatus.fields.map((f) => {
             return { ...f.anime, nextEpisode: f.nextEpisodeToSee?.number };
           }),
           onSeeMoreCardPress: () =>
             statusListNavigation.navigate("InProgress", {
-              status: AnimeViewingStatus.InProgress
+              status: AnimeViewStatus.InProgress
             })
         });
       }
 
-      if (data?.categoriesPreviews) {
-        const previewsCards: HomePreviewListProps[] = data.categoriesPreviews.map(
-          (cp) => {
-            return {
-              ...cp,
-              onSeeMoreCardPress: () =>
-                homeNavigation.navigate("CategoryList", {
-                  categoryId: cp.categoryId!,
-                  categoryName: cp.title
-                })
-            };
-          }
-        );
-        newCardsList = [...newCardsList, ...previewsCards];
-      }
+      newCardsList.push({
+        title: data?.action?.name!,
+        animes: data?.action?.animes,
+        onSeeMoreCardPress: () =>
+          statusListNavigation.navigate("InProgress", {
+            status: AnimeViewStatus.InProgress
+          })
+      });
+
+      newCardsList.push({
+        title: data?.romance?.name!,
+        animes: data?.romance?.animes,
+        onSeeMoreCardPress: () =>
+          statusListNavigation.navigate("InProgress", {
+            status: AnimeViewStatus.InProgress
+          })
+      });
+
+      newCardsList.push({
+        title: data?.comedie?.name!,
+        animes: data?.comedie?.animes,
+        onSeeMoreCardPress: () =>
+          statusListNavigation.navigate("InProgress", {
+            status: AnimeViewStatus.InProgress
+          })
+      });
+
+      newCardsList.push({
+        title: data?.drame?.name!,
+        animes: data?.drame?.animes,
+        onSeeMoreCardPress: () =>
+          statusListNavigation.navigate("InProgress", {
+            status: AnimeViewStatus.InProgress
+          })
+      });
+
+      newCardsList.push({
+        title: data?.sf?.name!,
+        animes: data?.sf?.animes,
+        onSeeMoreCardPress: () =>
+          statusListNavigation.navigate("InProgress", {
+            status: AnimeViewStatus.InProgress
+          })
+      });
 
       setCardsLists(newCardsList);
       setHasListBeenPopulated(true);

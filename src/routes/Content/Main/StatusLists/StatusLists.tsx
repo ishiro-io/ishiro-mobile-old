@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { Header } from "components";
-import { AnimeViewingStatus } from "shared/graphql/generated";
+import { AnimeViewStatus } from "shared/graphql/generated";
 import {
   StatusListsRoutes,
   StatusListsTabRoutes
@@ -63,7 +63,7 @@ const StatusListsContent = () => {
           <StatusListsTabs.Screen
             name="ToSee"
             initialParams={{
-              status: AnimeViewingStatus.ToSee
+              status: AnimeViewStatus.ToSee
             }}
             component={StatusListsTabContent}
             options={{ tabBarLabel: "A voir" }}
@@ -71,7 +71,7 @@ const StatusListsContent = () => {
           <StatusListsTabs.Screen
             name="InProgress"
             initialParams={{
-              status: AnimeViewingStatus.InProgress
+              status: AnimeViewStatus.InProgress
             }}
             component={StatusListsTabContent}
             options={{ tabBarLabel: "En cours" }}
@@ -79,7 +79,7 @@ const StatusListsContent = () => {
           <StatusListsTabs.Screen
             name="Finished"
             initialParams={{
-              status: AnimeViewingStatus.Finished
+              status: AnimeViewStatus.Finished
             }}
             component={StatusListsTabContent}
             options={{ tabBarLabel: "Terminé" }}
@@ -87,7 +87,7 @@ const StatusListsContent = () => {
           <StatusListsTabs.Screen
             name="Abandonned"
             initialParams={{
-              status: AnimeViewingStatus.Abandoned
+              status: AnimeViewStatus.Abandoned
             }}
             component={StatusListsTabContent}
             options={{ tabBarLabel: "Abandonné" }}

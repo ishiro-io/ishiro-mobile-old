@@ -4,7 +4,6 @@ import React, { useContext } from "react";
 import { View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
-import { AnimeType } from "shared/graphql/generated";
 import { AnimeInfoModalNavigationProps } from "shared/navigation/NavigationProps";
 import { AnimeInfoTabRoutes } from "shared/navigation/Routes";
 
@@ -55,7 +54,7 @@ const AnimeInfoContent: React.FC<AnimeInfoContentProps> = ({}: AnimeInfoContentP
           component={AnimeInformations}
           initialParams={{ animeId: animeData.id }}
         />
-        {animeData.type === AnimeType.Tv && (
+        {animeData.episodeCount > 0 && (
           <AnimeInfoTabs.Screen
             name="Episodes"
             component={Episodes}

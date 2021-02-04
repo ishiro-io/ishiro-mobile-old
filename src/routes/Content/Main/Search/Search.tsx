@@ -1,7 +1,8 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useFocusEffect } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext, useState } from "react";
-import { View } from "react-native";
+import { Keyboard, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { Header } from "components";
@@ -32,6 +33,16 @@ const SearchContent = () => {
 
   const [isSearchContentOpen, setIsSearchContentOpen] = useState(false);
   const [value, setValue] = useState("");
+
+  useFocusEffect(() => {
+    Keyboard.addListener("keyboardWillHide", () => {
+      if (!value) setIsSearchContentOpen(false);
+    });
+
+    return () => {
+      Keyboard.removeAllListeners("keyboardWillHide");
+    };
+  });
 
   return (
     <View style={{ flex: 1 }}>
