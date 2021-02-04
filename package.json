@@ -12,6 +12,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint --ext .ts,.tsx .",
+    "format": "prettier --write \"src/**/*.ts\"",
     "build": "tsc",
     "test": "jest",
     "test:pre-commit": "jest -o",

@@ -4,8 +4,8 @@ import { Dimensions, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import {
-  AnimeViewingStatus,
-  UserAnimeStatusFieldsFragment
+  AnimeViewStatus,
+  UserAnimeViewFieldsFragment
 } from "shared/graphql/generated";
 
 import { ChangeStatusButton } from "./ChangeStatusButton";
@@ -13,7 +13,7 @@ import { ChangeStatusButton } from "./ChangeStatusButton";
 const { width } = Dimensions.get("screen");
 
 const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
-  animeStatus
+  animeView
 }: StatusSelectorProps) => {
   const { theme } = useContext(ThemeContext);
 
@@ -34,14 +34,14 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
             name="watch-later"
             size={24}
             color={
-              animeStatus?.status === AnimeViewingStatus.ToSee
+              animeView?.status === AnimeViewStatus.ToSee
                 ? theme.colors?.info
                 : theme.colors?.grey5
             }
           />
         }
-        newStatus={AnimeViewingStatus.ToSee}
-        {...{ animeStatus }}
+        newStatus={AnimeViewStatus.ToSee}
+        {...{ animeStatus: animeView }}
       />
       <ChangeStatusButton
         label="Je le regarde"
@@ -50,14 +50,14 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
             name="play-circle-filled"
             size={24}
             color={
-              animeStatus?.status === AnimeViewingStatus.InProgress
+              animeView?.status === AnimeViewStatus.InProgress
                 ? theme.colors?.warning
                 : theme.colors?.grey5
             }
           />
         }
-        newStatus={AnimeViewingStatus.InProgress}
-        {...{ animeStatus }}
+        newStatus={AnimeViewStatus.InProgress}
+        {...{ animeStatus: animeView }}
       />
       <ChangeStatusButton
         label="Je l'ai terminé"
@@ -66,14 +66,14 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
             name="offline-pin"
             size={24}
             color={
-              animeStatus?.status === AnimeViewingStatus.Finished
+              animeView?.status === AnimeViewStatus.Finished
                 ? theme.colors?.success
                 : theme.colors?.grey5
             }
           />
         }
-        newStatus={AnimeViewingStatus.Finished}
-        {...{ animeStatus }}
+        newStatus={AnimeViewStatus.Finished}
+        {...{ animeStatus: animeView }}
       />
       <ChangeStatusButton
         label="Je l'abandonne"
@@ -82,14 +82,14 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
             name="pause-circle-filled"
             size={24}
             color={
-              animeStatus?.status === AnimeViewingStatus.Abandoned
+              animeView?.status === AnimeViewStatus.Abandoned
                 ? theme.colors?.error
                 : theme.colors?.grey5
             }
           />
         }
-        newStatus={AnimeViewingStatus.Abandoned}
-        {...{ animeStatus }}
+        newStatus={AnimeViewStatus.Abandoned}
+        {...{ animeStatus: animeView }}
       />
     </View>
   );
@@ -98,5 +98,5 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
 export default AnimeStatusSelector;
 
 interface StatusSelectorProps {
-  animeStatus: UserAnimeStatusFieldsFragment;
+  animeView: UserAnimeViewFieldsFragment;
 }

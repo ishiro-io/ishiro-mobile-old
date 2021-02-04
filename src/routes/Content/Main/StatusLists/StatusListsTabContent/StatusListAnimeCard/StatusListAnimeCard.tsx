@@ -5,10 +5,10 @@ import React from "react";
 
 import { AnimeCard } from "components";
 import {
-  AnimeViewingStatus,
-  UserAnimeStatusFieldsFragment
+  AnimeViewStatus,
+  UserAnimeViewFieldsFragment
 } from "shared/graphql/generated";
-import { useSetUserAnimeViewingStatus } from "shared/hooks";
+import { useSetUserAnimeViewStatus } from "shared/hooks";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
 const CARD_WIDTH = 160;
@@ -37,7 +37,7 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
     >["route"]
   >();
 
-  const setUserAnimeViewingStatus = useSetUserAnimeViewingStatus();
+  const setUserAnimeViewStatus = useSetUserAnimeViewStatus();
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -53,19 +53,19 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
 
     let filteredOptions: Option[] = options;
     switch (route.params.status) {
-      case AnimeViewingStatus.Abandoned:
+      case AnimeViewStatus.Abandoned:
         filteredOptions = options.filter((value) => value !== "J'abandonne");
         break;
 
-      case AnimeViewingStatus.Finished:
+      case AnimeViewStatus.Finished:
         filteredOptions = options.filter((value) => value !== "J'ai terminé");
         break;
 
-      case AnimeViewingStatus.InProgress:
+      case AnimeViewStatus.InProgress:
         filteredOptions = options.filter((value) => value !== "Je regarde");
         break;
 
-      case AnimeViewingStatus.ToSee:
+      case AnimeViewStatus.ToSee:
         filteredOptions = options.filter(
           (value) => value !== "Je veux regarder"
         );
@@ -86,34 +86,34 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
         const option = filteredOptions[buttonIndex];
         if (option === "Annuler") return;
 
-        let newStatus: AnimeViewingStatus;
+        let newStatus: AnimeViewStatus;
         switch (option) {
           case "J'abandonne":
-            newStatus = AnimeViewingStatus.Abandoned;
+            newStatus = AnimeViewStatus.Abandoned;
             break;
 
           case "J'ai terminé":
-            newStatus = AnimeViewingStatus.Finished;
+            newStatus = AnimeViewStatus.Finished;
             break;
 
           case "Je regarde":
-            newStatus = AnimeViewingStatus.InProgress;
+            newStatus = AnimeViewStatus.InProgress;
             break;
 
           case "Je veux regarder":
-            newStatus = AnimeViewingStatus.ToSee;
+            newStatus = AnimeViewStatus.ToSee;
             break;
 
           case "Retirer de mes listes":
-            newStatus = AnimeViewingStatus.None;
+            newStatus = AnimeViewStatus.None;
             break;
 
           default:
-            newStatus = AnimeViewingStatus.ToSee;
+            newStatus = AnimeViewStatus.ToSee;
             break;
         }
 
-        await setUserAnimeViewingStatus({
+        await setUserAnimeViewStatus({
           itemToUpdate: item,
           newStatus
         });
@@ -123,10 +123,10 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
 
   const episodeText = (): string => {
     switch (item.status) {
-      case AnimeViewingStatus.InProgress:
+      case AnimeViewStatus.InProgress:
         return "Prochain épisode";
 
-      case AnimeViewingStatus.Abandoned:
+      case AnimeViewStatus.Abandoned:
         return "Dernier épisode vu";
 
       default:
@@ -136,10 +136,10 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
 
   const episodeNumber = (): number | undefined => {
     switch (item.status) {
-      case AnimeViewingStatus.InProgress:
+      case AnimeViewStatus.InProgress:
         return item.nextEpisodeToSee?.number;
 
-      case AnimeViewingStatus.Abandoned:
+      case AnimeViewStatus.Abandoned:
         return item.lastEpisodeSeen?.number;
 
       default:
@@ -169,5 +169,5 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
 export default StatusListAnimeCard;
 
 interface StatusListAnimeCardProps {
-  item: UserAnimeStatusFieldsFragment;
+  item: UserAnimeViewFieldsFragment;
 }

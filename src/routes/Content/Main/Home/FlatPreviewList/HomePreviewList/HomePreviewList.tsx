@@ -63,7 +63,7 @@ const HomePreviewList: React.FC<HomePreviewListProps> = ({
 export default HomePreviewList;
 
 export interface HomePreviewListProps {
-  animes?: AnimeCardData[] | null;
+  animes?: AnimeCardData[];
   title: string;
   onSeeMoreCardPress: () => void;
 }
@@ -72,5 +72,5 @@ interface AnimeCardData {
   id: number;
   title: string;
   nextEpisode?: number;
-  posterImage: string;
+  posterImage?: string;
 }

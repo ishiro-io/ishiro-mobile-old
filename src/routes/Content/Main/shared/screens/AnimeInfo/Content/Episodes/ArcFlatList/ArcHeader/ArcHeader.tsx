@@ -83,7 +83,7 @@ const ArcHeader: React.FC<StickyHeaderProps> = ({
 export default ArcHeader;
 
 interface StickyHeaderProps {
-  arcName?: string | null | undefined;
+  arcName?: string;
   onArrowPress?: () => void;
   displayArrow?: boolean;
   onCheckPress: (toSeen: boolean) => void;

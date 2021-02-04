@@ -6,10 +6,10 @@ import { StyleSheet, View } from "react-native";
 import { Header } from "components";
 import {
   AnimeDataFieldsFragment,
-  AnimeViewingStatus,
-  UserAnimeStatusFieldsFragment
+  AnimeViewStatus,
+  UserAnimeViewFieldsFragment
 } from "shared/graphql/generated";
-import { useSetUserAnimeViewingStatus, useUpdateEffect } from "shared/hooks";
+import { useSetUserAnimeViewStatus, useUpdateEffect } from "shared/hooks";
 import { HomeNavigationProps } from "shared/navigation/NavigationProps";
 
 const AnimeInfoHeader: React.FC<AnimeInfoHeaderProps> = ({
@@ -21,34 +21,32 @@ const AnimeInfoHeader: React.FC<AnimeInfoHeaderProps> = ({
     HomeNavigationProps<"AnimeInfo">["navigation"]
   >();
 
-  const setUserAnimeViewingStatus = useSetUserAnimeViewingStatus();
+  const setUserAnimeViewStatus = useSetUserAnimeViewStatus();
 
   const [isChecked, setIsChecked] = useState(
-    animeStatus?.status && animeStatus?.status !== AnimeViewingStatus.None
+    animeStatus?.status && animeStatus?.status !== AnimeViewStatus.None
   );
   const [isDirty, setIsDirty] = useState(false);
 
   // ? When animeStatus?.status is updated, consolidate isChecked & clean isDirty
   useUpdateEffect(() => {
-    setIsChecked(animeStatus?.status !== AnimeViewingStatus.None);
+    setIsChecked(animeStatus?.status !== AnimeViewStatus.None);
     setIsDirty(false);
   }, [animeStatus?.status]);
 
   // ? We call the mutation when the flag isDirty is true
   useUpdateEffect(() => {
     if (isDirty) {
-      setUserAnimeViewingStatus({
+      setUserAnimeViewStatus({
         itemToUpdate: animeStatus ?? {
           id: 0,
           anime: animeData!,
-          status: AnimeViewingStatus.None,
-          episodesStatus: [],
+          status: AnimeViewStatus.None,
+          episodeViews: [],
           lastEpisodeSeen: null,
           nextEpisodeToSee: null
         },
-        newStatus: isChecked
-          ? AnimeViewingStatus.ToSee
-          : AnimeViewingStatus.None
+        newStatus: isChecked ? AnimeViewStatus.ToSee : AnimeViewStatus.None
       });
     }
 
@@ -90,6 +88,6 @@ export default AnimeInfoHeader;
 
 interface AnimeInfoHeaderProps {
   animeData?: AnimeDataFieldsFragment;
-  animeStatus?: UserAnimeStatusFieldsFragment | null;
+  animeStatus?: UserAnimeViewFieldsFragment;
   hideBookmark?: boolean;
 }

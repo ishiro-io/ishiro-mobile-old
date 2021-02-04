@@ -4,10 +4,10 @@ import { ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 import {
-  AnimeViewingStatus,
-  UserAnimeStatusFieldsFragment
+  AnimeViewStatus,
+  UserAnimeViewFieldsFragment
 } from "shared/graphql/generated";
-import { useSetUserAnimeViewingStatus } from "shared/hooks";
+import { useSetUserAnimeViewStatus } from "shared/hooks";
 
 const ChangeStatusButton: React.FC<ChangeStatusButtonProps> = ({
   label,
@@ -17,13 +17,13 @@ const ChangeStatusButton: React.FC<ChangeStatusButtonProps> = ({
 }: ChangeStatusButtonProps) => {
   const { theme } = useContext(ThemeContext);
 
-  const setUserAnimeViewingStatus = useSetUserAnimeViewingStatus();
+  const setUserAnimeView = useSetUserAnimeViewStatus();
 
   const onPress = () => {
-    setUserAnimeViewingStatus({
+    setUserAnimeView({
       itemToUpdate: animeStatus,
       newStatus:
-        newStatus !== animeStatus.status ? newStatus : AnimeViewingStatus.ToSee
+        newStatus !== animeStatus.status ? newStatus : AnimeViewStatus.ToSee
     });
   };
 
@@ -56,6 +56,6 @@ export default ChangeStatusButton;
 interface ChangeStatusButtonProps {
   label: string;
   icon: React.ReactElement;
-  animeStatus: UserAnimeStatusFieldsFragment;
-  newStatus: AnimeViewingStatus;
+  animeStatus: UserAnimeViewFieldsFragment;
+  newStatus: AnimeViewStatus;
 }

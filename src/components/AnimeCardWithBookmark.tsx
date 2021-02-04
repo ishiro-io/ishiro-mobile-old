@@ -4,10 +4,10 @@ import React, { useState } from "react";
 
 import {
   AnimeFieldsFragment,
-  AnimeViewingStatus,
-  useUserAnimeViewingStatusQuery
+  AnimeViewStatus,
+  useUserAnimeViewQuery
 } from "shared/graphql/generated";
-import { useSetUserAnimeViewingStatus, useUpdateEffect } from "shared/hooks";
+import { useSetUserAnimeViewStatus, useUpdateEffect } from "shared/hooks";
 import { SearchNavigationProps } from "shared/navigation/NavigationProps";
 
 import AnimeCard from "./AnimeCard";
@@ -22,43 +22,39 @@ const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
     SearchNavigationProps<"Search" | "CategoryList">["navigation"]
   >();
 
-  const { data, loading } = useUserAnimeViewingStatusQuery({
+  const { data, loading } = useUserAnimeViewQuery({
     variables: {
       animeId: animeData.id
     }
   });
 
-  const setUserAnimeViewingStatus = useSetUserAnimeViewingStatus();
+  const setUserAnimeViewStatus = useSetUserAnimeViewStatus();
 
   const [isChecked, setIsChecked] = useState(
-    data?.userAnimeViewingStatus?.status &&
-      data?.userAnimeViewingStatus?.status !== AnimeViewingStatus.None
+    data?.userAnimeView?.status &&
+      data?.userAnimeView?.status !== AnimeViewStatus.None
   );
   const [isDirty, setIsDirty] = useState(false);
 
   // ? When status is updated, consolidate isChecked & clean isDirty
   useUpdateEffect(() => {
-    setIsChecked(
-      data?.userAnimeViewingStatus?.status !== AnimeViewingStatus.None
-    );
+    setIsChecked(data?.userAnimeView?.status !== AnimeViewStatus.None);
     setIsDirty(false);
-  }, [data?.userAnimeViewingStatus?.status]);
+  }, [data?.userAnimeView?.status]);
 
   // ? We call the mutation when the flag isDirty is true
   useUpdateEffect(() => {
     if (isDirty && !loading) {
-      setUserAnimeViewingStatus({
-        itemToUpdate: data?.userAnimeViewingStatus ?? {
+      setUserAnimeViewStatus({
+        itemToUpdate: data?.userAnimeView ?? {
           id: 0,
           anime: animeData,
-          status: AnimeViewingStatus.None,
-          episodesStatus: [],
+          status: AnimeViewStatus.None,
+          episodeViews: [],
           lastEpisodeSeen: null,
           nextEpisodeToSee: null
         },
-        newStatus: isChecked
-          ? AnimeViewingStatus.ToSee
-          : AnimeViewingStatus.None
+        newStatus: isChecked ? AnimeViewStatus.ToSee : AnimeViewStatus.None
       });
     }
 

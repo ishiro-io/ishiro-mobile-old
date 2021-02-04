@@ -388,6 +388,14 @@ export type AnimeDataFieldsFragment = { __typename?: "Anime" } & Pick<
     categories: Array<
       { __typename?: "Category" } & Pick<Category, "id" | "name">
     >;
+    arcs?: Maybe<
+      Array<
+        { __typename?: "Arc" } & Pick<
+          Arc,
+          "title" | "firstEpisodeNumber" | "lastEpisodeNumber"
+        >
+      >
+    >;
   };
 
 export type AnimeFieldsFragment = { __typename?: "Anime" } & Pick<
@@ -559,6 +567,16 @@ export type HomeAnimesQuery = { __typename?: "Query" } & {
   sf?: Maybe<
     { __typename?: "CategoryPreview" } & CategoryPreviewFieldsFragment
   >;
+  userAnimeViewsByStatus?: Maybe<
+    { __typename?: "UserAnimeViewsByStatusOutput" } & Pick<
+      UserAnimeViewsByStatusOutput,
+      "hasMore" | "total"
+    > & {
+        fields: Array<
+          { __typename?: "UserAnimeView" } & UserAnimeViewFieldsFragment
+        >;
+      }
+  >;
 };
 
 export type UserFieldsFragment = { __typename?: "User" } & Pick<
@@ -692,6 +710,11 @@ export const AnimeDataFieldsFragmentDoc = gql`
     categories {
       id
       name
+    }
+    arcs {
+      title
+      firstEpisodeNumber
+      lastEpisodeNumber
     }
   }
 `;
@@ -1513,8 +1536,19 @@ export const HomeAnimesDocument = gql`
     sf: categoryPreview(id: 10) {
       ...CategoryPreviewFields
     }
+    userAnimeViewsByStatus(
+      status: IN_PROGRESS
+      options: { limit: 10, offset: 0 }
+    ) {
+      hasMore
+      total
+      fields {
+        ...UserAnimeViewFields
+      }
+    }
   }
   ${CategoryPreviewFieldsFragmentDoc}
+  ${UserAnimeViewFieldsFragmentDoc}
 `;
 
 /**
