@@ -8,7 +8,8 @@ import { ClearInputButton, DismissKeyboard, Header } from "components";
 import {
   MeDocument,
   MeQuery,
-  useLoginWithGoogleMutation
+  useGoogleRegisterMutation,
+  usePhoneRegisterMutation
 } from "shared/graphql/generated";
 import {
   AppNavigationProps,
@@ -19,44 +20,91 @@ import { GoogleSetUsernameSchema } from "../shared/schemas";
 
 const { width } = Dimensions.get("screen");
 
-const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUsernameProps) => {
+const SetUsername: React.FC = () => {
   const { theme } = useContext(ThemeContext);
 
   const route = useRoute<
-    AuthenticationNavigationProps<"GoogleSetUsername">["route"]
+    AuthenticationNavigationProps<"SetUsername">["route"]
   >();
 
   const rootNavigation = useNavigation<
     AppNavigationProps<"Authentication">["navigation"]
   >();
 
-  const [loginWithGoogle, { loading }] = useLoginWithGoogleMutation({
+  const [phoneRegister, { loading: phoneLoading }] = usePhoneRegisterMutation({
     errorPolicy: "all"
   });
 
-  const [loginError, setLoginError] = useState("");
+  const [
+    googleRegister,
+    { loading: googleLoading }
+  ] = useGoogleRegisterMutation({
+    errorPolicy: "all"
+  });
+
+  const [connectError, setLoginError] = useState<string | undefined>(undefined);
 
   const onSubmit = async (values: { username: string }) => {
-    const { accountId } = route.params;
+    const { type } = route.params;
 
-    const response = await loginWithGoogle({
-      variables: {
-        input: { accountId, username: values.username }
-      },
-      update: (cache, { data }) => {
-        if (!data?.loginWithGoogle) return;
-        cache.writeQuery<MeQuery>({
-          query: MeDocument,
-          data: { __typename: "Query", me: data.loginWithGoogle }
+    console.log({ params: route.params });
+
+    switch (type) {
+      case "Google": {
+        const response = await googleRegister({
+          variables: {
+            input: {
+              accountId: route.params.accountId!,
+              username: values.username
+            }
+          },
+          update: (cache, { data }) => {
+            if (!data?.googleRegister) return;
+            cache.writeQuery<MeQuery>({
+              query: MeDocument,
+              data: { __typename: "Query", me: data.googleRegister }
+            });
+          }
         });
-      }
-    });
 
-    if (response) {
-      if (response.data?.loginWithGoogle) {
-        rootNavigation.reset({ index: 0, routes: [{ name: "Content" }] });
-      } else {
-        setLoginError("Ce nom d'utilisateur est indisponible");
+        if (response) {
+          if (response.data?.googleRegister) {
+            rootNavigation.reset({ index: 0, routes: [{ name: "Content" }] });
+          } else {
+            setLoginError("Ce nom d'utilisateur est indisponible");
+          }
+        }
+
+        break;
+      }
+
+      case "Phone": {
+        const response = await phoneRegister({
+          variables: {
+            input: {
+              code: route.params.code!,
+              phoneNumber: route.params.phoneNumber!,
+              username: values.username
+            }
+          },
+          update: (cache, { data }) => {
+            if (!data?.phoneRegister) return;
+            cache.writeQuery<MeQuery>({
+              query: MeDocument,
+              data: { __typename: "Query", me: data.phoneRegister }
+            });
+          }
+        });
+
+        if (response) {
+          if (response.data?.phoneRegister) {
+            rootNavigation.reset({ index: 0, routes: [{ name: "Content" }] });
+          } else {
+            setLoginError("Ce nom d'utilisateur est indisponible");
+          }
+        }
+
+        break;
       }
     }
   };
@@ -64,7 +112,7 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
   return (
     <DismissKeyboard>
       <View style={{ flex: 1 }}>
-        <Header label="Créer un compte" justifyContent="center" />
+        <Header label="Créer votre profil" justifyContent="center" />
 
         <Formik
           initialValues={{
@@ -103,13 +151,14 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
                 onChangeText={handleChange("username")}
                 onBlur={handleBlur("username")}
                 errorMessage={
-                  errors.username ??
+                  (errors.username || connectError) ??
                   "Il apparaîtra sur votre profil Ishiro et ne sera rien qu'à vous."
                 }
                 errorStyle={{
-                  color: errors.username
-                    ? theme.colors?.error
-                    : theme.colors?.grey5
+                  color:
+                    errors.username || connectError
+                      ? theme.colors?.error
+                      : theme.colors?.grey5
                 }}
                 keyboardType="default"
                 autoCompleteType="off"
@@ -117,18 +166,6 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
                 blurOnSubmit={false}
                 onSubmitEditing={() => handleSubmit()}
               />
-
-              <View style={{ height: 30, alignItems: "center" }}>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_300Light",
-                    fontSize: 12,
-                    color: theme.colors?.error
-                  }}
-                >
-                  {loginError}
-                </Text>
-              </View>
 
               <Button
                 type="solid"
@@ -144,14 +181,14 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
                 titleStyle={{
                   color: theme.colors?.black,
                   fontFamily: "Poppins_600SemiBold",
-                  fontSize: 18,
+                  fontSize: 15,
                   textTransform: "uppercase",
                   textAlign: "center",
                   letterSpacing: 1
                 }}
                 onPress={() => handleSubmit()}
                 title="Continuer"
-                {...{ loading }}
+                loading={googleLoading || phoneLoading}
                 loadingProps={{ color: theme.colors?.black }}
               />
             </View>
@@ -162,6 +199,4 @@ const GoogleSetUsername: React.FC<GoogleSetUsernameProps> = ({}: GoogleSetUserna
   );
 };
 
-export default GoogleSetUsername;
-
-interface GoogleSetUsernameProps {}
+export default SetUsername;

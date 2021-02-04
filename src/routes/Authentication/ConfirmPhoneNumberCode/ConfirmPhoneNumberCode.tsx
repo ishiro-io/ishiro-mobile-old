@@ -7,14 +7,14 @@ import {
   useClearByFocusCell
 } from "react-native-confirmation-code-field";
 import { Button, Text, ThemeContext } from "react-native-elements";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { TouchableHighlight } from "react-native-gesture-handler";
 
 import { DismissKeyboard, Header } from "components";
 import {
   MeDocument,
   MeQuery,
-  useConfirmPhoneNumberMutation,
-  useResendConfirmationSmsMutation
+  usePhoneAskConfirmationCodeMutation,
+  usePhoneConnectMutation
 } from "shared/graphql/generated";
 import {
   AppNavigationProps,
@@ -23,8 +23,12 @@ import {
 
 const { width } = Dimensions.get("window");
 
-const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: ConfirmPhoneNumberCodeProps) => {
+const ConfirmPhoneNumberCode: React.FC = () => {
   const { theme } = useContext(ThemeContext);
+
+  const navigation = useNavigation<
+    AuthenticationNavigationProps<"ConfirmPhoneNumberCode">["navigation"]
+  >();
 
   const rootNavigation = useNavigation<
     AppNavigationProps<"Authentication">["navigation"]
@@ -42,30 +46,38 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
     setValue
   });
 
-  const [confirm, { loading }] = useConfirmPhoneNumberMutation({
+  const [
+    askConfirmationCode,
+    { loading: askLoading }
+  ] = usePhoneAskConfirmationCodeMutation({
     errorPolicy: "all"
   });
 
-  const [
-    resendConfirmationCode,
-    { loading: resendLoading }
-  ] = useResendConfirmationSmsMutation();
+  const [connect, { loading: connectLoading }] = usePhoneConnectMutation();
 
   const onSubmit = async () => {
-    const response = await confirm({
-      variables: { token: value },
+    const response = await connect({
+      variables: {
+        input: { phoneNumber: route.params.phoneNumber, code: value }
+      },
       update: (cache, { data }) => {
-        if (!data?.confirmPhoneNumber) return;
+        if (!data?.phoneConnect?.user) return;
         cache.writeQuery<MeQuery>({
           query: MeDocument,
-          data: { __typename: "Query", me: data.confirmPhoneNumber }
+          data: { __typename: "Query", me: data.phoneConnect.user }
         });
       }
     });
 
     if (response) {
-      if (response.data?.confirmPhoneNumber) {
+      if (response.data?.phoneConnect?.user) {
         rootNavigation.navigate("Content");
+      } else if (response.data?.phoneConnect) {
+        navigation.navigate("SetUsername", {
+          type: "Phone",
+          phoneNumber: route.params.phoneNumber,
+          code: value
+        });
       } else {
         setConfirmError("Code incorrect");
       }
@@ -73,8 +85,8 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
   };
 
   const onResendPress = async () => {
-    await resendConfirmationCode({
-      variables: { phoneNumber: route.params.phoneNumber }
+    await askConfirmationCode({
+      variables: { input: { phoneNumber: route.params.phoneNumber } }
     });
   };
 
@@ -112,22 +124,22 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
             Inscrivez le code reçu par SMS
           </Text>
 
-          <View
-            style={{
-              flexDirection: "row",
-              marginHorizontal: theme.spacing?.xs
-            }}
-          >
-            <Text
+          <TouchableHighlight onPress={() => onResendPress()}>
+            <View
               style={{
-                fontFamily: "Poppins_300Light",
-                fontSize: 12,
-                color: theme.colors?.white
+                flexDirection: "row",
+                marginHorizontal: theme.spacing?.xs
               }}
             >
-              Vous n'avez rien reçu ?{" "}
-            </Text>
-            <TouchableWithoutFeedback onPress={() => onResendPress()}>
+              <Text
+                style={{
+                  fontFamily: "Poppins_300Light",
+                  fontSize: 12,
+                  color: theme.colors?.white
+                }}
+              >
+                Vous n'avez rien reçu ?{" "}
+              </Text>
               <Text
                 style={{
                   fontFamily: "Poppins_500Medium",
@@ -137,8 +149,8 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
               >
                 Recevoir un nouveau code
               </Text>
-            </TouchableWithoutFeedback>
-          </View>
+            </View>
+          </TouchableHighlight>
 
           <CodeField
             {...props}
@@ -192,13 +204,13 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
             titleStyle={{
               color: theme.colors?.black,
               fontFamily: "Poppins_600SemiBold",
-              fontSize: 18,
+              fontSize: 15,
               textTransform: "uppercase",
               textAlign: "center",
               letterSpacing: 1
             }}
-            title="Terminé"
-            loading={loading || resendLoading}
+            title="Continuer"
+            loading={connectLoading || askLoading}
             loadingProps={{ color: theme.colors?.black }}
             onPress={() => onSubmit()}
           />
@@ -206,8 +218,8 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
           <View style={{ height: 30 }}>
             <Text
               style={{
-                fontFamily: "Poppins_300Light",
-                fontSize: 11,
+                fontFamily: "Poppins_400Regular",
+                fontSize: 12,
                 color: theme.colors?.error,
                 marginTop: theme.spacing?.s
               }}
@@ -222,5 +234,3 @@ const ConfirmPhoneNumberCode: React.FC<ConfirmPhoneNumberCodeProps> = ({}: Confi
 };
 
 export default ConfirmPhoneNumberCode;
-
-interface ConfirmPhoneNumberCodeProps {}

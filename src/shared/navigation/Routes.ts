@@ -1,7 +1,7 @@
 import {
   AnimeDataFieldsFragment,
-  AnimeViewingStatus,
-  Arc
+  Arc,
+  UserAnimeView
 } from "shared/graphql/generated";
 
 export type AppRoutes = {
@@ -11,13 +11,14 @@ export type AppRoutes = {
 
 export type AuthenticationRoutes = {
   Onboarding: undefined;
-  Login: undefined;
-  SignUp: undefined;
+  AskConfirmPhoneNumberCode: undefined;
   ConfirmPhoneNumberCode: { phoneNumber: string };
-  ForgotPassword: undefined;
-  ConfirmPasswordCode: { phoneNumber: string };
-  ChangeForgotPassword: { token: string };
-  GoogleSetUsername: { accountId: string };
+  SetUsername: {
+    type: "Google" | "Phone";
+    accountId?: string;
+    phoneNumber?: string;
+    code?: string;
+  };
 };
 
 export type ContentRoutes = {
@@ -54,10 +55,10 @@ export type StatusListsRoutes = {
 };
 
 export type StatusListsTabRoutes = {
-  ToSee: { status: AnimeViewingStatus };
-  InProgress: { status: AnimeViewingStatus };
-  Finished: { status: AnimeViewingStatus };
-  Abandonned: { status: AnimeViewingStatus };
+  ToSee: { view: UserAnimeView };
+  InProgress: { view: UserAnimeView };
+  Finished: { view: UserAnimeView };
+  Abandonned: { view: UserAnimeView };
 };
 
 export type AnimeInfoModalRoutes = {

@@ -6,4 +6,3 @@ export { default as GenreIcon } from "./GenreIcon";
 export { default as Header } from "./Header";
 export { default as ListEmpty } from "./ListEmpty";
 export { default as LoadingScreen } from "./LoadingScreen";
-export { default as VisiblityInputButton } from "./VisiblityInputButton";
