@@ -93,7 +93,10 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
     if (!loading) {
       const newArcEpisodeList = (data?.userAnimeEpisodesStatus ?? []).filter(
         (ues) => {
-          return !ues.episode.arcName || ues.episode.arcName === arcName;
+          return (
+            (!ues.episode.arcName && arcName === null) ||
+            ues.episode.arcName === arcName
+          );
         }
       );
 

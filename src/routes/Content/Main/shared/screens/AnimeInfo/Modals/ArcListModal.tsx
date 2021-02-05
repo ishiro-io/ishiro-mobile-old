@@ -52,7 +52,8 @@ const ArcListModal: React.FC<ArcListModalProps> = ({}: ArcListModalProps) => {
                   : theme.colors?.white
             }}
           >
-            {arc.title} ({arc.firstEpisodeNumber}-{arc.lastEpisodeNumber})
+            {arc.title || "Épisodes"} ({arc.firstEpisodeNumber}-
+            {arc.lastEpisodeNumber})
           </Text>
         </TouchableWithoutFeedback>
       ))}
