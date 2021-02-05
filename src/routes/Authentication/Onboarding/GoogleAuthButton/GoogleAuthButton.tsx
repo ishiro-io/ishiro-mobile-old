@@ -41,6 +41,8 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: Constants.manifest.extra.googleExpoClientId,
+    iosClientId: Constants.manifest.extra.googleIosAppId,
+    androidClientId: Constants.manifest.extra.googleAndroidAppId,
     selectAccount: true,
     language: "fr-FR"
   });

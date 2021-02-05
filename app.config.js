@@ -21,7 +21,9 @@ export default {
     assetBundlePatterns: ["**/*"],
     ios: {
       supportsTablet: true,
-      userInterfaceStyle: "dark"
+      userInterfaceStyle: "dark",
+      bundleIdentifier: "io.ishiro.app",
+      buildNumber: "0.1.0.2"
     },
     android: {
       userInterfaceStyle: "dark",
@@ -33,7 +35,9 @@ export default {
     extra: {
       apiEndpoint: process.env.EXPO_API_ENDPOINT,
       googleExpoClientId: process.env.EXPO_GOOGLE_EXPO_CLIENT_ID,
-      googleUserApiEndpoint: process.env.EXPO_GOOGLE_USER_API_ENDPOINT
+      googleUserApiEndpoint: process.env.EXPO_GOOGLE_USER_API_ENDPOINT,
+      googleIosAppId: process.env.EXPO_GOOGLE_IOS_APP_ID,
+      googleAndroidAppId: process.env.EXPO_GOOGLE_ANDROID_APP_ID
     }
   }
 };
