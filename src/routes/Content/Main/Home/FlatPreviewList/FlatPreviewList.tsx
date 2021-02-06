@@ -39,6 +39,7 @@ const HomeFlatPreviewList: React.FC<ListsScrollViewProps> = ({}: ListsScrollView
           animes: data.userAnimeViewsByStatus.fields.map((f) => {
             return { ...f.anime, nextEpisode: f.nextEpisodeToSee?.number };
           }),
+          total: data.userAnimeViewsByStatus.total,
           onSeeMoreCardPress: () =>
             statusListNavigation.navigate("InProgress", {
               status: AnimeViewStatus.InProgress

@@ -14,6 +14,7 @@ const CARD_HEIGHT = 210;
 const HomePreviewList: React.FC<HomePreviewListProps> = ({
   animes,
   title,
+  total,
   onSeeMoreCardPress
 }: HomePreviewListProps) => {
   const { theme } = useContext(ThemeContext);
@@ -54,7 +55,9 @@ const HomePreviewList: React.FC<HomePreviewListProps> = ({
             />
           );
         })}
-        <SeeMoreCard onPress={onSeeMoreCardPress} />
+        {(!total || total > animes.length) && (
+          <SeeMoreCard onPress={onSeeMoreCardPress} />
+        )}
       </ScrollView>
     </View>
   );
@@ -65,6 +68,7 @@ export default HomePreviewList;
 export interface HomePreviewListProps {
   animes?: AnimeCardData[];
   title: string;
+  total?: number;
   onSeeMoreCardPress: () => void;
 }
 
