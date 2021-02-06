@@ -4,4 +4,6 @@ fragment EpisodeFields on Episode {
   title
   airedDate
   arcName
+  isFiller
+  isRecap
 }

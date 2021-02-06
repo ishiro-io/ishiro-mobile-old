@@ -13,6 +13,8 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
   airedDate,
   title,
   isChecked,
+  isFiller,
+  isRecap,
   onCheckPress
 }: EpisodeRowProps) => {
   const { theme } = useContext(ThemeContext);
@@ -59,16 +61,71 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
           >
             {title}
           </Text>
-          {airedDate && (
-            <Text
-              style={{
-                fontFamily: "Poppins_200ExtraLight",
-                fontSize: 12
-              }}
-            >
-              {format(parseISO(airedDate), "dd MMMM yyyy", { locale: fr })}
-            </Text>
-          )}
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingTop: theme.spacing.xs
+            }}
+          >
+            {airedDate && (
+              <Text
+                style={{
+                  fontFamily: "Poppins_200ExtraLight",
+                  fontSize: 12
+                }}
+              >
+                {format(parseISO(airedDate), "dd MMMM yyyy", { locale: fr })}
+              </Text>
+            )}
+
+            {isFiller && (
+              <View
+                style={{
+                  backgroundColor: theme.colors?.grey8,
+                  height: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: theme.borderRadii?.xs,
+                  paddingHorizontal: theme.spacing?.s,
+                  marginHorizontal: theme.spacing?.s
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Poppins_300Light",
+                    fontSize: 10
+                  }}
+                >
+                  Filler
+                </Text>
+              </View>
+            )}
+
+            {isRecap && (
+              <View
+                style={{
+                  backgroundColor: theme.colors?.grey8,
+                  height: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: theme.borderRadii?.xs,
+                  paddingHorizontal: theme.spacing?.s,
+                  marginLeft: theme.spacing?.s
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Poppins_300Light",
+                    fontSize: 10
+                  }}
+                >
+                  Récapitulatif
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
       </View>
 
@@ -98,5 +155,7 @@ interface EpisodeRowProps {
   title?: string;
   airedDate?: string;
   isChecked: boolean;
+  isFiller: boolean;
+  isRecap: boolean;
   onCheckPress: () => void;
 }

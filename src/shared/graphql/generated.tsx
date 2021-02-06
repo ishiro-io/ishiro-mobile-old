@@ -119,6 +119,8 @@ export type Episode = {
   number: Scalars["Float"];
   arcName?: Maybe<Scalars["String"]>;
   airedDate?: Maybe<Scalars["String"]>;
+  isFiller: Scalars["Boolean"];
+  isRecap: Scalars["Boolean"];
   anime: Anime;
 };
 
@@ -538,7 +540,7 @@ export type CategoriesQuery = { __typename?: "Query" } & {
 
 export type EpisodeFieldsFragment = { __typename?: "Episode" } & Pick<
   Episode,
-  "id" | "number" | "title" | "airedDate" | "arcName"
+  "id" | "number" | "title" | "airedDate" | "arcName" | "isFiller" | "isRecap"
 >;
 
 export type EpisodesQueryVariables = Exact<{
@@ -789,6 +791,8 @@ export const EpisodeFieldsFragmentDoc = gql`
     title
     airedDate
     arcName
+    isFiller
+    isRecap
   }
 `;
 export const UserEpisodeViewFieldsFragmentDoc = gql`
@@ -1952,6 +1956,8 @@ export type EpisodeKeySpecifier = (
   | "number"
   | "arcName"
   | "airedDate"
+  | "isFiller"
+  | "isRecap"
   | "anime"
   | EpisodeKeySpecifier
 )[];
@@ -1963,6 +1969,8 @@ export type EpisodeFieldPolicy = {
   number?: FieldPolicy<any> | FieldReadFunction<any>;
   arcName?: FieldPolicy<any> | FieldReadFunction<any>;
   airedDate?: FieldPolicy<any> | FieldReadFunction<any>;
+  isFiller?: FieldPolicy<any> | FieldReadFunction<any>;
+  isRecap?: FieldPolicy<any> | FieldReadFunction<any>;
   anime?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UserKeySpecifier = (

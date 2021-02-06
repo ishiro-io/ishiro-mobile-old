@@ -268,6 +268,8 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
             number={item.episode.number}
             title={item.episode.title}
             airedDate={item.episode.airedDate}
+            isFiller={item.episode.isFiller}
+            isRecap={item.episode.isRecap}
             isChecked={isCheckedList[index]}
             onCheckPress={() => onCheckPress(index, isCheckedList[index])}
           />
