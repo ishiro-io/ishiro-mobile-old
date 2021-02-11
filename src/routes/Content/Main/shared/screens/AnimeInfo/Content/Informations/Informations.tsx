@@ -192,7 +192,12 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
               data?.anime.type !== AnimeType.Movie ? "Durée moyenne" : "Durée"
             }
             data={formatDuration(
-              { minutes: data.anime.averageDuration },
+              {
+                hours: Math.floor(data.anime.averageDuration / 60),
+                minutes:
+                  data.anime.averageDuration -
+                  Math.floor(data.anime.averageDuration / 60) * 60
+              },
               { locale: fr }
             )}
           />
