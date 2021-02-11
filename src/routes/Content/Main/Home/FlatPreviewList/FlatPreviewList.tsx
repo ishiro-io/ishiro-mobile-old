@@ -51,8 +51,9 @@ const HomeFlatPreviewList: React.FC<ListsScrollViewProps> = ({}: ListsScrollView
         title: data?.action?.name!,
         animes: data?.action?.animes,
         onSeeMoreCardPress: () =>
-          statusListNavigation.navigate("InProgress", {
-            status: AnimeViewStatus.InProgress
+          homeNavigation.navigate("CategoryList", {
+            categoryId: data?.action?.id,
+            categoryName: data?.action?.name
           })
       });
 
@@ -60,8 +61,9 @@ const HomeFlatPreviewList: React.FC<ListsScrollViewProps> = ({}: ListsScrollView
         title: data?.romance?.name!,
         animes: data?.romance?.animes,
         onSeeMoreCardPress: () =>
-          statusListNavigation.navigate("InProgress", {
-            status: AnimeViewStatus.InProgress
+          homeNavigation.navigate("CategoryList", {
+            categoryId: data?.romance?.id,
+            categoryName: data?.romance?.name
           })
       });
 
@@ -69,8 +71,9 @@ const HomeFlatPreviewList: React.FC<ListsScrollViewProps> = ({}: ListsScrollView
         title: data?.comedie?.name!,
         animes: data?.comedie?.animes,
         onSeeMoreCardPress: () =>
-          statusListNavigation.navigate("InProgress", {
-            status: AnimeViewStatus.InProgress
+          homeNavigation.navigate("CategoryList", {
+            categoryId: data?.comedie?.id,
+            categoryName: data?.comedie?.name
           })
       });
 
@@ -78,8 +81,9 @@ const HomeFlatPreviewList: React.FC<ListsScrollViewProps> = ({}: ListsScrollView
         title: data?.drame?.name!,
         animes: data?.drame?.animes,
         onSeeMoreCardPress: () =>
-          statusListNavigation.navigate("InProgress", {
-            status: AnimeViewStatus.InProgress
+          homeNavigation.navigate("CategoryList", {
+            categoryId: data?.drame?.id,
+            categoryName: data?.drame?.name
           })
       });
 
@@ -87,8 +91,9 @@ const HomeFlatPreviewList: React.FC<ListsScrollViewProps> = ({}: ListsScrollView
         title: data?.sf?.name!,
         animes: data?.sf?.animes,
         onSeeMoreCardPress: () =>
-          statusListNavigation.navigate("InProgress", {
-            status: AnimeViewStatus.InProgress
+          homeNavigation.navigate("CategoryList", {
+            categoryId: data?.sf?.id,
+            categoryName: data?.sf?.name
           })
       });
 
