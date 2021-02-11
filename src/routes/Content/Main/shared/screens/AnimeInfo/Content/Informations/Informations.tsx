@@ -189,12 +189,12 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
           <Row title="Statut" data={readableStatus(data.anime.status)} />
         )}
 
-        {data?.anime?.duration && (
+        {data?.anime?.averageDuration && (
           <Row
             title={
               data?.anime.type !== AnimeType.Movie ? "Durée moyenne" : "Durée"
             }
-            data={data.anime.duration}
+            data={data.anime.averageDuration}
           />
         )}
 

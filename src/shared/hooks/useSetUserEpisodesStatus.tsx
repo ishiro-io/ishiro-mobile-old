@@ -53,8 +53,6 @@ const useSetUserAnimeEpisodesStatus = () => {
           }
         );
 
-        console.log({ oldStatusListCache });
-
         // * Edit the cached episode views list
         if (oldStatusListCache?.userAnimeEpisodesStatus) {
           cache.writeQuery<UserAnimeEpisodesStatusQuery>({

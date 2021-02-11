@@ -62,25 +62,26 @@ export type Anime = {
   id: Scalars["Float"];
   createdAt: Scalars["String"];
   updatedAt: Scalars["String"];
-  idMAL: Scalars["Float"];
+  idAniDB: Scalars["Float"];
   title: Scalars["String"];
   titleEnglish?: Maybe<Scalars["String"]>;
-  titleJapanese?: Maybe<Scalars["String"]>;
+  titleRomaji?: Maybe<Scalars["String"]>;
+  titleKanji?: Maybe<Scalars["String"]>;
   bannerImage?: Maybe<Scalars["String"]>;
   posterImage?: Maybe<Scalars["String"]>;
   description?: Maybe<Scalars["String"]>;
-  MALRating?: Maybe<Scalars["Float"]>;
+  AniDBRating?: Maybe<Scalars["Float"]>;
   type: AnimeType;
-  status: AnimeStatus;
   releaseDate?: Maybe<Scalars["String"]>;
   endDate?: Maybe<Scalars["String"]>;
   author?: Maybe<Scalars["String"]>;
   editor?: Maybe<Scalars["String"]>;
-  duration?: Maybe<Scalars["String"]>;
-  isAdult: Scalars["Boolean"];
+  isAdult?: Maybe<Scalars["Boolean"]>;
   categories: Array<Category>;
   episodes: Array<Episode>;
   episodeCount: Scalars["Int"];
+  averageDuration: Scalars["Int"];
+  status: AnimeStatus;
   arcs?: Maybe<Array<Arc>>;
 };
 
@@ -96,8 +97,7 @@ export enum AnimeType {
 export enum AnimeStatus {
   ComingSoon = "COMING_SOON",
   Ongoing = "ONGOING",
-  Finished = "FINISHED",
-  Cancelled = "CANCELLED"
+  Finished = "FINISHED"
 }
 
 export type Category = {
@@ -119,6 +119,7 @@ export type Episode = {
   number: Scalars["Float"];
   arcName?: Maybe<Scalars["String"]>;
   airedDate?: Maybe<Scalars["String"]>;
+  length?: Maybe<Scalars["Float"]>;
   isFiller: Scalars["Boolean"];
   isRecap: Scalars["Boolean"];
   anime: Anime;
@@ -369,7 +370,7 @@ export type AnimeAdditionalInformationsFieldsFragment = {
   | "status"
   | "releaseDate"
   | "endDate"
-  | "duration"
+  | "averageDuration"
 > & {
     categories: Array<
       { __typename?: "Category" } & Pick<Category, "id" | "name">
@@ -380,7 +381,7 @@ export type AnimeDataFieldsFragment = { __typename?: "Anime" } & Pick<
   Anime,
   | "id"
   | "title"
-  | "titleJapanese"
+  | "titleKanji"
   | "bannerImage"
   | "posterImage"
   | "description"
@@ -692,7 +693,7 @@ export const AnimeAdditionalInformationsFieldsFragmentDoc = gql`
     status
     releaseDate
     endDate
-    duration
+    averageDuration
     categories {
       id
       name
@@ -703,7 +704,7 @@ export const AnimeDataFieldsFragmentDoc = gql`
   fragment AnimeDataFields on Anime {
     id
     title
-    titleJapanese
+    titleKanji
     bannerImage
     posterImage
     description
@@ -1884,25 +1885,26 @@ export type AnimeKeySpecifier = (
   | "id"
   | "createdAt"
   | "updatedAt"
-  | "idMAL"
+  | "idAniDB"
   | "title"
   | "titleEnglish"
-  | "titleJapanese"
+  | "titleRomaji"
+  | "titleKanji"
   | "bannerImage"
   | "posterImage"
   | "description"
-  | "MALRating"
+  | "AniDBRating"
   | "type"
-  | "status"
   | "releaseDate"
   | "endDate"
   | "author"
   | "editor"
-  | "duration"
   | "isAdult"
   | "categories"
   | "episodes"
   | "episodeCount"
+  | "averageDuration"
+  | "status"
   | "arcs"
   | AnimeKeySpecifier
 )[];
@@ -1910,25 +1912,26 @@ export type AnimeFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  idMAL?: FieldPolicy<any> | FieldReadFunction<any>;
+  idAniDB?: FieldPolicy<any> | FieldReadFunction<any>;
   title?: FieldPolicy<any> | FieldReadFunction<any>;
   titleEnglish?: FieldPolicy<any> | FieldReadFunction<any>;
-  titleJapanese?: FieldPolicy<any> | FieldReadFunction<any>;
+  titleRomaji?: FieldPolicy<any> | FieldReadFunction<any>;
+  titleKanji?: FieldPolicy<any> | FieldReadFunction<any>;
   bannerImage?: FieldPolicy<any> | FieldReadFunction<any>;
   posterImage?: FieldPolicy<any> | FieldReadFunction<any>;
   description?: FieldPolicy<any> | FieldReadFunction<any>;
-  MALRating?: FieldPolicy<any> | FieldReadFunction<any>;
+  AniDBRating?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
-  status?: FieldPolicy<any> | FieldReadFunction<any>;
   releaseDate?: FieldPolicy<any> | FieldReadFunction<any>;
   endDate?: FieldPolicy<any> | FieldReadFunction<any>;
   author?: FieldPolicy<any> | FieldReadFunction<any>;
   editor?: FieldPolicy<any> | FieldReadFunction<any>;
-  duration?: FieldPolicy<any> | FieldReadFunction<any>;
   isAdult?: FieldPolicy<any> | FieldReadFunction<any>;
   categories?: FieldPolicy<any> | FieldReadFunction<any>;
   episodes?: FieldPolicy<any> | FieldReadFunction<any>;
   episodeCount?: FieldPolicy<any> | FieldReadFunction<any>;
+  averageDuration?: FieldPolicy<any> | FieldReadFunction<any>;
+  status?: FieldPolicy<any> | FieldReadFunction<any>;
   arcs?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CategoryKeySpecifier = (
@@ -1956,6 +1959,7 @@ export type EpisodeKeySpecifier = (
   | "number"
   | "arcName"
   | "airedDate"
+  | "length"
   | "isFiller"
   | "isRecap"
   | "anime"
@@ -1969,6 +1973,7 @@ export type EpisodeFieldPolicy = {
   number?: FieldPolicy<any> | FieldReadFunction<any>;
   arcName?: FieldPolicy<any> | FieldReadFunction<any>;
   airedDate?: FieldPolicy<any> | FieldReadFunction<any>;
+  length?: FieldPolicy<any> | FieldReadFunction<any>;
   isFiller?: FieldPolicy<any> | FieldReadFunction<any>;
   isRecap?: FieldPolicy<any> | FieldReadFunction<any>;
   anime?: FieldPolicy<any> | FieldReadFunction<any>;

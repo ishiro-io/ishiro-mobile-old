@@ -1,7 +1,7 @@
 fragment AnimeDataFields on Anime {
   id
   title
-  titleJapanese
+  titleKanji
   bannerImage
   posterImage
   description
