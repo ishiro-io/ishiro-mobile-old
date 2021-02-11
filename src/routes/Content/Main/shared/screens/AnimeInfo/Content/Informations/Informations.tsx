@@ -173,7 +173,7 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
           />
         )}
 
-        {data?.anime?.endDate && (
+        {data?.anime?.endDate && data.anime.type !== AnimeType.Movie && (
           <Row
             title="Date de fin"
             data={format(new Date(data.anime.endDate), "PP", {
@@ -182,7 +182,7 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
           />
         )}
 
-        {data?.anime?.status && (
+        {data?.anime?.status && data.anime.type !== AnimeType.Movie && (
           <Row title="Statut" data={readableStatus(data.anime.status)} />
         )}
 
