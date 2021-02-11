@@ -3,10 +3,10 @@ import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { Image, Text, ThemeContext } from "react-native-elements";
 
-import { AnimeDataFieldsFragment } from "shared/graphql/generated";
+import { AnimeDataFieldsFragment, AnimeType } from "shared/graphql/generated";
 
 const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> = ({
-  animeData: { title, titleKanji, bannerImage, episodeCount }
+  animeData: { title, titleKanji, bannerImage, episodeCount, type }
 }: AnimeInfoUpperImageContainerProps) => {
   const { theme } = useContext(ThemeContext);
 
@@ -72,7 +72,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
               {titleKanji}
             </Text>
           )}
-          {episodeCount > 0 && (
+          {type !== AnimeType.Movie && episodeCount > 0 && (
             <Text
               style={{
                 fontFamily: "Poppins_200ExtraLight",
