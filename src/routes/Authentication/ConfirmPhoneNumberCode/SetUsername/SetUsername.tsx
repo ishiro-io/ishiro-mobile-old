@@ -47,8 +47,6 @@ const SetUsername: React.FC = () => {
   const onSubmit = async (values: { username: string }) => {
     const { type } = route.params;
 
-    console.log({ params: route.params });
-
     switch (type) {
       case "Google": {
         const response = await googleRegister({
