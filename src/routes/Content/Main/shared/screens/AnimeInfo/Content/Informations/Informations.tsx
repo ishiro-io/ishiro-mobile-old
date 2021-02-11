@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import { format } from "date-fns";
+import { format, formatDuration } from "date-fns";
 import { fr } from "date-fns/locale";
 import React, { useContext, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
@@ -19,9 +19,6 @@ const readableStatus = (status: AnimeStatus): string => {
   switch (status) {
     case AnimeStatus.Ongoing:
       return "En cours";
-
-    case AnimeStatus.Cancelled:
-      return "Annulé";
 
     case AnimeStatus.Finished:
       return "Terminé";
@@ -194,7 +191,10 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
             title={
               data?.anime.type !== AnimeType.Movie ? "Durée moyenne" : "Durée"
             }
-            data={data.anime.averageDuration}
+            data={formatDuration(
+              { minutes: data.anime.averageDuration },
+              { locale: fr }
+            )}
           />
         )}
 
