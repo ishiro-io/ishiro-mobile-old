@@ -23,6 +23,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
     <View
       style={{
         width,
+        height: 85,
         paddingVertical: theme.spacing?.m,
         paddingRight: theme.spacing?.m,
         borderBottomWidth: 1,
