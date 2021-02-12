@@ -263,6 +263,24 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
       <FlatList
         ref={ref}
         data={arcEpisodeList}
+        stickyHeaderIndices={[0]}
+        keyExtractor={(item) => item.episode.id.toString()}
+        showsVerticalScrollIndicator={false}
+        getItemLayout={(_, index) => ({
+          length: 85,
+          offset: 85 * index,
+          index
+        })}
+        onScrollToIndexFailed={() =>
+          ref.current?.scrollToOffset({ offset: 0, animated: false })
+        }
+        onContentSizeChange={() =>
+          ref.current.scrollToIndex({
+            index: animeViewData?.userAnimeView?.nextEpisodeToSee?.number ?? 0,
+            animated: false,
+            viewPosition: 0.5
+          })
+        }
         renderItem={({ item, index }) => (
           <EpisodeRow
             number={item.episode.number}
@@ -289,17 +307,11 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
             <ArcFooter {...{ onNextEpisodePressed }} />
           ) : null
         }
-        stickyHeaderIndices={[0]}
-        keyExtractor={(item) => item.episode.id.toString()}
-        showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <ListEmpty
             title={"Oups! \nIl n'y a rien à afficher ici."}
             subtitle={"(Vérifie ta connexion 👀)"}
           />
-        }
-        onScrollToIndexFailed={() =>
-          ref.current?.scrollToOffset({ offset: 0, animated: false })
         }
       />
     </View>

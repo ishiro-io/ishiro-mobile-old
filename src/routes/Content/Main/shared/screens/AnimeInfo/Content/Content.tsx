@@ -4,7 +4,11 @@ import React, { useContext } from "react";
 import { View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
-import { AnimeType } from "shared/graphql/generated";
+import {
+  AnimeType,
+  AnimeViewStatus,
+  useUserAnimeViewQuery
+} from "shared/graphql/generated";
 import { AnimeInfoModalNavigationProps } from "shared/navigation/NavigationProps";
 import { AnimeInfoTabRoutes } from "shared/navigation/Routes";
 
@@ -21,6 +25,10 @@ const AnimeInfoContent: React.FC<AnimeInfoContentProps> = ({}: AnimeInfoContentP
 
   const { animeData } = route.params;
 
+  const { data: animeViewData } = useUserAnimeViewQuery({
+    variables: { animeId: route.params.animeId }
+  });
+
   return (
     <View
       style={{
@@ -30,7 +38,11 @@ const AnimeInfoContent: React.FC<AnimeInfoContentProps> = ({}: AnimeInfoContentP
       <AnimeInfoUpper />
 
       <AnimeInfoTabs.Navigator
-        initialRouteName="Informations"
+        initialRouteName={
+          animeViewData?.userAnimeView?.status === AnimeViewStatus.InProgress
+            ? "Episodes"
+            : "Informations"
+        }
         tabBarOptions={{
           activeTintColor: theme.colors?.white,
           pressOpacity: 1,
