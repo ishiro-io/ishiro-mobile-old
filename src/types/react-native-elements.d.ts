@@ -33,9 +33,19 @@ declare module "react-native-elements" {
     xxl: number;
   }
 
+  export interface TextSize {
+    xs: number;
+    s: number;
+    m: number;
+    l: number;
+    xl: number;
+    xxl: number;
+  }
+
   export interface FullTheme {
     colors: RecursivePartial<Colors>;
     spacing: Spacing;
     borderRadii: BorderRadius;
+    textsize: TextSize;
   }
 }

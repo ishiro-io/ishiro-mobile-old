@@ -25,7 +25,7 @@ const SeeMoreCard: React.FC<SeeMoreCardProps> = ({
         <Text
           style={{
             fontFamily: "Poppins_500Medium",
-            fontSize: 13,
+            fontSize: 14,
             color: theme.colors?.white,
             marginBottom: theme.spacing?.m
           }}

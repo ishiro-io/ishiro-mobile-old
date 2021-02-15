@@ -32,7 +32,7 @@ const HomePreviewList: React.FC<HomePreviewListProps> = ({
       <Text
         style={{
           fontFamily: "Poppins_500Medium",
-          fontSize: 20,
+          fontSize: theme.textsize?.m,
           color: theme.colors?.white
         }}
       >

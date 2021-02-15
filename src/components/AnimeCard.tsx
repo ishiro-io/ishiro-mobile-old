@@ -33,7 +33,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
         <View
           style={{
             ...StyleSheet.absoluteFillObject,
-            height: height * 0.85,
+            height: height * 0.8,
             borderRadius: theme.borderRadii?.m,
             backgroundColor: theme.colors?.grey9,
             alignItems: "center",
@@ -46,7 +46,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
         <Image
           source={{ uri: posterImageUrl }}
           style={{
-            height: height * 0.85,
+            height: height * 0.8,
             borderRadius: theme.borderRadii?.m,
             resizeMode: "cover"
           }}
@@ -58,7 +58,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
             ...StyleSheet.absoluteFillObject,
             justifyContent: "flex-start",
             alignItems: "flex-end",
-            height: height * 0.85
+            height: height * 0.8
           }}
         >
           <LinearGradient
@@ -76,7 +76,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
             style={{
               ...StyleSheet.absoluteFillObject,
               justifyContent: "flex-end",
-              height: height * 0.85
+              height: height * 0.8
             }}
           >
             <LinearGradient

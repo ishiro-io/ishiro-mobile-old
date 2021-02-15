@@ -1,14 +1,15 @@
 import { Theme } from "react-native-elements";
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 const theme: Theme = {
   Input: {
     inputStyle: {
       color: "#fff",
       fontFamily: "Poppins_400Regular",
-      fontSize: 14
+      fontSize: RFPercentage(2)
     },
     inputContainerStyle: {
-      height: 40,
+      height: RFPercentage(5),
       backgroundColor: "#2f2f2f",
       borderRadius: 8,
       borderBottomWidth: 0,
@@ -16,9 +17,29 @@ const theme: Theme = {
     },
     labelStyle: {
       fontFamily: "Poppins_500Medium",
-      fontSize: 18,
+      fontSize: RFPercentage(2.5),
       color: "#fff",
       marginBottom: 8
+    },
+    errorStyle: {
+      fontSize: RFPercentage(1.5)
+    }
+  },
+  Button: {
+    buttonStyle: {
+      borderRadius: 60,
+      height: RFPercentage(7),
+      maxWidth: 520
+    },
+    titleStyle: {
+      fontSize: RFPercentage(2),
+      fontFamily: "Poppins_600SemiBold",
+      textTransform: "uppercase",
+      textAlign: "center",
+      letterSpacing: 1
+    },
+    containerStyle: {
+      marginBottom: RFPercentage(2)
     }
   },
   Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } },
@@ -43,12 +64,12 @@ const theme: Theme = {
     info: "#0087C6"
   },
   spacing: {
-    xs: 4,
-    s: 8,
-    m: 16,
-    l: 24,
-    xl: 40,
-    xxl: 78,
+    xs: RFPercentage(1),
+    s: RFPercentage(1.5),
+    m: RFPercentage(2),
+    l: RFPercentage(4),
+    xl: RFPercentage(8),
+    xxl: RFPercentage(9),
     "3xl": 100
   },
   borderRadii: {
@@ -57,7 +78,15 @@ const theme: Theme = {
     m: 14,
     l: 24,
     xl: 30,
-    xxl: 40
+    xxl: 60
+  },
+  textsize: {
+    xs: RFPercentage(1.5),
+    s: RFPercentage(2),
+    m: RFPercentage(2.5),
+    l: RFPercentage(3),
+    xl: RFPercentage(4),
+    xxl: RFPercentage(8)
   }
 };
 
