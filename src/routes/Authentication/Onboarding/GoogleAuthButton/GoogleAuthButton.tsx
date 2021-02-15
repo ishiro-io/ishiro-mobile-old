@@ -115,9 +115,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
     <Button
       type="outline"
       buttonStyle={{
-        width: width * 0.8,
-        height: 50,
-        borderRadius: theme.borderRadii?.xxl,
+        width: width * 0.9,
         borderWidth: 2,
         borderColor: theme.colors?.primaryLighter
       }}
@@ -127,16 +125,11 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
         marginBottom: theme.spacing?.m
       }}
       titleStyle={{
-        color: theme.colors?.white,
-        fontFamily: "Poppins_600SemiBold",
-        fontSize: 15,
-        textTransform: "uppercase",
-        textAlign: "center",
-        letterSpacing: 1
+        color: theme.colors?.white
       }}
       icon={
         <View style={{ marginRight: theme.spacing?.m }}>
-          <GoogleLogoSvg width={24} height={24} />
+          <GoogleLogoSvg width={theme.textsize?.l} height={theme.textsize?.l} />
         </View>
       }
       onPress={() => promptAsync()}

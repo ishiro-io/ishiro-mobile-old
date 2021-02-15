@@ -93,7 +93,9 @@ const AskConfirmPhoneNumberCode: React.FC = () => {
             >
               <Input
                 label="Numéro de téléphone"
-                containerStyle={{ marginBottom: theme.spacing?.m }}
+                containerStyle={{
+                  marginBottom: theme.spacing?.m
+                }}
                 rightIcon={
                   <ClearInputButton
                     value={values.phoneNumber}
@@ -108,6 +110,7 @@ const AskConfirmPhoneNumberCode: React.FC = () => {
                   "Il vous servira d'identifiant pour accéder à votre compte Ishiro."
                 }
                 errorStyle={{
+                  fontSize: theme.textsize?.xs,
                   color:
                     errors.phoneNumber || connectError
                       ? theme.colors?.error
@@ -124,20 +127,14 @@ const AskConfirmPhoneNumberCode: React.FC = () => {
                 type="solid"
                 buttonStyle={{
                   backgroundColor: theme.colors?.white,
-                  width: width * 0.8,
-                  height: 50,
-                  borderRadius: theme.borderRadii?.xxl
+                  width: width * 0.9
                 }}
                 containerStyle={{
-                  marginBottom: theme.spacing?.m
+                  marginBottom: theme.spacing?.m,
+                  marginTop: theme.spacing?.xs
                 }}
                 titleStyle={{
-                  color: theme.colors?.black,
-                  fontFamily: "Poppins_600SemiBold",
-                  fontSize: 15,
-                  textTransform: "uppercase",
-                  textAlign: "center",
-                  letterSpacing: 1
+                  color: theme.colors?.black
                 }}
                 onPress={() => handleSubmit()}
                 title="Recevoir mon code"

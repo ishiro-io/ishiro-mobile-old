@@ -155,6 +155,7 @@ const SetUsername: React.FC = () => {
                   "Il apparaîtra sur votre profil Ishiro et ne sera rien qu'à vous."
                 }
                 errorStyle={{
+                  fontSize: theme.textsize?.xs,
                   color:
                     errors.username || connectError
                       ? theme.colors?.error
@@ -171,20 +172,13 @@ const SetUsername: React.FC = () => {
                 type="solid"
                 buttonStyle={{
                   backgroundColor: theme.colors?.white,
-                  width: width * 0.8,
-                  height: 50,
-                  borderRadius: theme.borderRadii?.xxl
+                  width: width * 0.9
                 }}
                 containerStyle={{
                   marginBottom: theme.spacing?.m
                 }}
                 titleStyle={{
-                  color: theme.colors?.black,
-                  fontFamily: "Poppins_600SemiBold",
-                  fontSize: 15,
-                  textTransform: "uppercase",
-                  textAlign: "center",
-                  letterSpacing: 1
+                  color: theme.colors?.black
                 }}
                 onPress={() => handleSubmit()}
                 title="Continuer"

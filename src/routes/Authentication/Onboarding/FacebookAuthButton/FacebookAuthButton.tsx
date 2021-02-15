@@ -13,9 +13,7 @@ const FacebookAuthButton: React.FC = () => {
     <Button
       type="outline"
       buttonStyle={{
-        width: width * 0.8,
-        height: 50,
-        borderRadius: theme.borderRadii?.xxl,
+        width: width * 0.9,
         borderWidth: 2,
         borderColor: theme.colors?.primaryLighter
       }}
@@ -24,16 +22,14 @@ const FacebookAuthButton: React.FC = () => {
         marginBottom: theme.spacing?.m
       }}
       titleStyle={{
-        color: theme.colors?.white,
-        fontFamily: "Poppins_600SemiBold",
-        fontSize: 15,
-        textTransform: "uppercase",
-        textAlign: "center",
-        letterSpacing: 1
+        color: theme.colors?.white
       }}
       icon={
         <View style={{ marginRight: theme.spacing?.m }}>
-          <FacebookLogoSvg />
+          <FacebookLogoSvg
+            width={theme.textsize?.l}
+            height={theme.textsize?.l}
+          />
         </View>
       }
       title="Continuer avec Facebook"

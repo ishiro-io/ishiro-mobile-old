@@ -1,7 +1,9 @@
+import { isNonEmptyArray } from "@apollo/client/utilities";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useContext } from "react";
 import { View } from "react-native";
 import { Button, ThemeContext } from "react-native-elements";
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 const ClearInputButton: React.FC<ClearInputButtonProps> = ({
   value,
@@ -14,10 +16,13 @@ const ClearInputButton: React.FC<ClearInputButtonProps> = ({
       {value !== "" ? (
         <Button
           type="clear"
+          containerStyle={{
+            marginBottom: 0
+          }}
           icon={
             <MaterialCommunityIcons
               name="close-circle"
-              size={20}
+              size={RFPercentage(3)}
               color={theme.colors?.grey5}
             />
           }

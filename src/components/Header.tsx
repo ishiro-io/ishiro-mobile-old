@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { View } from "react-native";
 import { IconNode, Text, ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { RFPercentage } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Header: React.FC<HeaderProps> = ({
@@ -46,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: 20,
+              fontSize: RFPercentage(2.5),
               color: theme.colors?.white
             }}
           >
