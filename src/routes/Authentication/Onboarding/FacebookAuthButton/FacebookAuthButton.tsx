@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, ThemeContext } from "react-native-elements";
 
 import FacebookLogoSvg from "components/svg/FacebookLogoSvg";
-
-const { width } = Dimensions.get("screen");
 
 const FacebookAuthButton: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -13,7 +11,6 @@ const FacebookAuthButton: React.FC = () => {
     <Button
       type="outline"
       buttonStyle={{
-        width: width * 0.9,
         borderWidth: 2,
         borderColor: theme.colors?.primaryLighter
       }}

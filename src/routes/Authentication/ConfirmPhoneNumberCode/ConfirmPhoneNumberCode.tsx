@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
-import { Dimensions, Image, View } from "react-native";
+import { Image, View } from "react-native";
 import {
   CodeField,
   Cursor,
@@ -21,8 +21,6 @@ import {
   AppNavigationProps,
   AuthenticationNavigationProps
 } from "shared/navigation/NavigationProps";
-
-const { width } = Dimensions.get("window");
 
 const ConfirmPhoneNumberCode: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -194,8 +192,7 @@ const ConfirmPhoneNumberCode: React.FC = () => {
           <Button
             type="solid"
             buttonStyle={{
-              backgroundColor: theme.colors?.white,
-              width: width * 0.9
+              backgroundColor: theme.colors?.white
             }}
             containerStyle={{
               marginTop: theme.spacing?.xl

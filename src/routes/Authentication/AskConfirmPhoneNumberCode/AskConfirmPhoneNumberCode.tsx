@@ -2,7 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, Input, ThemeContext } from "react-native-elements";
 
 import { ClearInputButton, DismissKeyboard, Header } from "components";
@@ -10,8 +10,6 @@ import { usePhoneAskConfirmationCodeMutation } from "shared/graphql/generated";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
 import { ConnectSchema } from "../shared/schemas";
-
-const { width } = Dimensions.get("screen");
 
 const AskConfirmPhoneNumberCode: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -126,8 +124,7 @@ const AskConfirmPhoneNumberCode: React.FC = () => {
               <Button
                 type="solid"
                 buttonStyle={{
-                  backgroundColor: theme.colors?.white,
-                  width: width * 0.9
+                  backgroundColor: theme.colors?.white
                 }}
                 containerStyle={{
                   marginBottom: theme.spacing?.m,

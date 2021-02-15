@@ -1,4 +1,3 @@
-import { isNonEmptyArray } from "@apollo/client/utilities";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useContext } from "react";
 import { View } from "react-native";
@@ -17,6 +16,7 @@ const ClearInputButton: React.FC<ClearInputButtonProps> = ({
         <Button
           type="clear"
           containerStyle={{
+            width: RFPercentage(25),
             marginBottom: 0
           }}
           icon={

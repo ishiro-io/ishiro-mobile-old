@@ -27,6 +27,7 @@ const theme: Theme = {
   },
   Button: {
     buttonStyle: {
+      width: RFPercentage(45),
       borderRadius: 60,
       height: RFPercentage(7),
       maxWidth: 520

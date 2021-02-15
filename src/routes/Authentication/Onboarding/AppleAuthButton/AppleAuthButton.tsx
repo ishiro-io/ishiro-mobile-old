@@ -1,9 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useContext } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, ThemeContext } from "react-native-elements";
-
-const { width } = Dimensions.get("screen");
 
 const AppleAuthButton: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -12,7 +10,6 @@ const AppleAuthButton: React.FC = () => {
     <Button
       type="outline"
       buttonStyle={{
-        width: width * 0.9,
         borderWidth: 2,
         borderColor: theme.colors?.primaryLighter
       }}

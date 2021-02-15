@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect } from "react";
-import { Dimensions, Image, View } from "react-native";
+import { Image, View } from "react-native";
 import { Button, Text, ThemeContext } from "react-native-elements";
 import { RFPercentage } from "react-native-responsive-fontsize";
 
@@ -9,8 +9,6 @@ import { cache } from "shared/graphql";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
 import { GoogleAuthButton } from "./GoogleAuthButton";
-
-const { width } = Dimensions.get("screen");
 
 const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
   const { theme } = useContext(ThemeContext);
@@ -58,7 +56,6 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
       <Button
         type="outline"
         buttonStyle={{
-          width: width * 0.9,
           borderWidth: 2,
           borderColor: theme.colors?.primaryLighter
         }}

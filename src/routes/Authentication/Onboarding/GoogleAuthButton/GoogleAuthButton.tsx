@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Google from "expo-auth-session/providers/google";
 import Constants from "expo-constants";
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, ThemeContext } from "react-native-elements";
 
 import GoogleLogoSvg from "components/svg/GoogleLogoSvg";
@@ -16,8 +16,6 @@ import {
   AppNavigationProps,
   AuthenticationNavigationProps
 } from "shared/navigation/NavigationProps";
-
-const { width } = Dimensions.get("screen");
 
 const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonProps) => {
   const { theme } = useContext(ThemeContext);
@@ -115,7 +113,6 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
     <Button
       type="outline"
       buttonStyle={{
-        width: width * 0.9,
         borderWidth: 2,
         borderColor: theme.colors?.primaryLighter
       }}
