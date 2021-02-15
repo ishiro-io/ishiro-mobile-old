@@ -22,7 +22,7 @@ const ClearInputButton: React.FC<ClearInputButtonProps> = ({
           icon={
             <MaterialCommunityIcons
               name="close-circle"
-              size={RFPercentage(3)}
+              size={theme.textsize?.l}
               color={theme.colors?.grey5}
             />
           }

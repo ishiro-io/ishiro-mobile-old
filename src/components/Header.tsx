@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: RFPercentage(2.5),
+              fontSize: theme.textsize?.m,
               color: theme.colors?.white
             }}
           >
