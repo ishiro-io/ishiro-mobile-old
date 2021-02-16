@@ -174,8 +174,8 @@ const ConfirmPhoneNumberCode: React.FC = () => {
               <View
                 key={index}
                 style={{
-                  width: moderateScale(50),
-                  height: moderateScale(50),
+                  width: moderateVerticalScale(40, 0.8),
+                  height: moderateVerticalScale(40, 0.8),
                   marginHorizontal: theme.spacing?.xs,
                   borderRadius: theme.borderRadii?.s,
                   backgroundColor: theme.colors?.white,

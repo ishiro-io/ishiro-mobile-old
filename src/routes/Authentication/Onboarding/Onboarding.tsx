@@ -1,15 +1,13 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect } from "react";
-import { Image, Platform, View } from "react-native";
+import { Image, View } from "react-native";
 import { Button, Text, ThemeContext } from "react-native-elements";
 import { moderateScale } from "react-native-size-matters";
 
 import { cache } from "shared/graphql";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
-import { AppleAuthButton } from "./AppleAuthButton";
-import { FacebookAuthButton } from "./FacebookAuthButton";
 import { GoogleAuthButton } from "./GoogleAuthButton";
 
 const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
@@ -34,8 +32,8 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
       <Image
         source={require("../../../assets/images/logo.png")}
         style={{
-          height: moderateScale(150),
-          width: moderateScale(150),
+          height: moderateScale(150, 0.8),
+          width: moderateScale(150, 0.8),
           resizeMode: "cover"
         }}
       />
@@ -75,11 +73,11 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
         title="Continuer avec mon numéro"
       />
 
-      <FacebookAuthButton />
+      {/* <FacebookAuthButton /> */}
 
       <GoogleAuthButton />
 
-      {Platform.OS === "ios" && <AppleAuthButton />}
+      {/* {Platform.OS === "ios" && <AppleAuthButton />}E */}
     </View>
   );
 };
