@@ -1,13 +1,18 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
-import { Dimensions, Image, View } from "react-native";
+import { Image, View } from "react-native";
 import {
   CodeField,
   Cursor,
+  useBlurOnFulfill,
   useClearByFocusCell
 } from "react-native-confirmation-code-field";
 import { Button, Text, ThemeContext } from "react-native-elements";
 import { TouchableHighlight } from "react-native-gesture-handler";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import { DismissKeyboard, Header } from "components";
 import {
@@ -21,7 +26,7 @@ import {
   AuthenticationNavigationProps
 } from "shared/navigation/NavigationProps";
 
-const { width } = Dimensions.get("window");
+const CELL_COUNT = 6;
 
 const ConfirmPhoneNumberCode: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -45,6 +50,8 @@ const ConfirmPhoneNumberCode: React.FC = () => {
     value,
     setValue
   });
+
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
 
   const [
     askConfirmationCode,
@@ -105,8 +112,8 @@ const ConfirmPhoneNumberCode: React.FC = () => {
           <Image
             source={require("../../../assets/images/logo.png")}
             style={{
-              height: 100,
-              width: 100,
+              height: moderateScale(100),
+              width: moderateScale(100),
               resizeMode: "cover",
               marginBottom: theme.spacing?.m
             }}
@@ -115,7 +122,7 @@ const ConfirmPhoneNumberCode: React.FC = () => {
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: 20,
+              fontSize: theme.textSize.m,
               textAlign: "center",
               paddingHorizontal: theme.spacing?.xl,
               marginBottom: theme.spacing?.l
@@ -134,7 +141,7 @@ const ConfirmPhoneNumberCode: React.FC = () => {
               <Text
                 style={{
                   fontFamily: "Poppins_300Light",
-                  fontSize: 12,
+                  fontSize: theme.textSize.s,
                   color: theme.colors?.white
                 }}
               >
@@ -143,7 +150,7 @@ const ConfirmPhoneNumberCode: React.FC = () => {
               <Text
                 style={{
                   fontFamily: "Poppins_500Medium",
-                  fontSize: 12,
+                  fontSize: theme.textSize.s,
                   color: theme.colors?.white
                 }}
               >
@@ -153,11 +160,12 @@ const ConfirmPhoneNumberCode: React.FC = () => {
           </TouchableHighlight>
 
           <CodeField
+            ref={ref}
             {...props}
             value={value}
             onChangeText={setValue}
-            cellCount={6}
-            rootStyle={{ marginTop: 20 }}
+            cellCount={CELL_COUNT}
+            rootStyle={{ marginTop: theme.spacing.l }}
             keyboardType="number-pad"
             textContentType="oneTimeCode"
             keyboardAppearance="dark"
@@ -166,8 +174,8 @@ const ConfirmPhoneNumberCode: React.FC = () => {
               <View
                 key={index}
                 style={{
-                  width: 50,
-                  height: 50,
+                  width: moderateScale(50),
+                  height: moderateScale(50),
                   marginHorizontal: theme.spacing?.xs,
                   borderRadius: theme.borderRadii?.s,
                   backgroundColor: theme.colors?.white,
@@ -178,7 +186,7 @@ const ConfirmPhoneNumberCode: React.FC = () => {
                 <Text
                   style={{
                     fontFamily: "Poppins_500Medium",
-                    fontSize: 24,
+                    fontSize: theme.textSize.l,
                     color: theme.colors?.black,
                     textAlign: "center"
                   }}
@@ -193,21 +201,13 @@ const ConfirmPhoneNumberCode: React.FC = () => {
           <Button
             type="solid"
             buttonStyle={{
-              backgroundColor: theme.colors?.white,
-              width: width * 0.8,
-              height: 50,
-              borderRadius: theme.borderRadii?.xxl
+              backgroundColor: theme.colors?.white
             }}
             containerStyle={{
               marginTop: theme.spacing?.xl
             }}
             titleStyle={{
-              color: theme.colors?.black,
-              fontFamily: "Poppins_600SemiBold",
-              fontSize: 15,
-              textTransform: "uppercase",
-              textAlign: "center",
-              letterSpacing: 1
+              color: theme.colors?.black
             }}
             title="Continuer"
             loading={connectLoading || askLoading}
@@ -215,11 +215,11 @@ const ConfirmPhoneNumberCode: React.FC = () => {
             onPress={() => onSubmit()}
           />
 
-          <View style={{ height: 30 }}>
+          <View style={{ height: moderateVerticalScale(30) }}>
             <Text
               style={{
                 fontFamily: "Poppins_400Regular",
-                fontSize: 12,
+                fontSize: theme.textSize.s,
                 color: theme.colors?.error,
                 marginTop: theme.spacing?.s
               }}

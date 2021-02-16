@@ -21,10 +21,19 @@ declare module "react-native-elements" {
     l: number;
     xl: number;
     xxl: number;
-    "3xl": 100;
+    "3xl": number;
   }
 
   export interface BorderRadius {
+    xs: number;
+    s: number;
+    m: number;
+    l: number;
+    xl: number;
+    xxl: number;
+  }
+
+  export interface TextSize {
     xs: number;
     s: number;
     m: number;
@@ -37,5 +46,6 @@ declare module "react-native-elements" {
     colors: RecursivePartial<Colors>;
     spacing: Spacing;
     borderRadii: BorderRadius;
+    textSize: TextSize;
   }
 }

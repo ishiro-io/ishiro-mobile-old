@@ -3,6 +3,10 @@ import { View } from "react-native";
 import { IconNode, Text, ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 const Header: React.FC<HeaderProps> = ({
   label,
@@ -19,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <View
       style={{
-        height,
+        height: moderateVerticalScale(height),
         paddingHorizontal: theme.spacing?.m,
         marginTop: top
       }}
@@ -36,17 +40,22 @@ const Header: React.FC<HeaderProps> = ({
           <TouchableWithoutFeedback onPress={onIconLeftPress}>
             {iconLeft}
           </TouchableWithoutFeedback>
-        ) : iconRight ? (
-          <View style={{ width: 32, height: 32 }} />
         ) : (
-          <></>
+          iconRight && (
+            <View
+              style={{
+                width: moderateScale(32),
+                height: moderateScale(32)
+              }}
+            />
+          )
         )}
 
         {label && (
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: 20,
+              fontSize: theme.textSize.m,
               color: theme.colors?.white
             }}
           >
@@ -58,10 +67,12 @@ const Header: React.FC<HeaderProps> = ({
           <TouchableWithoutFeedback onPress={onIconRightPress}>
             {iconRight}
           </TouchableWithoutFeedback>
-        ) : iconLeft ? (
-          <View style={{ width: 32, height: 32 }} />
         ) : (
-          <></>
+          iconLeft && (
+            <View
+              style={{ width: moderateScale(32), height: moderateScale(32) }}
+            />
+          )
         )}
       </View>
     </View>

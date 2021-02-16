@@ -5,8 +5,8 @@ import { AuthenticationRoutes } from "shared/navigation/Routes";
 
 import { AskConfirmPhoneNumberCode } from "./AskConfirmPhoneNumberCode";
 import { ConfirmPhoneNumberCode } from "./ConfirmPhoneNumberCode";
-import { SetUsername } from "./ConfirmPhoneNumberCode/SetUsername";
 import { Onboarding } from "./Onboarding";
+import { SetUsername } from "./SetUsername";
 
 const AuthenticationStack = createStackNavigator<AuthenticationRoutes>();
 

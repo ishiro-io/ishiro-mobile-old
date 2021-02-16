@@ -1,15 +1,16 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect } from "react";
-import { Dimensions, Image, View } from "react-native";
+import { Image, Platform, View } from "react-native";
 import { Button, Text, ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 
 import { cache } from "shared/graphql";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
+import { AppleAuthButton } from "./AppleAuthButton";
+import { FacebookAuthButton } from "./FacebookAuthButton";
 import { GoogleAuthButton } from "./GoogleAuthButton";
-
-const { width } = Dimensions.get("screen");
 
 const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
   const { theme } = useContext(ThemeContext);
@@ -33,8 +34,8 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
       <Image
         source={require("../../../assets/images/logo.png")}
         style={{
-          height: 200,
-          width: 200,
+          height: moderateScale(150),
+          width: moderateScale(150),
           resizeMode: "cover",
           marginBottom: theme.spacing?.xxl
         }}
@@ -43,7 +44,7 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
       <Text
         style={{
           fontFamily: "Poppins_500Medium",
-          fontSize: 24,
+          fontSize: theme.textSize.l,
           color: theme.colors?.white,
           textAlign: "center",
           paddingHorizontal: theme.spacing?.xl,
@@ -56,38 +57,30 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
       <Button
         type="outline"
         buttonStyle={{
-          width: width * 0.8,
-          height: 50,
-          borderRadius: theme.borderRadii?.xxl,
-          borderWidth: 2,
-          borderColor: theme.colors?.primaryLighter
+          borderColor: theme.colors?.primaryLighter,
+          borderWidth: moderateScale(2, 0.25)
         }}
         disabledStyle={{ backgroundColor: theme.colors?.grey8 }}
         containerStyle={{
-          marginBottom: theme.spacing?.m
+          marginBottom: theme.spacing.s
         }}
         titleStyle={{
-          color: theme.colors?.white,
-          fontFamily: "Poppins_600SemiBold",
-          fontSize: 15,
-          textTransform: "uppercase",
-          textAlign: "center",
-          letterSpacing: 1
+          color: theme.colors?.white
         }}
         icon={
           <View style={{ marginRight: theme.spacing?.m }}>
-            <FontAwesome name="phone" size={24} color="white" />
+            <FontAwesome name="phone" size={moderateScale(20)} color="white" />
           </View>
         }
         onPress={() => navigation.navigate("AskConfirmPhoneNumberCode")}
         title="Continuer avec mon numéro"
       />
 
-      {/* <FacebookAuthButton /> */}
+      <FacebookAuthButton />
 
       <GoogleAuthButton />
 
-      {/* {Platform.OS === "ios" && <AppleAuthButton />} */}
+      {Platform.OS === "ios" && <AppleAuthButton />}
     </View>
   );
 };

@@ -1,25 +1,44 @@
 import { Theme } from "react-native-elements";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 const theme: Theme = {
+  Button: {
+    buttonStyle: {
+      width: moderateScale(310),
+      borderRadius: moderateScale(1000),
+      height: moderateVerticalScale(44)
+    },
+    titleStyle: {
+      fontSize: moderateScale(14),
+      fontFamily: "Poppins_600SemiBold",
+      textTransform: "uppercase",
+      textAlign: "center",
+      letterSpacing: 1
+    }
+  },
   Input: {
     inputStyle: {
       color: "#fff",
       fontFamily: "Poppins_400Regular",
-      fontSize: 14
+      fontSize: moderateScale(16)
     },
     inputContainerStyle: {
-      height: 40,
+      height: moderateVerticalScale(40),
       backgroundColor: "#2f2f2f",
-      borderRadius: 8,
+      borderRadius: moderateScale(8),
       borderBottomWidth: 0,
-      paddingLeft: 8
+      paddingLeft: moderateScale(8)
     },
     labelStyle: {
       fontFamily: "Poppins_500Medium",
-      fontSize: 18,
+      fontSize: moderateScale(16),
       color: "#fff",
-      marginBottom: 8
-    }
+      marginBottom: moderateVerticalScale(8)
+    },
+    errorStyle: { fontSize: moderateScale(10) }
   },
   Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } },
   colors: {
@@ -43,21 +62,29 @@ const theme: Theme = {
     info: "#0087C6"
   },
   spacing: {
-    xs: 4,
-    s: 8,
-    m: 16,
-    l: 24,
-    xl: 40,
-    xxl: 78,
-    "3xl": 100
+    xs: moderateScale(4),
+    s: moderateScale(8),
+    m: moderateScale(16),
+    l: moderateScale(24),
+    xl: moderateScale(40),
+    xxl: moderateScale(64),
+    "3xl": moderateScale(100)
   },
   borderRadii: {
-    xs: 5,
-    s: 8,
-    m: 14,
-    l: 24,
-    xl: 30,
-    xxl: 40
+    xs: moderateScale(5),
+    s: moderateScale(8),
+    m: moderateScale(14),
+    l: moderateScale(24),
+    xl: moderateScale(30),
+    xxl: moderateScale(40)
+  },
+  textSize: {
+    xs: moderateScale(8),
+    s: moderateScale(12),
+    m: moderateScale(16),
+    l: moderateScale(24),
+    xl: moderateScale(32),
+    xxl: moderateScale(48)
   }
 };
 
