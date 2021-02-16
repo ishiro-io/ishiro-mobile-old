@@ -62,13 +62,13 @@ const theme: Theme = {
     info: "#0087C6"
   },
   spacing: {
-    xs: moderateScale(4),
-    s: moderateScale(8),
-    m: moderateScale(16),
-    l: moderateScale(24),
-    xl: moderateScale(40),
-    xxl: moderateScale(64),
-    "3xl": moderateScale(100)
+    xs: moderateVerticalScale(4, 0.25),
+    s: moderateVerticalScale(8, 0.25),
+    m: moderateVerticalScale(16, 0.25),
+    l: moderateVerticalScale(24, 0.25),
+    xl: moderateVerticalScale(40, 0.25),
+    xxl: moderateVerticalScale(64, 0.25),
+    "3xl": moderateVerticalScale(100, 0.25)
   },
   borderRadii: {
     xs: moderateScale(5),
@@ -79,12 +79,12 @@ const theme: Theme = {
     xxl: moderateScale(40)
   },
   textSize: {
-    xs: moderateScale(8),
-    s: moderateScale(12),
-    m: moderateScale(16),
-    l: moderateScale(24),
-    xl: moderateScale(32),
-    xxl: moderateScale(48)
+    xs: moderateScale(8, 0.25),
+    s: moderateScale(12, 0.25),
+    m: moderateScale(16, 0.25),
+    l: moderateScale(24, 0.25),
+    xl: moderateScale(32, 0.25),
+    xxl: moderateScale(48, 0.25)
   }
 };
 

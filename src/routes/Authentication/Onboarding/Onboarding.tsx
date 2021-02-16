@@ -36,8 +36,7 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
         style={{
           height: moderateScale(150),
           width: moderateScale(150),
-          resizeMode: "cover",
-          marginBottom: theme.spacing?.xxl
+          resizeMode: "cover"
         }}
       />
 
@@ -48,7 +47,7 @@ const Onboarding: React.FC<OnboardingProps> = ({}: OnboardingProps) => {
           color: theme.colors?.white,
           textAlign: "center",
           paddingHorizontal: theme.spacing?.xl,
-          marginBottom: theme.spacing?.xxl
+          marginVertical: theme.spacing?.xxl
         }}
       >
         Des milliers d'animes que vous pouvez suivre à tout moment.
