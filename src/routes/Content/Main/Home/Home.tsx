@@ -3,6 +3,10 @@ import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Image, View } from "react-native";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import { Header } from "components";
 import { ContentNavigationProps } from "shared/navigation/NavigationProps";
@@ -36,13 +40,15 @@ const HomeContent: React.FC = () => {
           <Image
             source={require("../../../../assets/images/logo.png")}
             style={{
-              height: 40,
-              width: 40,
+              height: moderateVerticalScale(40),
+              width: moderateVerticalScale(40),
               resizeMode: "cover"
             }}
           />
         }
-        iconRight={<MaterialIcons name="person" size={32} color="white" />}
+        iconRight={
+          <MaterialIcons name="person" size={moderateScale(32)} color="white" />
+        }
         onIconRightPress={() => navigation.navigate("Profile")}
       />
 

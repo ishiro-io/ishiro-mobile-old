@@ -2,6 +2,10 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import { AnimeCard } from "components";
 import {
@@ -11,8 +15,8 @@ import {
 import { useSetUserAnimeViewStatus } from "shared/hooks";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
-const CARD_WIDTH = 160;
-const CARD_HEIGHT = 260;
+export const CARD_WIDTH = moderateScale(160, 0.1);
+const CARD_HEIGHT = moderateVerticalScale(260, 0.1);
 
 type Option =
   | "Je veux regarder"
@@ -159,7 +163,11 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
         navigation.navigate("AnimeInfo", { animeId: item.anime.id })
       }
       topRightIcon={
-        <MaterialCommunityIcons name="dots-vertical" size={32} color="white" />
+        <MaterialCommunityIcons
+          name="dots-vertical"
+          size={moderateScale(32, 0.1)}
+          color="white"
+        />
       }
       onTopRightIconPress={onDotsPress}
     />

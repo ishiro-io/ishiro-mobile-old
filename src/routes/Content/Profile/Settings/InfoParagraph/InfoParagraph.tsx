@@ -39,7 +39,7 @@ const InfoParagraph: React.FC<InfoParagraphProps> = ({}: InfoParagraphProps) => 
             style={{
               marginBottom: theme.spacing?.xl,
               paddingHorizontal: theme.spacing?.m,
-              fontSize: 16,
+              fontSize: theme.textSize.s,
               textAlign: "justify"
             }}
           >

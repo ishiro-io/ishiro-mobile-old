@@ -2,14 +2,18 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import AnimeCard from "components/AnimeCard";
 import { HomeNavigationProps } from "shared/navigation/NavigationProps";
 
 import { SeeMoreCard } from "./SeeMoreCard";
 
-const CARD_WIDTH = 125;
-const CARD_HEIGHT = 210;
+const CARD_WIDTH = moderateScale(125, 0.25);
+const CARD_HEIGHT = moderateVerticalScale(210, 0.25);
 
 const HomePreviewList: React.FC<HomePreviewListProps> = ({
   animes,
@@ -32,7 +36,7 @@ const HomePreviewList: React.FC<HomePreviewListProps> = ({
       <Text
         style={{
           fontFamily: "Poppins_500Medium",
-          fontSize: 20,
+          fontSize: moderateScale(20, 0.25),
           color: theme.colors?.white
         }}
       >

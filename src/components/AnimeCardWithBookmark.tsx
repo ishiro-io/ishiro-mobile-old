@@ -1,6 +1,10 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import {
   AnimeFieldsFragment,
@@ -12,8 +16,8 @@ import { SearchNavigationProps } from "shared/navigation/NavigationProps";
 
 import AnimeCard from "./AnimeCard";
 
-const CARD_WIDTH = 160;
-const CARD_HEIGHT = 260;
+export const CARD_WIDTH = moderateScale(160, 0.25);
+const CARD_HEIGHT = moderateVerticalScale(260, 0.25);
 
 const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
   animeData
@@ -82,7 +86,7 @@ const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
         !loading && (
           <MaterialCommunityIcons
             name={isChecked ? "bookmark" : "bookmark-plus-outline"}
-            size={32}
+            size={moderateScale(32)}
             color="white"
           />
         )

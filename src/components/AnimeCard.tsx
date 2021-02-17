@@ -33,7 +33,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
         <View
           style={{
             ...StyleSheet.absoluteFillObject,
-            height: height * 0.85,
+            height: height * 0.8,
             borderRadius: theme.borderRadii?.m,
             backgroundColor: theme.colors?.grey9,
             alignItems: "center",
@@ -44,9 +44,11 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
         </View>
 
         <Image
-          source={{ uri: posterImageUrl }}
+          source={{
+            uri: posterImageUrl
+          }}
           style={{
-            height: height * 0.85,
+            height: height * 0.8,
             borderRadius: theme.borderRadii?.m,
             resizeMode: "cover"
           }}
@@ -58,7 +60,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
             ...StyleSheet.absoluteFillObject,
             justifyContent: "flex-start",
             alignItems: "flex-end",
-            height: height * 0.85
+            height: height * 0.8
           }}
         >
           <LinearGradient
@@ -76,7 +78,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
             style={{
               ...StyleSheet.absoluteFillObject,
               justifyContent: "flex-end",
-              height: height * 0.85
+              height: height * 0.8
             }}
           >
             <LinearGradient
@@ -91,7 +93,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
               <Text
                 style={{
                   fontFamily: "Poppins_500Medium",
-                  fontSize: 11
+                  fontSize: theme.textSize.s
                 }}
               >
                 {episodeText}
@@ -99,7 +101,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
               <Text
                 style={{
                   fontFamily: "Poppins_200ExtraLight",
-                  fontSize: 20
+                  fontSize: theme.textSize.m
                 }}
               >
                 {episodeNumber}
@@ -130,7 +132,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
 
         <Text
           style={{
-            fontSize: 13,
+            fontSize: theme.textSize.s,
             marginTop: theme.spacing?.s
           }}
           ellipsizeMode="tail"

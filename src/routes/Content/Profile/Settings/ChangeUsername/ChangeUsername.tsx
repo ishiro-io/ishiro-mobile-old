@@ -122,21 +122,10 @@ const ChangeUsername: React.FC<ChangeUsernameProps> = ({}: ChangeUsernameProps) 
               <Button
                 type="solid"
                 buttonStyle={{
-                  backgroundColor: theme.colors?.white,
-                  width: width * 0.8,
-                  height: 50,
-                  borderRadius: theme.borderRadii?.xxl
-                }}
-                containerStyle={{
-                  marginBottom: theme.spacing?.m
+                  backgroundColor: theme.colors?.white
                 }}
                 titleStyle={{
-                  color: theme.colors?.black,
-                  fontFamily: "Poppins_600SemiBold",
-                  fontSize: 18,
-                  textTransform: "uppercase",
-                  textAlign: "center",
-                  letterSpacing: 1
+                  color: theme.colors?.black
                 }}
                 onPress={() => handleSubmit()}
                 title="Enregistrer"

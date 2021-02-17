@@ -1,5 +1,4 @@
 import { Theme } from "react-native-elements";
-import { RFValue } from "react-native-responsive-fontsize";
 import {
   moderateScale,
   moderateVerticalScale
@@ -13,7 +12,7 @@ const theme: Theme = {
       height: moderateVerticalScale(44)
     },
     titleStyle: {
-      fontSize: RFValue(13),
+      fontSize: moderateScale(13, 0.25),
       fontFamily: "Poppins_600SemiBold",
       textTransform: "uppercase",
       textAlign: "center",
@@ -24,7 +23,7 @@ const theme: Theme = {
     inputStyle: {
       color: "#fff",
       fontFamily: "Poppins_400Regular",
-      fontSize: RFValue(12)
+      fontSize: moderateScale(12, 0.25)
     },
     inputContainerStyle: {
       height: moderateVerticalScale(40),
@@ -35,11 +34,11 @@ const theme: Theme = {
     },
     labelStyle: {
       fontFamily: "Poppins_500Medium",
-      fontSize: RFValue(16),
+      fontSize: moderateScale(16, 0.25),
       color: "#fff",
       marginBottom: moderateVerticalScale(8)
     },
-    errorStyle: { fontSize: RFValue(10) }
+    errorStyle: { fontSize: moderateScale(10, 0.25) }
   },
   Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } },
   colors: {
@@ -80,12 +79,12 @@ const theme: Theme = {
     xxl: moderateScale(40)
   },
   textSize: {
-    xs: RFValue(8),
-    s: RFValue(12),
-    m: RFValue(16),
-    l: RFValue(24),
-    xl: RFValue(32),
-    xxl: RFValue(64)
+    xs: moderateScale(10, 0.25),
+    s: moderateScale(12, 0.25),
+    m: moderateScale(16, 0.25),
+    l: moderateScale(24, 0.25),
+    xl: moderateScale(32, 0.25),
+    xxl: moderateScale(64, 0.25)
   }
 };
 

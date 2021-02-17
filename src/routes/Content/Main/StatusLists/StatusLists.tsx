@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext } from "react";
 import { View } from "react-native";
 import { ThemeContext } from "react-native-elements";
+import { moderateVerticalScale } from "react-native-size-matters";
 
 import { Header } from "components";
 import { AnimeViewStatus } from "shared/graphql/generated";
@@ -37,7 +38,7 @@ const StatusListsContent = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header label="Mes listes" height={60} />
+      <Header label="Mes listes" height={moderateVerticalScale(40)} />
 
       <View style={{ flex: 1 }}>
         <StatusListsTabs.Navigator
@@ -55,7 +56,7 @@ const StatusListsContent = () => {
             },
             labelStyle: {
               fontFamily: "Poppins_400Regular",
-              fontSize: 11
+              fontSize: theme.textSize.xs
             }
           }}
           initialRouteName="InProgress"

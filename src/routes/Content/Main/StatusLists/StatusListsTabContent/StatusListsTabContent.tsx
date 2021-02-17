@@ -1,14 +1,16 @@
 import { NetworkStatus } from "@apollo/client";
 import { useRoute } from "@react-navigation/native";
-import React, { useContext } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { ListEmpty } from "components";
 import { useUserAnimeViewsByStatusQuery } from "shared/graphql/generated";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
-import { StatusListAnimeCard } from "./StatusListAnimeCard";
+import { CARD_WIDTH, StatusListAnimeCard } from "./StatusListAnimeCard";
+
+const { width } = Dimensions.get("screen");
 
 const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusListsTabContentProps) => {
   const { theme } = useContext(ThemeContext);
@@ -33,10 +35,21 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
     notifyOnNetworkStatusChange: true
   });
 
+  const [numColumns, setNumColumns] = useState(
+    Math.floor(width / (CARD_WIDTH * 1.1))
+  );
+
+  Dimensions.addEventListener("change", ({ screen }) => {
+    const num = Math.floor(screen.width / (CARD_WIDTH * 1.1));
+
+    setNumColumns(num);
+  });
+
   if (
     loading &&
     networkStatus !== NetworkStatus.fetchMore &&
-    networkStatus === NetworkStatus.refetch
+    (networkStatus === NetworkStatus.refetch ||
+      networkStatus === NetworkStatus.loading)
   )
     return (
       <View
@@ -78,7 +91,8 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
       data={data?.userAnimeViewsByStatus?.fields}
       renderItem={({ item }) => <StatusListAnimeCard {...{ item }} />}
       showsVerticalScrollIndicator={false}
-      numColumns={2}
+      key={numColumns}
+      numColumns={numColumns}
       keyExtractor={(item) => item.id.toString()}
       onEndReachedThreshold={4}
       onEndReached={() => loadMoreUserAnimes()}
