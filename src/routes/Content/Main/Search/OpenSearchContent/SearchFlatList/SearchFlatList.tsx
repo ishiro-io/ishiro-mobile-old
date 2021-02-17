@@ -5,7 +5,10 @@ import { ThemeContext } from "react-native-elements";
 
 import { AnimeCardWithBookmark, ListEmpty } from "components";
 import { CARD_WIDTH } from "components/AnimeCardWithBookmark";
-import { useSearchAnimesQuery } from "shared/graphql/generated";
+import {
+  AnimeFieldsFragment,
+  useSearchAnimesQuery
+} from "shared/graphql/generated";
 
 const { width } = Dimensions.get("screen");
 
@@ -56,6 +59,27 @@ const SearchFlatList: React.FC<SearchFlatListProps> = ({
     }
   };
 
+  const buildFlatListData = () => {
+    const { fields } = data?.searchAnimes;
+    const array: Array<AnimeFieldsFragment & { blank?: boolean }> = [...fields];
+    const numberOfFullRows = Math.floor(fields.length / numColumns);
+
+    let numberOfElementsLastRow = fields.length - numberOfFullRows * numColumns;
+    while (
+      numberOfElementsLastRow !== numColumns &&
+      numberOfElementsLastRow !== 0
+    ) {
+      array.push({
+        blank: true,
+        id: numberOfElementsLastRow,
+        title: undefined
+      });
+      numberOfElementsLastRow++;
+    }
+
+    return array;
+  };
+
   return (
     <FlatList
       style={{
@@ -67,7 +91,7 @@ const SearchFlatList: React.FC<SearchFlatListProps> = ({
         alignItems: "center",
         paddingVertical: theme.spacing?.m
       }}
-      data={data?.searchAnimes?.fields}
+      data={buildFlatListData()}
       renderItem={({ item }) => <AnimeCardWithBookmark animeData={item} />}
       showsVerticalScrollIndicator={false}
       numColumns={numColumns}

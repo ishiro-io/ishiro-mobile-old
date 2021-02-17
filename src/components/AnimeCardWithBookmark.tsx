@@ -1,6 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { View } from "react-native";
+import { ThemeContext } from "react-native-elements";
 import {
   moderateScale,
   moderateVerticalScale
@@ -22,6 +24,7 @@ const CARD_HEIGHT = moderateVerticalScale(250, 0.1);
 const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
   animeData
 }: AnimeCardWithBookmarkProps) => {
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation<
     SearchNavigationProps<"Search" | "CategoryList">["navigation"]
   >();
@@ -73,6 +76,18 @@ const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
     setIsDirty(true);
   };
 
+  if (animeData.blank)
+    return (
+      <View
+        style={{
+          width: CARD_WIDTH,
+          height: CARD_HEIGHT,
+          margin: theme.spacing?.s,
+          backgroundColor: "transparent"
+        }}
+      />
+    );
+
   return (
     <AnimeCard
       title={animeData.title}
@@ -99,5 +114,5 @@ const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
 export default AnimeCardWithBookmark;
 
 interface AnimeCardWithBookmarkProps {
-  animeData: AnimeFieldsFragment;
+  animeData: AnimeFieldsFragment & { blank?: boolean };
 }

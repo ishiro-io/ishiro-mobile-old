@@ -5,7 +5,10 @@ import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { ListEmpty } from "components";
-import { useUserAnimeViewsByStatusQuery } from "shared/graphql/generated";
+import {
+  UserAnimeViewFieldsFragment,
+  useUserAnimeViewsByStatusQuery
+} from "shared/graphql/generated";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
 import { CARD_WIDTH, StatusListAnimeCard } from "./StatusListAnimeCard";
@@ -77,6 +80,32 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
     }
   };
 
+  const buildFlatListData = () => {
+    const { fields } = data?.userAnimeViewsByStatus;
+    const array: Array<UserAnimeViewFieldsFragment & { blank?: boolean }> = [
+      ...fields
+    ];
+    const numberOfFullRows = Math.floor(fields.length / numColumns);
+
+    let numberOfElementsLastRow = fields.length - numberOfFullRows * numColumns;
+    while (
+      numberOfElementsLastRow !== numColumns &&
+      numberOfElementsLastRow !== 0
+    ) {
+      array.push({
+        blank: true,
+        id: numberOfElementsLastRow,
+        anime: undefined,
+        episodeViews: undefined,
+        nextEpisodeToSee: undefined,
+        status: undefined
+      });
+      numberOfElementsLastRow++;
+    }
+
+    return array;
+  };
+
   return (
     <FlatList
       style={{
@@ -88,7 +117,7 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
         alignItems: "center",
         paddingVertical: theme.spacing?.m
       }}
-      data={data?.userAnimeViewsByStatus?.fields}
+      data={buildFlatListData()}
       renderItem={({ item }) => <StatusListAnimeCard {...{ item }} />}
       showsVerticalScrollIndicator={false}
       key={numColumns}

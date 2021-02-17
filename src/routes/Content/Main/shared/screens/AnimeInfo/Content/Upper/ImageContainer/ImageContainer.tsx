@@ -60,7 +60,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: theme.textSize.l
+              fontSize: theme.textSize.m
             }}
           >
             {title}
@@ -69,7 +69,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
             <Text
               style={{
                 fontFamily: "Poppins_300Light",
-                fontSize: theme.textSize.m
+                fontSize: theme.textSize.s
               }}
             >
               {titleKanji}
