@@ -3,9 +3,10 @@ import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 import React, { useContext } from "react";
-import { Alert, Dimensions, Platform, View } from "react-native";
+import { Alert, Platform, View } from "react-native";
 import { Button, ThemeContext } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
+import { moderateScale } from "react-native-size-matters";
 
 import { Header } from "components";
 import { cache } from "shared/graphql";
@@ -22,8 +23,6 @@ import {
 
 import { SettingsAction } from "./Action";
 import { SettingsGroup } from "./Group";
-
-const { width } = Dimensions.get("screen");
 
 const SettingsMain: React.FC<SettingsMainProps> = ({}: SettingsMainProps) => {
   const { theme } = useContext(ThemeContext);
@@ -91,9 +90,13 @@ const SettingsMain: React.FC<SettingsMainProps> = ({}: SettingsMainProps) => {
       }}
     >
       <Header
-        label="Péférences"
+        label="Préférences"
         iconLeft={
-          <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={moderateScale(32)}
+            color="white"
+          />
         }
         onIconLeftPress={() => navigation.goBack()}
       />
@@ -167,20 +170,11 @@ const SettingsMain: React.FC<SettingsMainProps> = ({}: SettingsMainProps) => {
           <Button
             type="solid"
             containerStyle={{
-              width: width * 0.6,
               marginTop: theme.spacing?.m,
               marginBottom: theme.spacing?.xxl
             }}
             buttonStyle={{
-              borderRadius: theme.borderRadii?.xl,
               backgroundColor: theme.colors?.primaryLighter
-            }}
-            titleStyle={{
-              fontFamily: "Poppins_600SemiBold",
-              fontSize: 18,
-              textTransform: "uppercase",
-              textAlign: "center",
-              letterSpacing: 1
             }}
             title="Déconnexion"
             onPress={onDisconnect}

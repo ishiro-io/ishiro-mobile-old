@@ -1,6 +1,7 @@
 import React, { ReactElement, useContext } from "react";
 import { Dimensions, Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
+import { RFValue } from "react-native-responsive-fontsize";
 
 import { SettingsActionProps } from "../Action/Action";
 
@@ -23,7 +24,7 @@ const SettingsGroup: React.FC<SettingsGroupProps> = ({
         style={{
           color: theme.colors?.primaryLighter,
           fontFamily: "Poppins_500Medium",
-          fontSize: 18,
+          fontSize: RFValue(18),
           textTransform: "uppercase",
           marginBottom: theme.spacing?.m,
           marginLeft: theme.spacing?.l

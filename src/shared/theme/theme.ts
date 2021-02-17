@@ -85,7 +85,7 @@ const theme: Theme = {
     m: RFValue(16),
     l: RFValue(24),
     xl: RFValue(32),
-    xxl: RFValue(48)
+    xxl: RFValue(64)
   }
 };
 

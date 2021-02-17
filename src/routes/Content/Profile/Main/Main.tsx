@@ -4,6 +4,7 @@ import ColorHash from "color-hash";
 import React, { useContext } from "react";
 import { View } from "react-native";
 import { Avatar, Text, ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 
 import { Header } from "components";
 import { useMeQuery } from "shared/graphql/generated";
@@ -25,10 +26,18 @@ const ProfileMain: React.FC<ProfileMainProps> = ({}: ProfileMainProps) => {
       <Header
         label="Profil"
         iconLeft={
-          <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={moderateScale(32)}
+            color="white"
+          />
         }
         iconRight={
-          <MaterialCommunityIcons name="settings" size={32} color="white" />
+          <MaterialCommunityIcons
+            name="settings"
+            size={moderateScale(32)}
+            color="white"
+          />
         }
         onIconLeftPress={() => navigation.goBack()}
         onIconRightPress={() => navigation.navigate("Settings")}
@@ -41,7 +50,7 @@ const ProfileMain: React.FC<ProfileMainProps> = ({}: ProfileMainProps) => {
           rounded
           title={data?.me?.username.substring(0, 2)}
           size="xlarge"
-          titleStyle={{ fontSize: 64 }}
+          titleStyle={{ fontSize: theme.textSize.xxl }}
           overlayContainerStyle={{
             backgroundColor: hash.hex(data?.me?.username || ""),
             borderWidth: 4,
@@ -52,7 +61,7 @@ const ProfileMain: React.FC<ProfileMainProps> = ({}: ProfileMainProps) => {
         <Text
           style={{
             fontFamily: "Poppins_500Medium",
-            fontSize: 32,
+            fontSize: theme.textSize.xl,
             marginBottom: theme.spacing?.["3xl"],
             marginTop: theme.spacing?.l
           }}
