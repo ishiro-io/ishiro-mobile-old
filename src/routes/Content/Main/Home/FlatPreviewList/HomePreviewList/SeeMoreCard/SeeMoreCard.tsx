@@ -16,8 +16,8 @@ const SeeMoreCard: React.FC<SeeMoreCardProps> = ({
     <TouchableWithoutFeedback onPress={onPress}>
       <View
         style={{
-          width: moderateScale(125, 0.25),
-          height: moderateVerticalScale(178.5, 0.25),
+          width: moderateScale(125, 0.1),
+          height: moderateVerticalScale(210, 0.1) * 0.8,
           margin: theme.spacing?.s,
           backgroundColor: theme.colors?.grey9,
           flex: 1,

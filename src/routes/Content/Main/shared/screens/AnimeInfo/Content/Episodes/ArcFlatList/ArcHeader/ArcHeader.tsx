@@ -1,11 +1,9 @@
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Text, ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { moderateScale } from "react-native-size-matters";
-
-const { width } = Dimensions.get("screen");
 
 const ArcHeader: React.FC<StickyHeaderProps> = ({
   arcName,
