@@ -9,7 +9,7 @@ import { ClearInputButton, DismissKeyboard, Header } from "components";
 import { usePhoneAskConfirmationCodeMutation } from "shared/graphql/generated";
 import { AuthenticationNavigationProps } from "shared/navigation/NavigationProps";
 
-import { ConnectSchema } from "../shared/schemas";
+import { AskCodeSchema } from "../shared/schemas";
 
 const AskConfirmPhoneNumberCode: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -73,7 +73,7 @@ const AskConfirmPhoneNumberCode: React.FC = () => {
           initialValues={{
             phoneNumber: ""
           }}
-          validationSchema={ConnectSchema}
+          validationSchema={AskCodeSchema}
           validateOnChange={false}
           validateOnBlur={false}
           onSubmit={onSubmit}

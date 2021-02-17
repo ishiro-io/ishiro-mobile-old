@@ -13,7 +13,7 @@ const theme: Theme = {
       height: moderateVerticalScale(44)
     },
     titleStyle: {
-      fontSize: moderateScale(14),
+      fontSize: RFValue(13),
       fontFamily: "Poppins_600SemiBold",
       textTransform: "uppercase",
       textAlign: "center",
@@ -24,7 +24,7 @@ const theme: Theme = {
     inputStyle: {
       color: "#fff",
       fontFamily: "Poppins_400Regular",
-      fontSize: moderateScale(16)
+      fontSize: RFValue(16)
     },
     inputContainerStyle: {
       height: moderateVerticalScale(40),
@@ -35,11 +35,11 @@ const theme: Theme = {
     },
     labelStyle: {
       fontFamily: "Poppins_500Medium",
-      fontSize: moderateScale(16),
+      fontSize: RFValue(16),
       color: "#fff",
       marginBottom: moderateVerticalScale(8)
     },
-    errorStyle: { fontSize: moderateScale(10) }
+    errorStyle: { fontSize: RFValue(10) }
   },
   Text: { style: { color: "#fff", fontFamily: "Poppins_400Regular" } },
   colors: {
