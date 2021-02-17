@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { Dimensions, View } from "react-native";
 import { Text, ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { moderateScale } from "react-native-size-matters";
 
 const { width } = Dimensions.get("screen");
 
@@ -39,17 +40,21 @@ const ArcHeader: React.FC<StickyHeaderProps> = ({
           style={{
             flexDirection: "row",
             alignItems: "center",
-            width: width * 0.75
+            width: moderateScale(260)
           }}
         >
           {displayArrow && (
-            <MaterialIcons name="keyboard-arrow-down" size={24} color="white" />
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={moderateScale(24, 0.1)}
+              color="white"
+            />
           )}
           <View>
             <Text
               style={{
                 fontFamily: "Poppins_700Bold",
-                fontSize: 17,
+                fontSize: theme.textSize.m,
                 paddingLeft: theme.spacing?.m
               }}
             >
@@ -59,7 +64,7 @@ const ArcHeader: React.FC<StickyHeaderProps> = ({
             <Text
               style={{
                 fontFamily: "Poppins_300Light",
-                fontSize: 12,
+                fontSize: theme.textSize.s,
                 paddingLeft: theme.spacing?.m
               }}
             >
@@ -72,7 +77,7 @@ const ArcHeader: React.FC<StickyHeaderProps> = ({
       <TouchableWithoutFeedback onPress={() => onCheckPress(!isChecked)}>
         <MaterialCommunityIcons
           name="checkbox-multiple-marked-circle-outline"
-          size={30}
+          size={moderateScale(30, 0.1)}
           color={isChecked ? theme.colors?.success : theme.colors?.grey6}
         />
       </TouchableWithoutFeedback>

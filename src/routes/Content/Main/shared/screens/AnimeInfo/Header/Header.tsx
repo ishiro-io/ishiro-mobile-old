@@ -2,6 +2,10 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import { Header } from "components";
 import {
@@ -64,16 +68,20 @@ const AnimeInfoHeader: React.FC<AnimeInfoHeaderProps> = ({
   return (
     <View style={{ ...StyleSheet.absoluteFillObject }}>
       <Header
-        height={60}
+        height={moderateVerticalScale(50)}
         iconLeft={
-          <MaterialIcons name="keyboard-arrow-left" size={40} color="white" />
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={moderateScale(32)}
+            color="white"
+          />
         }
         onIconLeftPress={() => navigation.goBack()}
         iconRight={
           !hideBookmark && (
             <MaterialCommunityIcons
               name={isChecked ? "bookmark" : "bookmark-plus-outline"}
-              size={40}
+              size={moderateScale(32)}
               color="white"
             />
           )

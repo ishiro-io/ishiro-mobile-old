@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({
   onIconLeftPress,
   onIconRightPress,
   justifyContent = "space-between",
-  height = 80
+  height = moderateVerticalScale(80)
 }: HeaderProps) => {
   const { theme } = useContext(ThemeContext);
   const { top } = useSafeAreaInsets();
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: theme.textSize.m,
+              fontSize: theme.textSize.l,
               color: theme.colors?.white
             }}
           >

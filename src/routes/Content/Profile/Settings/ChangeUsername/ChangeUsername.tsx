@@ -2,8 +2,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, Input, ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 import * as Yup from "yup";
 
 import { ClearInputButton, DismissKeyboard, Header } from "components";
@@ -13,8 +14,6 @@ import {
   useUpdateUsernameMutation
 } from "shared/graphql/generated";
 import { ProfileSettingsNavigationProps } from "shared/navigation/NavigationProps";
-
-const { width } = Dimensions.get("screen");
 
 const ChangeUsernameSchema = Yup.object().shape({
   username: Yup.string().required("Votre nom d'utilisateur est requis")
@@ -61,7 +60,11 @@ const ChangeUsername: React.FC<ChangeUsernameProps> = ({}: ChangeUsernameProps) 
         <Header
           label="Modifier son nom d'utilisateur"
           iconLeft={
-            <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={moderateScale(32)}
+              color="white"
+            />
           }
           onIconLeftPress={() => navigation.goBack()}
         />

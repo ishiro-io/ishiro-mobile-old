@@ -16,8 +16,8 @@ import { SearchNavigationProps } from "shared/navigation/NavigationProps";
 
 import AnimeCard from "./AnimeCard";
 
-export const CARD_WIDTH = moderateScale(160, 0.25);
-const CARD_HEIGHT = moderateVerticalScale(260, 0.25);
+export const CARD_WIDTH = moderateScale(145, 0.1);
+const CARD_HEIGHT = moderateVerticalScale(250, 0.1);
 
 const AnimeCardWithBookmark: React.FC<AnimeCardWithBookmarkProps> = ({
   animeData

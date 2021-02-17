@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext } from "react";
 import { Dimensions, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 
 import {
   AnimeViewStatus,
@@ -32,7 +33,7 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
         icon={
           <MaterialIcons
             name="watch-later"
-            size={24}
+            size={moderateScale(24, 0.1)}
             color={
               animeView?.status === AnimeViewStatus.ToSee
                 ? theme.colors?.info
@@ -48,7 +49,7 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
         icon={
           <MaterialIcons
             name="play-circle-filled"
-            size={24}
+            size={moderateScale(24, 0.1)}
             color={
               animeView?.status === AnimeViewStatus.InProgress
                 ? theme.colors?.warning
@@ -64,7 +65,7 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
         icon={
           <MaterialIcons
             name="offline-pin"
-            size={24}
+            size={moderateScale(24, 0.1)}
             color={
               animeView?.status === AnimeViewStatus.Finished
                 ? theme.colors?.success
@@ -80,7 +81,7 @@ const AnimeStatusSelector: React.FC<StatusSelectorProps> = ({
         icon={
           <MaterialIcons
             name="pause-circle-filled"
-            size={24}
+            size={moderateScale(24, 0.1)}
             color={
               animeView?.status === AnimeViewStatus.Abandoned
                 ? theme.colors?.error

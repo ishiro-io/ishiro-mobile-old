@@ -5,18 +5,16 @@ import { moderateScale } from "react-native-size-matters";
 
 const GenreIcon: React.FC<CategoryIconProps> = ({
   name,
-  size = 32
+  size = moderateScale(32, 0.1)
 }: CategoryIconProps) => {
   const { theme } = useContext(ThemeContext);
-
-  const moderateSize = moderateScale(size);
 
   switch (name) {
     case "Comédie":
       return (
         <FontAwesome5
           name="theater-masks"
-          size={moderateSize * 1.1}
+          size={size * 1.1}
           color={theme.colors?.white}
         />
       );
@@ -25,88 +23,64 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <MaterialCommunityIcons
           name="sword-cross"
-          size={moderateSize * 1.1}
+          size={size * 1.1}
           color={theme.colors?.white}
         />
       );
 
     case "Romance":
       return (
-        <FontAwesome5
-          name="heart"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="heart" size={size} color={theme.colors?.white} />
       );
 
     case "Action":
       return (
         <FontAwesome5
           name="fist-raised"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
 
     case "Vie à l'école":
       return (
-        <FontAwesome5
-          name="school"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="school" size={size} color={theme.colors?.white} />
       );
 
     case "Drame":
       return (
         <FontAwesome5
           name="heart-broken"
-          size={moderateSize * 1.1}
+          size={size * 1.1}
           color={theme.colors?.white}
         />
       );
 
     case "Aventure":
       return (
-        <FontAwesome5
-          name="compass"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="compass" size={size} color={theme.colors?.white} />
       );
 
     case "Tranche de vie":
       return (
-        <FontAwesome5
-          name="coffee"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="coffee" size={size} color={theme.colors?.white} />
       );
 
     case "Shojo":
       return (
-        <FontAwesome5
-          name="dove"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="dove" size={size} color={theme.colors?.white} />
       );
 
     case "Science-fiction":
       return (
-        <FontAwesome5
-          name="rocket"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="rocket" size={size} color={theme.colors?.white} />
       );
 
     case "Yaoi":
       return (
         <FontAwesome5
           name="mars-double"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
@@ -115,7 +89,7 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="pepper-hot"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
@@ -124,7 +98,7 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="volleyball-ball"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
@@ -133,7 +107,7 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="fort-awesome"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
@@ -142,61 +116,41 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="user-secret"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
 
     case "Harem":
       return (
-        <FontAwesome5
-          name="users"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="users" size={size} color={theme.colors?.white} />
       );
 
     case "Mystère":
       return (
-        <FontAwesome5
-          name="question"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="question" size={size} color={theme.colors?.white} />
       );
 
     case "Magie":
       return (
-        <FontAwesome5
-          name="magic"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="magic" size={size} color={theme.colors?.white} />
       );
 
     case "Musique":
       return (
-        <FontAwesome5
-          name="guitar"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="guitar" size={size} color={theme.colors?.white} />
       );
 
     case "Horreur":
       return (
-        <FontAwesome5
-          name="ghost"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="ghost" size={size} color={theme.colors?.white} />
       );
 
     case "Mecha":
       return (
         <MaterialCommunityIcons
           name="robot"
-          size={moderateSize * 1.1}
+          size={size * 1.1}
           color={theme.colors?.white}
         />
       );
@@ -205,7 +159,7 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="heartbeat"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
@@ -214,7 +168,7 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="shield-alt"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
@@ -223,70 +177,50 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="torii-gate"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
 
     case "Super pouvoir":
       return (
-        <FontAwesome5
-          name="fire"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="fire" size={size} color={theme.colors?.white} />
       );
 
     case "Surnaturel":
       return (
-        <FontAwesome5
-          name="dna"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="dna" size={size} color={theme.colors?.white} />
       );
 
     case "Militaire":
       return (
-        <FontAwesome5
-          name="medal"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="medal" size={size} color={theme.colors?.white} />
       );
 
     case "Seinen":
       return (
-        <FontAwesome5
-          name="smoking"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="smoking" size={size} color={theme.colors?.white} />
       );
 
     case "Policier":
       return (
         <FontAwesome5
           name="fingerprint"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
 
     case "Josei":
       return (
-        <FontAwesome5
-          name="seedling"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="seedling" size={size} color={theme.colors?.white} />
       );
 
     case "Cuisine":
       return (
         <FontAwesome5
           name="cookie-bite"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
@@ -295,18 +229,14 @@ const GenreIcon: React.FC<CategoryIconProps> = ({
       return (
         <FontAwesome5
           name="venus-double"
-          size={moderateSize}
+          size={size}
           color={theme.colors?.white}
         />
       );
 
     default:
       return (
-        <FontAwesome5
-          name="square"
-          size={moderateSize}
-          color={theme.colors?.white}
-        />
+        <FontAwesome5 name="square" size={size} color={theme.colors?.white} />
       );
   }
 };

@@ -3,6 +3,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { Text, TouchableWithoutFeedback, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 
 import { Header } from "components";
 import { AnimeInfoModalNavigationProps } from "shared/navigation/NavigationProps";
@@ -29,7 +30,9 @@ const ArcListModal: React.FC<ArcListModalProps> = ({}: ArcListModalProps) => {
     >
       <Header
         label="Saisons"
-        iconLeft={<MaterialIcons name="close" size={32} color="white" />}
+        iconLeft={
+          <MaterialIcons name="close" size={moderateScale(32)} color="white" />
+        }
         onIconLeftPress={() => navigation.goBack()}
       />
       {arcList.map((arc, index) => (
@@ -43,7 +46,7 @@ const ArcListModal: React.FC<ArcListModalProps> = ({}: ArcListModalProps) => {
           <Text
             style={{
               fontFamily: "Poppins_400Regular",
-              fontSize: 17,
+              fontSize: theme.textSize.m,
               paddingLeft: theme.spacing?.m,
               paddingVertical: theme.spacing?.s,
               color:

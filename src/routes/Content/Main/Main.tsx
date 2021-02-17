@@ -17,7 +17,7 @@ const Main: React.FC = () => {
 
   return (
     <MainTabs.Navigator
-      initialRouteName="Recherche"
+      initialRouteName="Accueil"
       lazy={false}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {

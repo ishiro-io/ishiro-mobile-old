@@ -79,7 +79,7 @@ const theme: Theme = {
     xxl: moderateScale(40)
   },
   textSize: {
-    xs: moderateScale(10, 0.25),
+    xs: moderateScale(8.5, 0.25),
     s: moderateScale(12, 0.25),
     m: moderateScale(16, 0.25),
     l: moderateScale(24, 0.25),

@@ -4,11 +4,11 @@ import {
   ActivityIndicator,
   AppState,
   AppStateStatus,
-  Dimensions,
   View
 } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { FlatList } from "react-native-gesture-handler";
+import { moderateVerticalScale } from "react-native-size-matters";
 
 import { ListEmpty } from "components";
 import {
@@ -29,8 +29,6 @@ import { AnimeInfoTabNavigationProps } from "shared/navigation/NavigationProps";
 import { ArcFooter } from "./ArcFooter";
 import { ArcHeader } from "./ArcHeader";
 import { EpisodeRow } from "./EpisodeRow";
-
-const { height } = Dimensions.get("screen");
 
 const ArcFlatList: React.FC<ArcFlatListProps> = ({
   animeData,
@@ -249,7 +247,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
     return (
       <View
         style={{
-          minHeight: height * 0.1,
+          minHeight: moderateVerticalScale(70),
           justifyContent: "center",
           alignItems: "center"
         }}
@@ -259,7 +257,7 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
     );
 
   return (
-    <View style={{ minHeight: height * 0.1 }}>
+    <View style={{ minHeight: moderateVerticalScale(70) }}>
       <FlatList
         ref={ref}
         data={arcEpisodeList}
@@ -267,20 +265,21 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
         keyExtractor={(item) => item.episode.id.toString()}
         showsVerticalScrollIndicator={false}
         getItemLayout={(_, index) => ({
-          length: 85,
-          offset: 85 * index,
+          length: moderateVerticalScale(70),
+          offset: moderateVerticalScale(70) * index,
           index
         })}
         onScrollToIndexFailed={() =>
           ref.current?.scrollToOffset({ offset: 0, animated: false })
         }
-        onContentSizeChange={() =>
-          ref.current.scrollToIndex({
-            index: animeViewData?.userAnimeView?.nextEpisodeToSee?.number ?? 0,
-            animated: false,
-            viewPosition: 0.5
-          })
-        }
+        // TODO : Fix auto scroll
+        // onContentSizeChange={() =>
+        //   ref.current.scrollToIndex({
+        //     index: animeViewData?.userAnimeView?.nextEpisodeToSee?.number ?? 0,
+        //     animated: false,
+        //     viewPosition: 0.5
+        //   })
+        // }
         renderItem={({ item, index }) => (
           <EpisodeRow
             number={item.episode.number}

@@ -12,8 +12,8 @@ import { HomeNavigationProps } from "shared/navigation/NavigationProps";
 
 import { SeeMoreCard } from "./SeeMoreCard";
 
-const CARD_WIDTH = moderateScale(125, 0.25);
-const CARD_HEIGHT = moderateVerticalScale(210, 0.25);
+const CARD_WIDTH = moderateScale(125, 0.1);
+const CARD_HEIGHT = moderateVerticalScale(210, 0.1);
 
 const HomePreviewList: React.FC<HomePreviewListProps> = ({
   animes,

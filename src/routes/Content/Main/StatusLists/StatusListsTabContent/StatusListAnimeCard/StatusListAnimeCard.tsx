@@ -15,8 +15,8 @@ import {
 import { useSetUserAnimeViewStatus } from "shared/hooks";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
-export const CARD_WIDTH = moderateScale(160, 0.1);
-const CARD_HEIGHT = moderateVerticalScale(260, 0.1);
+export const CARD_WIDTH = moderateScale(145, 0.1);
+const CARD_HEIGHT = moderateVerticalScale(250, 0.1);
 
 type Option =
   | "Je veux regarder"

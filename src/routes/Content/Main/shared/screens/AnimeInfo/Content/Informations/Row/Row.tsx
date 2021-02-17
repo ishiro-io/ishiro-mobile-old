@@ -20,7 +20,14 @@ const Row: React.FC<RowProps> = ({ title, data }: RowProps) => {
           justifyContent: "center"
         }}
       >
-        <Text style={{ fontFamily: "Poppins_500Medium" }}>{title}</Text>
+        <Text
+          style={{
+            fontFamily: "Poppins_500Medium",
+            fontSize: theme.textSize.s
+          }}
+        >
+          {title}
+        </Text>
       </View>
       <View
         style={{
@@ -30,7 +37,8 @@ const Row: React.FC<RowProps> = ({ title, data }: RowProps) => {
       >
         <Text
           style={{
-            fontFamily: "Poppins_200ExtraLight"
+            fontFamily: "Poppins_200ExtraLight",
+            fontSize: theme.textSize.s
           }}
         >
           {data}
