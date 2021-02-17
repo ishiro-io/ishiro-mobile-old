@@ -1,7 +1,10 @@
+import "shared/utils/yup/phone";
+
 import * as Yup from "yup";
 
 const AskCodeSchema = Yup.object().shape({
-  phoneNumber: Yup.string().required("Votre numéro de téléphone est requis")
+  // @ts-ignore
+  phoneNumber: Yup.string().phone()
 });
 
 export default AskCodeSchema;

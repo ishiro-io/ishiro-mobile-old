@@ -24,7 +24,7 @@ const theme: Theme = {
     inputStyle: {
       color: "#fff",
       fontFamily: "Poppins_400Regular",
-      fontSize: RFValue(16)
+      fontSize: RFValue(12)
     },
     inputContainerStyle: {
       height: moderateVerticalScale(40),
