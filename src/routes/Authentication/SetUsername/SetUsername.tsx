@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, Input, ThemeContext } from "react-native-elements";
 
 import { ClearInputButton, DismissKeyboard, Header } from "components";
@@ -16,9 +16,7 @@ import {
   AuthenticationNavigationProps
 } from "shared/navigation/NavigationProps";
 
-import { GoogleSetUsernameSchema } from "../../shared/schemas";
-
-const { width } = Dimensions.get("screen");
+import { GoogleSetUsernameSchema } from "../shared/schemas";
 
 const SetUsername: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -168,21 +166,13 @@ const SetUsername: React.FC = () => {
               <Button
                 type="solid"
                 buttonStyle={{
-                  backgroundColor: theme.colors?.white,
-                  width: width * 0.8,
-                  height: 50,
-                  borderRadius: theme.borderRadii?.xxl
+                  backgroundColor: theme.colors?.white
                 }}
                 containerStyle={{
                   marginBottom: theme.spacing?.m
                 }}
                 titleStyle={{
-                  color: theme.colors?.black,
-                  fontFamily: "Poppins_600SemiBold",
-                  fontSize: 15,
-                  textTransform: "uppercase",
-                  textAlign: "center",
-                  letterSpacing: 1
+                  color: theme.colors?.black
                 }}
                 onPress={() => handleSubmit()}
                 title="Continuer"

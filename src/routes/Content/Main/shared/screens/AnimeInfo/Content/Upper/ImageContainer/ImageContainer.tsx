@@ -2,6 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { Image, Text, ThemeContext } from "react-native-elements";
+import { moderateVerticalScale } from "react-native-size-matters";
 
 import { AnimeDataFieldsFragment, AnimeType } from "shared/graphql/generated";
 
@@ -13,12 +14,14 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
   return (
     <View>
       <Image
-        source={{ uri: bannerImage }}
+        source={{
+          uri: bannerImage
+        }}
         style={{
           borderBottomLeftRadius: theme.borderRadii?.m,
           borderBottomRightRadius: theme.borderRadii?.m,
           overflow: "hidden",
-          height: 250
+          height: moderateVerticalScale(200)
         }}
       />
 
@@ -36,7 +39,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
             top: 0,
             borderBottomLeftRadius: theme.borderRadii?.m,
             borderBottomRightRadius: theme.borderRadii?.m,
-            height: 250,
+            height: moderateVerticalScale(200),
             overflow: "hidden"
           }}
         >
@@ -48,7 +51,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
               left: 0,
               right: 0,
               top: 0,
-              height: 250
+              height: moderateVerticalScale(200)
             }}
           />
         </View>
@@ -57,7 +60,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: 24
+              fontSize: theme.textSize.m
             }}
           >
             {title}
@@ -66,7 +69,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
             <Text
               style={{
                 fontFamily: "Poppins_300Light",
-                fontSize: 16
+                fontSize: theme.textSize.s
               }}
             >
               {titleKanji}
@@ -76,7 +79,7 @@ const AnimeInfoUpperImageContainer: React.FC<AnimeInfoUpperImageContainerProps> 
             <Text
               style={{
                 fontFamily: "Poppins_200ExtraLight",
-                fontSize: 20
+                fontSize: theme.textSize.m
               }}
             >
               {episodeCount} épisodes

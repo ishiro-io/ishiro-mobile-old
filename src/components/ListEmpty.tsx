@@ -16,10 +16,14 @@ const ListEmpty: React.FC<ListEmptyProps> = ({
         alignItems: "center"
       }}
     >
-      <Text style={{ fontSize: 30, marginBottom: theme.spacing?.m }}>😧</Text>
+      <Text
+        style={{ fontSize: theme.textSize.l, marginBottom: theme.spacing?.m }}
+      >
+        😧
+      </Text>
       <Text
         style={{
-          fontSize: 24,
+          fontSize: theme.textSize.m,
           fontFamily: "Poppins_500Medium",
           textAlign: "center",
           marginBottom: theme.spacing?.s
@@ -29,7 +33,7 @@ const ListEmpty: React.FC<ListEmptyProps> = ({
       </Text>
       <Text
         style={{
-          fontSize: 16,
+          fontSize: theme.textSize.s,
           textAlign: "center",
           fontFamily: "Poppins_300Light",
           marginHorizontal: theme.spacing?.m

@@ -1,1 +1,4 @@
-export { default as StatusListAnimeCard } from "./StatusListAnimeCard";
+export {
+  default as StatusListAnimeCard,
+  CARD_WIDTH
+} from "./StatusListAnimeCard";

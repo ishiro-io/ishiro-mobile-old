@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { View } from "react-native";
 import { Text, ThemeContext } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
+import { moderateScale } from "react-native-size-matters";
 
 import { Header } from "components";
 import { ProfileSettingsNavigationProps } from "shared/navigation/NavigationProps";
@@ -28,7 +29,11 @@ const InfoParagraph: React.FC<InfoParagraphProps> = ({}: InfoParagraphProps) => 
       <Header
         label={route.params.title}
         iconLeft={
-          <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={moderateScale(32)}
+            color="white"
+          />
         }
         onIconLeftPress={() => navigation.goBack()}
       />
@@ -39,7 +44,7 @@ const InfoParagraph: React.FC<InfoParagraphProps> = ({}: InfoParagraphProps) => 
             style={{
               marginBottom: theme.spacing?.xl,
               paddingHorizontal: theme.spacing?.m,
-              fontSize: 16,
+              fontSize: theme.textSize.s,
               textAlign: "justify"
             }}
           >

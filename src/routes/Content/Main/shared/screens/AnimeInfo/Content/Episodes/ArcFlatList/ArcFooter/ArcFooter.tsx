@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { Dimensions, Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { moderateScale } from "react-native-size-matters";
 
 const { width } = Dimensions.get("screen");
 
@@ -27,13 +28,17 @@ const ArcFooter: React.FC<ArcFooterProps> = ({
           style={{
             color: theme.colors?.white,
             fontFamily: "Poppins_500Medium",
-            fontSize: 14
+            fontSize: theme.textSize.s
           }}
         >
           Saison suivante
         </Text>
 
-        <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
+        <MaterialIcons
+          name="keyboard-arrow-right"
+          size={moderateScale(24, 0.1)}
+          color="white"
+        />
       </View>
     </TouchableWithoutFeedback>
   );

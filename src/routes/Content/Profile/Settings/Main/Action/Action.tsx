@@ -1,10 +1,12 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { TouchableHighlight } from "react-native-gesture-handler";
-
-const { height, width } = Dimensions.get("screen");
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 const SettingsAction: React.FC<SettingsActionProps> = ({
   title,
@@ -21,7 +23,7 @@ const SettingsAction: React.FC<SettingsActionProps> = ({
           backgroundColor: !isDisabled
             ? theme.colors?.grey8
             : theme.colors?.grey9,
-          height: height * 0.05,
+          height: moderateVerticalScale(45),
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
@@ -32,7 +34,7 @@ const SettingsAction: React.FC<SettingsActionProps> = ({
           style={{
             color: !isDisabled ? theme.colors?.white : theme.colors?.grey8,
             fontFamily: "Poppins_400Regular",
-            fontSize: 16
+            fontSize: theme.textSize.m
           }}
         >
           {title}
@@ -44,9 +46,8 @@ const SettingsAction: React.FC<SettingsActionProps> = ({
               style={{
                 fontFamily: "Poppins_200ExtraLight",
                 color: !isDisabled ? theme.colors?.grey2 : theme.colors?.grey8,
-                fontSize: 16,
-                marginRight: theme.spacing?.m,
-                maxWidth: width * 0.5
+                fontSize: theme.textSize.m,
+                marginRight: theme.spacing?.m
               }}
               ellipsizeMode="tail"
               numberOfLines={1}
@@ -58,7 +59,7 @@ const SettingsAction: React.FC<SettingsActionProps> = ({
           {onPress && !isDisabled && (
             <MaterialIcons
               name="keyboard-arrow-right"
-              size={24}
+              size={moderateScale(24)}
               color="white"
             />
           )}

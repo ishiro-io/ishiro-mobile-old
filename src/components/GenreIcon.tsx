@@ -1,10 +1,11 @@
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useContext } from "react";
 import { ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 
 const GenreIcon: React.FC<CategoryIconProps> = ({
   name,
-  size = 32
+  size = moderateScale(32, 0.1)
 }: CategoryIconProps) => {
   const { theme } = useContext(ThemeContext);
 

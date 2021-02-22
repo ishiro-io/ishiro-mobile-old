@@ -2,8 +2,9 @@ import { useNavigation } from "@react-navigation/native";
 import * as Google from "expo-auth-session/providers/google";
 import Constants from "expo-constants";
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 
 import GoogleLogoSvg from "components/svg/GoogleLogoSvg";
 import {
@@ -16,8 +17,6 @@ import {
   AppNavigationProps,
   AuthenticationNavigationProps
 } from "shared/navigation/NavigationProps";
-
-const { width } = Dimensions.get("screen");
 
 const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonProps) => {
   const { theme } = useContext(ThemeContext);
@@ -115,28 +114,20 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({}: GoogleAuthButtonP
     <Button
       type="outline"
       buttonStyle={{
-        width: width * 0.8,
-        height: 50,
-        borderRadius: theme.borderRadii?.xxl,
-        borderWidth: 2,
-        borderColor: theme.colors?.primaryLighter
+        borderColor: theme.colors?.primaryLighter,
+        borderWidth: moderateScale(2, 0.25)
+      }}
+      disabledStyle={{ backgroundColor: theme.colors?.grey8 }}
+      titleStyle={{
+        color: theme.colors?.white
+      }}
+      containerStyle={{
+        marginBottom: theme.spacing.s
       }}
       disabled={!request}
-      disabledStyle={{ backgroundColor: theme.colors?.grey8 }}
-      containerStyle={{
-        marginBottom: theme.spacing?.m
-      }}
-      titleStyle={{
-        color: theme.colors?.white,
-        fontFamily: "Poppins_600SemiBold",
-        fontSize: 15,
-        textTransform: "uppercase",
-        textAlign: "center",
-        letterSpacing: 1
-      }}
       icon={
         <View style={{ marginRight: theme.spacing?.m }}>
-          <GoogleLogoSvg width={24} height={24} />
+          <GoogleLogoSvg />
         </View>
       }
       onPress={() => promptAsync()}

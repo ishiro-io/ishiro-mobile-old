@@ -50,7 +50,10 @@ const Main: React.FC = () => {
           backgroundColor: theme.colors?.black,
           borderTopColor: theme.colors?.black
         },
-        labelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12 },
+        labelStyle: {
+          fontFamily: "Poppins_400Regular",
+          fontSize: theme.textSize.s
+        },
         tabStyle: { backgroundColor: theme.colors?.black }
       }}
     >

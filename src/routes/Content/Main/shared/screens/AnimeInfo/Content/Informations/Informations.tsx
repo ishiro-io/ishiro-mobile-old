@@ -4,6 +4,10 @@ import { fr } from "date-fns/locale";
 import React, { useContext, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { Button, ThemeContext } from "react-native-elements";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import {
   AnimeStatus,
@@ -118,7 +122,8 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
             style={{
               color: theme.colors?.white,
               fontFamily: "Poppins_300Light",
-              textAlign: "justify"
+              textAlign: "justify",
+              fontSize: theme.textSize.s
             }}
             numberOfLines={isDescCollapsed ? 5 : undefined}
             lineBreakMode="tail"
@@ -132,16 +137,14 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
               marginTop: theme.spacing?.m
             }}
             buttonStyle={{
-              width: 120,
-              borderRadius: theme.borderRadii?.xl,
+              width: moderateScale(120),
+              height: moderateVerticalScale(35),
               borderWidth: 1,
               borderColor: theme.colors?.grey5
             }}
             titleStyle={{
-              textTransform: "uppercase",
               fontFamily: "Poppins_400Regular",
-              fontSize: 12,
-              textAlign: "center",
+              fontSize: theme.textSize.s,
               color: theme.colors?.grey5
             }}
             title={isDescCollapsed ? "Lire plus" : "Lire moins"}

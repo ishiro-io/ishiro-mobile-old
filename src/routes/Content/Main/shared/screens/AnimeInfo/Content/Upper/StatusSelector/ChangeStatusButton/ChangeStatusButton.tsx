@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Text, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { moderateScale } from "react-native-size-matters";
 
 import {
   AnimeViewStatus,
@@ -40,7 +41,7 @@ const ChangeStatusButton: React.FC<ChangeStatusButtonProps> = ({
           style={{
             color: theme.colors?.grey5,
             fontFamily: "Poppins_300Light",
-            fontSize: 11,
+            fontSize: moderateScale(10, 0.1),
             paddingTop: theme.spacing?.s
           }}
         >

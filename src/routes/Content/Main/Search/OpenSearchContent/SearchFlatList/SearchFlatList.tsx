@@ -1,10 +1,16 @@
 import { NetworkStatus } from "@apollo/client";
-import React, { useContext } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { AnimeCardWithBookmark, ListEmpty } from "components";
-import { useSearchAnimesQuery } from "shared/graphql/generated";
+import { CARD_WIDTH } from "components/AnimeCardWithBookmark";
+import {
+  AnimeFieldsFragment,
+  useSearchAnimesQuery
+} from "shared/graphql/generated";
+
+const { width } = Dimensions.get("screen");
 
 const SearchFlatList: React.FC<SearchFlatListProps> = ({
   searchValue
@@ -17,6 +23,16 @@ const SearchFlatList: React.FC<SearchFlatListProps> = ({
       options: { limit: 20, offset: 0 }
     },
     notifyOnNetworkStatusChange: true
+  });
+
+  const [numColumns, setNumColumns] = useState(
+    Math.floor(width / (CARD_WIDTH * 1.1))
+  );
+
+  Dimensions.addEventListener("change", ({ screen }) => {
+    const num = Math.floor(screen.width / (CARD_WIDTH * 1.1));
+
+    setNumColumns(num);
   });
 
   if (loading && networkStatus !== NetworkStatus.fetchMore)
@@ -43,6 +59,27 @@ const SearchFlatList: React.FC<SearchFlatListProps> = ({
     }
   };
 
+  const buildFlatListData = () => {
+    const { fields } = data?.searchAnimes;
+    const array: Array<AnimeFieldsFragment & { blank?: boolean }> = [...fields];
+    const numberOfFullRows = Math.floor(fields.length / numColumns);
+
+    let numberOfElementsLastRow = fields.length - numberOfFullRows * numColumns;
+    while (
+      numberOfElementsLastRow !== numColumns &&
+      numberOfElementsLastRow !== 0
+    ) {
+      array.push({
+        blank: true,
+        id: numberOfElementsLastRow,
+        title: undefined
+      });
+      numberOfElementsLastRow++;
+    }
+
+    return array;
+  };
+
   return (
     <FlatList
       style={{
@@ -54,10 +91,11 @@ const SearchFlatList: React.FC<SearchFlatListProps> = ({
         alignItems: "center",
         paddingVertical: theme.spacing?.m
       }}
-      data={data?.searchAnimes?.fields}
+      data={buildFlatListData()}
       renderItem={({ item }) => <AnimeCardWithBookmark animeData={item} />}
       showsVerticalScrollIndicator={false}
-      numColumns={2}
+      numColumns={numColumns}
+      key={numColumns}
       keyExtractor={(item) => item.id.toString()}
       onEndReachedThreshold={4}
       onEndReached={() => loadMoreAnimes()}

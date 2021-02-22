@@ -1,14 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Image, ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import { GenreIcon } from "components";
 import { Category } from "shared/graphql/generated";
 import { SearchTabNavigationProps } from "shared/navigation/NavigationProps";
-
-const { width } = Dimensions.get("window");
 
 const GenreCard: React.FC<GenreCardProps> = ({ data }: GenreCardProps) => {
   const { theme } = useContext(ThemeContext);
@@ -29,8 +31,8 @@ const GenreCard: React.FC<GenreCardProps> = ({ data }: GenreCardProps) => {
       <View
         style={{
           backgroundColor: theme.colors?.black,
-          height: 115,
-          width: width * 0.45,
+          height: moderateVerticalScale(100),
+          width: moderateScale(155, 1),
           margin: theme.spacing?.s,
           borderRadius: theme.borderRadii?.m,
           alignItems: "center",
@@ -40,7 +42,7 @@ const GenreCard: React.FC<GenreCardProps> = ({ data }: GenreCardProps) => {
         <Image
           source={{ uri: data.coverImage }}
           style={{
-            height: 115,
+            height: moderateVerticalScale(100),
             borderRadius: theme.borderRadii?.m,
             resizeMode: "cover",
             ...StyleSheet.absoluteFillObject
@@ -50,8 +52,8 @@ const GenreCard: React.FC<GenreCardProps> = ({ data }: GenreCardProps) => {
         <View
           style={{
             ...StyleSheet.absoluteFillObject,
-            height: 115,
-            width: width * 0.45,
+            height: moderateVerticalScale(100),
+            width: moderateScale(155, 1),
             borderRadius: theme.borderRadii?.m,
             backgroundColor: "rgba(0,0,0,0.5)"
           }}
@@ -62,7 +64,7 @@ const GenreCard: React.FC<GenreCardProps> = ({ data }: GenreCardProps) => {
         <Text
           style={{
             fontFamily: "Poppins_500Medium",
-            fontSize: 14,
+            fontSize: theme.textSize.s,
             color: theme.colors?.white,
             marginTop: theme.spacing?.s
           }}

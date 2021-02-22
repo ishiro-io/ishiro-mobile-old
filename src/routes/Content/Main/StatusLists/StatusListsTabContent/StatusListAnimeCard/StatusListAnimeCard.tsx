@@ -1,7 +1,13 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
+import { View } from "react-native";
+import { ThemeContext } from "react-native-elements";
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 import { AnimeCard } from "components";
 import {
@@ -11,8 +17,8 @@ import {
 import { useSetUserAnimeViewStatus } from "shared/hooks";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
-const CARD_WIDTH = 160;
-const CARD_HEIGHT = 260;
+export const CARD_WIDTH = moderateScale(145, 0.1);
+const CARD_HEIGHT = moderateVerticalScale(250, 0.1);
 
 type Option =
   | "Je veux regarder"
@@ -25,6 +31,8 @@ type Option =
 const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
   item
 }: StatusListAnimeCardProps) => {
+  const { theme } = useContext(ThemeContext);
+
   const navigation = useNavigation<
     StatusListsTabNavigationProps<
       "ToSee" | "Abandonned" | "Finished" | "InProgress"
@@ -147,6 +155,18 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
     }
   };
 
+  if (item.blank)
+    return (
+      <View
+        style={{
+          width: CARD_WIDTH,
+          height: CARD_HEIGHT,
+          margin: theme.spacing?.s,
+          backgroundColor: "transparent"
+        }}
+      />
+    );
+
   return (
     <AnimeCard
       title={item.anime.title}
@@ -159,7 +179,11 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
         navigation.navigate("AnimeInfo", { animeId: item.anime.id })
       }
       topRightIcon={
-        <MaterialCommunityIcons name="dots-vertical" size={32} color="white" />
+        <MaterialCommunityIcons
+          name="dots-vertical"
+          size={moderateScale(32, 0.1)}
+          color="white"
+        />
       }
       onTopRightIconPress={onDotsPress}
     />
@@ -169,5 +193,5 @@ const StatusListAnimeCard: React.FC<StatusListAnimeCardProps> = ({
 export default StatusListAnimeCard;
 
 interface StatusListAnimeCardProps {
-  item: UserAnimeViewFieldsFragment;
+  item: UserAnimeViewFieldsFragment & { blank?: boolean };
 }

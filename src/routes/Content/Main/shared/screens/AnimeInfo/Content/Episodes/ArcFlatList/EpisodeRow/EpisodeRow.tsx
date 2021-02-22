@@ -2,11 +2,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import React, { useContext } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Text, ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-
-const { width } = Dimensions.get("screen");
+import {
+  moderateScale,
+  moderateVerticalScale
+} from "react-native-size-matters";
 
 const EpisodeRow: React.FC<EpisodeRowProps> = ({
   number,
@@ -22,9 +24,9 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
   return (
     <View
       style={{
-        width,
-        height: 85,
-        paddingVertical: theme.spacing?.m,
+        width: "100%",
+        height: moderateVerticalScale(70),
+        // paddingVertical: theme.spacing?.m,
         paddingRight: theme.spacing?.m,
         borderBottomWidth: 1,
         borderColor: theme.colors?.grey8,
@@ -35,7 +37,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
     >
       <View
         style={{
-          width: width * 0.68,
+          width: moderateScale(240),
           flexDirection: "row",
           alignItems: "center"
         }}
@@ -45,7 +47,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
             fontFamily: "Poppins_100Thin",
             fontSize: 35,
             textAlign: "center",
-            width: width * 0.18
+            width: moderateScale(60)
           }}
         >
           {number.toLocaleString("fr-FR", {
@@ -57,7 +59,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: 14
+              fontSize: theme.textSize.s
             }}
           >
             {title}
@@ -74,7 +76,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
               <Text
                 style={{
                   fontFamily: "Poppins_200ExtraLight",
-                  fontSize: 12
+                  fontSize: theme.textSize.s
                 }}
               >
                 {format(parseISO(airedDate), "dd MMMM yyyy", { locale: fr })}
@@ -85,7 +87,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
               <View
                 style={{
                   backgroundColor: theme.colors?.grey8,
-                  height: 16,
+                  height: moderateVerticalScale(14),
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: theme.borderRadii?.xs,
@@ -96,7 +98,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
                 <Text
                   style={{
                     fontFamily: "Poppins_300Light",
-                    fontSize: 10
+                    fontSize: theme.textSize.xs
                   }}
                 >
                   Filler
@@ -108,7 +110,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
               <View
                 style={{
                   backgroundColor: theme.colors?.grey8,
-                  height: 16,
+                  height: moderateVerticalScale(16),
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: theme.borderRadii?.xs,
@@ -119,7 +121,7 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
                 <Text
                   style={{
                     fontFamily: "Poppins_300Light",
-                    fontSize: 10
+                    fontSize: theme.textSize.xs
                   }}
                 >
                   Récapitulatif
@@ -133,15 +135,15 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
       <TouchableWithoutFeedback
         onPress={onCheckPress}
         style={{
-          width: 32,
-          height: 32,
+          width: moderateScale(32),
+          height: moderateScale(32),
           justifyContent: "center",
           alignItems: "center"
         }}
       >
         <MaterialCommunityIcons
           name="checkbox-marked-circle-outline"
-          size={24}
+          size={moderateScale(24, 0.1)}
           color={isChecked ? theme.colors?.success : theme.colors?.grey6}
         />
       </TouchableWithoutFeedback>

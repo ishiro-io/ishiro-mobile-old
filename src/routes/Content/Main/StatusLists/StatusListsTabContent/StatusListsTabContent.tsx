@@ -1,14 +1,19 @@
 import { NetworkStatus } from "@apollo/client";
 import { useRoute } from "@react-navigation/native";
-import React, { useContext } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
 
 import { ListEmpty } from "components";
-import { useUserAnimeViewsByStatusQuery } from "shared/graphql/generated";
+import {
+  UserAnimeViewFieldsFragment,
+  useUserAnimeViewsByStatusQuery
+} from "shared/graphql/generated";
 import { StatusListsTabNavigationProps } from "shared/navigation/NavigationProps";
 
-import { StatusListAnimeCard } from "./StatusListAnimeCard";
+import { CARD_WIDTH, StatusListAnimeCard } from "./StatusListAnimeCard";
+
+const { width } = Dimensions.get("screen");
 
 const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusListsTabContentProps) => {
   const { theme } = useContext(ThemeContext);
@@ -33,10 +38,21 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
     notifyOnNetworkStatusChange: true
   });
 
+  const [numColumns, setNumColumns] = useState(
+    Math.floor(width / (CARD_WIDTH * 1.1))
+  );
+
+  Dimensions.addEventListener("change", ({ screen }) => {
+    const num = Math.floor(screen.width / (CARD_WIDTH * 1.1));
+
+    setNumColumns(num);
+  });
+
   if (
     loading &&
     networkStatus !== NetworkStatus.fetchMore &&
-    networkStatus === NetworkStatus.refetch
+    (networkStatus === NetworkStatus.refetch ||
+      networkStatus === NetworkStatus.loading)
   )
     return (
       <View
@@ -64,6 +80,32 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
     }
   };
 
+  const buildFlatListData = () => {
+    const { fields } = data?.userAnimeViewsByStatus;
+    const array: Array<UserAnimeViewFieldsFragment & { blank?: boolean }> = [
+      ...fields
+    ];
+    const numberOfFullRows = Math.floor(fields.length / numColumns);
+
+    let numberOfElementsLastRow = fields.length - numberOfFullRows * numColumns;
+    while (
+      numberOfElementsLastRow !== numColumns &&
+      numberOfElementsLastRow !== 0
+    ) {
+      array.push({
+        blank: true,
+        id: numberOfElementsLastRow,
+        anime: undefined,
+        episodeViews: undefined,
+        nextEpisodeToSee: undefined,
+        status: undefined
+      });
+      numberOfElementsLastRow++;
+    }
+
+    return array;
+  };
+
   return (
     <FlatList
       style={{
@@ -75,10 +117,11 @@ const StatusListsTabContent: React.FC<StatusListsTabContentProps> = ({}: StatusL
         alignItems: "center",
         paddingVertical: theme.spacing?.m
       }}
-      data={data?.userAnimeViewsByStatus?.fields}
+      data={buildFlatListData()}
       renderItem={({ item }) => <StatusListAnimeCard {...{ item }} />}
       showsVerticalScrollIndicator={false}
-      numColumns={2}
+      key={numColumns}
+      numColumns={numColumns}
       keyExtractor={(item) => item.id.toString()}
       onEndReachedThreshold={4}
       onEndReached={() => loadMoreUserAnimes()}

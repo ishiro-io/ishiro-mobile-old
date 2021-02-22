@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
 import { Text, ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 
 import { DismissKeyboard } from "components";
 
@@ -26,7 +27,7 @@ const OpenSearchContent: React.FC<OpenSearchContentProps> = ({
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
-              fontSize: 20,
+              fontSize: moderateScale(20, 0.25),
               textAlign: "center"
             }}
           >
@@ -35,7 +36,7 @@ const OpenSearchContent: React.FC<OpenSearchContentProps> = ({
           <Text
             style={{
               fontFamily: "Poppins_200ExtraLight",
-              fontSize: 13,
+              fontSize: theme.textSize.s,
               textAlign: "center",
               paddingTop: theme.spacing?.s
             }}

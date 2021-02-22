@@ -58,7 +58,7 @@ const AnimeInfoContent: React.FC<AnimeInfoContentProps> = ({}: AnimeInfoContentP
           },
           labelStyle: {
             fontFamily: "Poppins_400Regular",
-            fontSize: 14
+            fontSize: theme.textSize.s
           }
         }}
       >

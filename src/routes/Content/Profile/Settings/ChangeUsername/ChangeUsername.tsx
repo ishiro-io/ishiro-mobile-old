@@ -2,8 +2,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useContext, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, Input, ThemeContext } from "react-native-elements";
+import { moderateScale } from "react-native-size-matters";
 import * as Yup from "yup";
 
 import { ClearInputButton, DismissKeyboard, Header } from "components";
@@ -13,8 +14,6 @@ import {
   useUpdateUsernameMutation
 } from "shared/graphql/generated";
 import { ProfileSettingsNavigationProps } from "shared/navigation/NavigationProps";
-
-const { width } = Dimensions.get("screen");
 
 const ChangeUsernameSchema = Yup.object().shape({
   username: Yup.string().required("Votre nom d'utilisateur est requis")
@@ -61,7 +60,11 @@ const ChangeUsername: React.FC<ChangeUsernameProps> = ({}: ChangeUsernameProps) 
         <Header
           label="Modifier son nom d'utilisateur"
           iconLeft={
-            <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={moderateScale(32)}
+              color="white"
+            />
           }
           onIconLeftPress={() => navigation.goBack()}
         />
@@ -122,21 +125,10 @@ const ChangeUsername: React.FC<ChangeUsernameProps> = ({}: ChangeUsernameProps) 
               <Button
                 type="solid"
                 buttonStyle={{
-                  backgroundColor: theme.colors?.white,
-                  width: width * 0.8,
-                  height: 50,
-                  borderRadius: theme.borderRadii?.xxl
-                }}
-                containerStyle={{
-                  marginBottom: theme.spacing?.m
+                  backgroundColor: theme.colors?.white
                 }}
                 titleStyle={{
-                  color: theme.colors?.black,
-                  fontFamily: "Poppins_600SemiBold",
-                  fontSize: 18,
-                  textTransform: "uppercase",
-                  textAlign: "center",
-                  letterSpacing: 1
+                  color: theme.colors?.black
                 }}
                 onPress={() => handleSubmit()}
                 title="Enregistrer"

@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext, useState } from "react";
 import { Keyboard, View } from "react-native";
 import { ThemeContext } from "react-native-elements";
+import { moderateVerticalScale } from "react-native-size-matters";
 
 import { Header } from "components";
 import { SearchRoutes, SearchTabRoutes } from "shared/navigation/Routes";
@@ -46,7 +47,9 @@ const SearchContent = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {!isSearchContentOpen && <Header label="Rechercher" height={60} />}
+      {!isSearchContentOpen && (
+        <Header label="Rechercher" height={moderateVerticalScale(50)} />
+      )}
 
       <SearchInput
         isOpen={isSearchContentOpen}
@@ -62,6 +65,7 @@ const SearchContent = () => {
       ) : (
         <View style={{ flex: 1 }}>
           <SearchTabs.Navigator
+            initialRouteName="Genres"
             tabBarOptions={{
               activeTintColor: theme.colors?.white,
               pressOpacity: 1,
@@ -76,7 +80,7 @@ const SearchContent = () => {
               },
               labelStyle: {
                 fontFamily: "Poppins_400Regular",
-                fontSize: 12
+                fontSize: theme.textSize.s
               }
             }}
           >

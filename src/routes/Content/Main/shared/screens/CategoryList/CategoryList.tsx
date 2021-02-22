@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 
 import { Header } from "components";
 import {
@@ -35,7 +36,11 @@ const CategoryList: React.FC<CategoryListProps> = ({}: CategoryListProps) => {
       <Header
         label={route.params.categoryName}
         iconLeft={
-          <MaterialIcons name="keyboard-arrow-left" size={32} color="white" />
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={moderateScale(32)}
+            color="white"
+          />
         }
         onIconLeftPress={() => navigation.goBack()}
       />

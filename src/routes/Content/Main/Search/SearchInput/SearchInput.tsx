@@ -4,6 +4,7 @@ import { TextInputProps as RNTextInputProps, View } from "react-native";
 import { Input, Text, ThemeContext } from "react-native-elements";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { moderateScale } from "react-native-size-matters";
 
 import { ClearInputButton } from "components";
 
@@ -57,7 +58,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           leftIcon={
             <MaterialIcons
               name="search"
-              size={24}
+              size={moderateScale(20)}
               color={theme.colors?.grey5}
             />
           }
@@ -82,7 +83,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
           >
             <Text
               style={{
-                color: theme.colors?.white
+                color: theme.colors?.white,
+                fontSize: theme.textSize.s
               }}
             >
               Annuler
