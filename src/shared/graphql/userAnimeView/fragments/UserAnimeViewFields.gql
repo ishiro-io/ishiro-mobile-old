@@ -14,8 +14,10 @@ fragment UserAnimeViewFields on UserAnimeView {
   }
   nextEpisodeToSee {
     number
+    arcName
   }
   lastEpisodeSeen {
     number
+    arcName
   }
 }

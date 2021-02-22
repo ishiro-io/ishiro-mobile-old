@@ -49,8 +49,14 @@ const HomePreviewList: React.FC<HomePreviewListProps> = ({
               key={item.id}
               title={item.title}
               posterImageUrl={item.posterImage}
-              episodeText={item.nextEpisode ? "Prochain épisode" : undefined}
-              episodeNumber={item.nextEpisode}
+              episodeText={
+                item.nextEpisode
+                  ? "Prochain épisode"
+                  : item.lastEpisode
+                  ? "Dernier épisode"
+                  : undefined
+              }
+              episodeNumber={item.nextEpisode || item.lastEpisode}
               width={CARD_WIDTH}
               height={CARD_HEIGHT}
               onPress={() =>
@@ -80,5 +86,6 @@ interface AnimeCardData {
   id: number;
   title: string;
   nextEpisode?: number;
+  lastEpisode?: number;
   posterImage?: string;
 }

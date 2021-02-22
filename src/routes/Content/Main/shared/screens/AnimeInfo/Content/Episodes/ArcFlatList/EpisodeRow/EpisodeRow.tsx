@@ -26,7 +26,6 @@ const EpisodeRow: React.FC<EpisodeRowProps> = ({
       style={{
         width: "100%",
         height: moderateVerticalScale(70),
-        // paddingVertical: theme.spacing?.m,
         paddingRight: theme.spacing?.m,
         borderBottomWidth: 1,
         borderColor: theme.colors?.grey8,

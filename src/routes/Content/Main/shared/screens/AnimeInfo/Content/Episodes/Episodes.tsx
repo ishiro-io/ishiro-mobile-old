@@ -2,6 +2,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
 import { View } from "react-native";
 
+import { useUserAnimeViewQuery } from "shared/graphql/generated";
 import {
   AnimeInfoModalNavigationProps,
   AnimeInfoTabNavigationProps
@@ -15,15 +16,36 @@ const Episodes: React.FC<EpisodesProps> = ({}: EpisodesProps) => {
     AnimeInfoModalNavigationProps<"Main">["navigation"]
   >();
 
-  const [selectedArcIndex, setSelectedArcIndex] = useState<number>(0);
+  const { data: animeViewData } = useUserAnimeViewQuery({
+    variables: { animeId: route.params.animeId }
+  });
 
   const { arcs } = route.params.animeData;
+
+  const nextEpisodeArcIndex = arcs.findIndex(
+    (arc) =>
+      arc.title === animeViewData?.userAnimeView?.nextEpisodeToSee?.arcName
+  );
+
+  const lastEpisodeArcIndex = arcs.findIndex(
+    (arc) =>
+      arc.title === animeViewData?.userAnimeView?.lastEpisodeSeen?.arcName
+  );
+
+  const [selectedArcIndex, setSelectedArcIndex] = useState<number>(
+    nextEpisodeArcIndex >= 0
+      ? nextEpisodeArcIndex
+      : lastEpisodeArcIndex >= 0
+      ? lastEpisodeArcIndex
+      : 0
+  );
 
   return (
     <View style={{ flex: 1 }}>
       {arcs.length && arcs.length > 1 ? (
         <ArcFlatList
           animeData={route.params.animeData}
+          animeViewData={animeViewData}
           arcName={arcs[selectedArcIndex].title}
           isLastArc={selectedArcIndex === arcs.length - 1}
           displayHeaderArrow
@@ -43,6 +65,7 @@ const Episodes: React.FC<EpisodesProps> = ({}: EpisodesProps) => {
       ) : (
         <ArcFlatList
           animeData={route.params.animeData}
+          animeViewData={animeViewData}
           arcName={arcs[selectedArcIndex].title}
           isLastArc
         />

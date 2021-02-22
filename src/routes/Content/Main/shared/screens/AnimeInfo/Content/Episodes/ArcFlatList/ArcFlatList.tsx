@@ -16,8 +16,8 @@ import {
   AnimeViewStatus,
   EpisodeWithStatusFieldsFragment,
   NewEpisodeView,
-  useUserAnimeEpisodesStatusQuery,
-  useUserAnimeViewQuery
+  UserAnimeViewQuery,
+  useUserAnimeEpisodesStatusQuery
 } from "shared/graphql/generated";
 import {
   useSetUserAnimeEpisodesStatus,
@@ -32,6 +32,7 @@ import { EpisodeRow } from "./EpisodeRow";
 
 const ArcFlatList: React.FC<ArcFlatListProps> = ({
   animeData,
+  animeViewData,
   arcName,
   isLastArc,
   displayHeaderArrow = false,
@@ -45,10 +46,6 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
   const route = useRoute<AnimeInfoTabNavigationProps<"Episodes">["route"]>();
 
   const ref = useRef<FlatList<any> | null>(null);
-
-  const { data: animeViewData } = useUserAnimeViewQuery({
-    variables: { animeId: route.params.animeId }
-  });
 
   const { data, loading } = useUserAnimeEpisodesStatusQuery({
     variables: {
@@ -182,8 +179,6 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
     else setAreAllCheckedInList(false);
 
     setCheckedCount(count);
-
-    if (count > 0) checkAndUpdateAnimeStatus(count);
   }, [isCheckedList]);
 
   // ? Call when check is pressed in EpisodeRow
@@ -198,6 +193,12 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
       });
 
       setIsCheckedList(newIsCheckedList);
+
+      const count = newIsCheckedList.reduce((accumulator, value) => {
+        if (value) return accumulator + 1;
+        return accumulator;
+      }, 0);
+      if (count > 0) checkAndUpdateAnimeStatus(count);
 
       setHasChanged(true);
     }
@@ -272,14 +273,29 @@ const ArcFlatList: React.FC<ArcFlatListProps> = ({
         onScrollToIndexFailed={() =>
           ref.current?.scrollToOffset({ offset: 0, animated: false })
         }
-        // TODO : Fix auto scroll
-        // onContentSizeChange={() =>
-        //   ref.current.scrollToIndex({
-        //     index: animeViewData?.userAnimeView?.nextEpisodeToSee?.number ?? 0,
-        //     animated: false,
-        //     viewPosition: 0.5
-        //   })
-        // }
+        onContentSizeChange={() => {
+          const nextEpisodeIndex = arcEpisodeList.findIndex(
+            (e) =>
+              e.episode.number ===
+              animeViewData?.userAnimeView?.nextEpisodeToSee?.number
+          );
+          const lastEpisodeIndex = arcEpisodeList.findIndex(
+            (e) =>
+              e.episode.number ===
+              animeViewData?.userAnimeView?.lastEpisodeSeen?.number
+          );
+
+          ref.current.scrollToIndex({
+            index:
+              nextEpisodeIndex >= 0
+                ? nextEpisodeIndex
+                : lastEpisodeIndex >= 0
+                ? lastEpisodeIndex
+                : 0,
+            animated: false,
+            viewOffset: moderateVerticalScale(70)
+          });
+        }}
         renderItem={({ item, index }) => (
           <EpisodeRow
             number={item.episode.number}
@@ -321,6 +337,7 @@ export default ArcFlatList;
 
 interface ArcFlatListProps {
   animeData: AnimeDataFieldsFragment;
+  animeViewData: UserAnimeViewQuery;
   arcName?: string;
   isLastArc: boolean;
   displayHeaderArrow?: boolean;

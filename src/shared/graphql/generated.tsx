@@ -70,7 +70,7 @@ export type Anime = {
   bannerImage?: Maybe<Scalars["String"]>;
   posterImage?: Maybe<Scalars["String"]>;
   description?: Maybe<Scalars["String"]>;
-  AniDBRating?: Maybe<Scalars["Float"]>;
+  aniDBRating?: Maybe<Scalars["Float"]>;
   type: AnimeType;
   releaseDate?: Maybe<Scalars["String"]>;
   endDate?: Maybe<Scalars["String"]>;
@@ -91,7 +91,8 @@ export enum AnimeType {
   Movie = "MOVIE",
   Ova = "OVA",
   Ona = "ONA",
-  Music = "MUSIC"
+  Music = "MUSIC",
+  Web = "WEB"
 }
 
 export enum AnimeStatus {
@@ -131,6 +132,9 @@ export type User = {
   createdAt: Scalars["String"];
   updatedAt: Scalars["String"];
   username: Scalars["String"];
+  totalSeenTime: Scalars["Float"];
+  animeSeenCount: Scalars["Float"];
+  episodeSeenCount: Scalars["Float"];
 };
 
 export type UserAnimeView = {
@@ -601,10 +605,10 @@ export type UserAnimeViewFieldsFragment = {
       > & { episode: { __typename?: "Episode" } & Pick<Episode, "number"> }
     >;
     nextEpisodeToSee?: Maybe<
-      { __typename?: "Episode" } & Pick<Episode, "number">
+      { __typename?: "Episode" } & Pick<Episode, "number" | "arcName">
     >;
     lastEpisodeSeen?: Maybe<
-      { __typename?: "Episode" } & Pick<Episode, "number">
+      { __typename?: "Episode" } & Pick<Episode, "number" | "arcName">
     >;
   };
 
@@ -779,9 +783,11 @@ export const UserAnimeViewFieldsFragmentDoc = gql`
     }
     nextEpisodeToSee {
       number
+      arcName
     }
     lastEpisodeSeen {
       number
+      arcName
     }
   }
 `;
@@ -1893,7 +1899,7 @@ export type AnimeKeySpecifier = (
   | "bannerImage"
   | "posterImage"
   | "description"
-  | "AniDBRating"
+  | "aniDBRating"
   | "type"
   | "releaseDate"
   | "endDate"
@@ -1920,7 +1926,7 @@ export type AnimeFieldPolicy = {
   bannerImage?: FieldPolicy<any> | FieldReadFunction<any>;
   posterImage?: FieldPolicy<any> | FieldReadFunction<any>;
   description?: FieldPolicy<any> | FieldReadFunction<any>;
-  AniDBRating?: FieldPolicy<any> | FieldReadFunction<any>;
+  aniDBRating?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
   releaseDate?: FieldPolicy<any> | FieldReadFunction<any>;
   endDate?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -1983,6 +1989,9 @@ export type UserKeySpecifier = (
   | "createdAt"
   | "updatedAt"
   | "username"
+  | "totalSeenTime"
+  | "animeSeenCount"
+  | "episodeSeenCount"
   | UserKeySpecifier
 )[];
 export type UserFieldPolicy = {
@@ -1990,6 +1999,9 @@ export type UserFieldPolicy = {
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
   username?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalSeenTime?: FieldPolicy<any> | FieldReadFunction<any>;
+  animeSeenCount?: FieldPolicy<any> | FieldReadFunction<any>;
+  episodeSeenCount?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UserAnimeViewKeySpecifier = (
   | "id"
