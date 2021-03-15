@@ -588,7 +588,7 @@ export type HomeAnimesQuery = { __typename?: "Query" } & {
 
 export type UserFieldsFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "username"
+  "id" | "username" | "totalSeenTime" | "animeSeenCount" | "episodeSeenCount"
 >;
 
 export type UserAnimeViewFieldsFragment = {
@@ -764,6 +764,9 @@ export const UserFieldsFragmentDoc = gql`
   fragment UserFields on User {
     id
     username
+    totalSeenTime
+    animeSeenCount
+    episodeSeenCount
   }
 `;
 export const UserAnimeViewFieldsFragmentDoc = gql`

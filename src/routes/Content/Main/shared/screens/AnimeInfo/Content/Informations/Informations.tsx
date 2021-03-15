@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import { format, formatDuration } from "date-fns";
+import { format, formatDuration, intervalToDuration } from "date-fns";
 import { fr } from "date-fns/locale";
 import React, { useContext, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
@@ -87,6 +87,8 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
         <ActivityIndicator color={theme.colors?.white} />
       </View>
     );
+
+  console.log(data.anime.averageDuration);
 
   return (
     <ScrollView
@@ -195,12 +197,10 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
               data?.anime.type !== AnimeType.Movie ? "Durée moyenne" : "Durée"
             }
             data={formatDuration(
-              {
-                hours: Math.floor(data.anime.averageDuration / 60),
-                minutes:
-                  data.anime.averageDuration -
-                  Math.floor(data.anime.averageDuration / 60) * 60
-              },
+              intervalToDuration({
+                start: 0,
+                end: data.anime.averageDuration * 60000
+              }),
               { locale: fr }
             )}
           />

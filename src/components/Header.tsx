@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({
   onIconLeftPress,
   onIconRightPress,
   justifyContent = "space-between",
-  height = moderateVerticalScale(80)
+  height = 60
 }: HeaderProps) => {
   const { theme } = useContext(ThemeContext);
   const { top } = useSafeAreaInsets();
