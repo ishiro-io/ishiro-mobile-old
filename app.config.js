@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "Ishiro",
     slug: "ishiro-mobile",
-    version: "0.1.0",
+    version: "1.0.0",
     entryPoint: "./src/app/App.tsx",
     orientation: "portrait",
     icon: "./src/assets/icon.png",
@@ -23,11 +23,13 @@ export default {
       supportsTablet: true,
       userInterfaceStyle: "dark",
       bundleIdentifier: "io.ishiro.app",
-      buildNumber: "0.1.0.2"
+      buildNumber: "1.0.0.1"
     },
     android: {
+      icon: "./src/assets/android_icon.png",
+      package: "io.ishiro.app",
       userInterfaceStyle: "dark",
-      icon: "./src/assets/android_icon.png"
+      versionCode: 1
     },
     androidNavigationBar: {
       backgroundColor: "#131313"
