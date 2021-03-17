@@ -101,6 +101,8 @@ const ProfileMain: React.FC<ProfileMainProps> = ({}: ProfileMainProps) => {
 const formatTotalTime = (seconds: number) => {
   const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
 
+  if (!seconds) return "🙄";
+
   let time = "";
   let dayWord =
     duration.days && duration.hours && duration.minutes ? "j" : " jours";
