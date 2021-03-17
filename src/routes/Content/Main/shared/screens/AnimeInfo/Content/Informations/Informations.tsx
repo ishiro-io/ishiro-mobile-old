@@ -88,8 +88,6 @@ const AnimeInformations: React.FC<AnimeInformationsProps> = ({}: AnimeInformatio
       </View>
     );
 
-  console.log(data.anime.averageDuration);
-
   return (
     <ScrollView
       style={{
